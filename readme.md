@@ -15,12 +15,12 @@ These are the R packages required to reproduce the scRNA analysis. Additionally,
 
 System Requirements:
 
-Operating System: Tested on RedHat 7.7 x86_64.
-R Version: 4.2.3
-R Packages:
-Seurat (v4.4.0) (https://satijalab.org/seurat/)
-SeuratObject (v5.0.1)
-circlize (v0.4.15) 
+Operating System: Tested on RedHat 7.7 x86_64.  
+R Version: 4.2.3. 
+R Packages:  
+Seurat (v4.4.0) (https://satijalab.org/seurat/). 
+SeuratObject (v5.0.1). 
+circlize (v0.4.15)   
 ComplexHeatmap (v2.14.0) (https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)
 clusterProfiler (v4.6.0) (https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 ggpubr (v0.6.0) (https://rdrr.io/cran/ggpubr/)
