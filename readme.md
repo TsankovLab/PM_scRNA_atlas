@@ -1,4 +1,4 @@
-### This repository contains custom code to reproduce main analyses in our manuscript, "Single-### cell view of tumor microenvironment gradients in Pleural Mesothelioma"
+### This repository contains custom code to reproduce main analyses in our manuscript, "Single-cell view of tumor microenvironment gradients in Pleural Mesothelioma"
 Scripts are organized per cellular compartment and figures in the paper. To download Seurat object inclusive of all cell annotation and additional metadata, please download it from GEO GSE190597.
 
 ## Installation
@@ -11,7 +11,7 @@ git clone https://github.com/TsankovLab/PM_scRNA_atlas.git
 
 ```
 
-# These are the R packages required to reproduce the scRNA analysis. Additionally, to install cNMF (https://github.com/dylkot/cNMF ) and SCENIC (https://github.com/aertslab/SCENIC) softwares please refer to the corresponding GitHub pages
+These are the R packages required to reproduce the scRNA analysis. Additionally, to install cNMF (https://github.com/dylkot/cNMF ) and SCENIC (https://github.com/aertslab/SCENIC) softwares please refer to the corresponding GitHub pages
 
 System Requirements:
 
