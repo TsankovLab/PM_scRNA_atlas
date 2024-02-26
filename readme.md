@@ -18,20 +18,20 @@ System Requirements:
 Operating System: Tested on RedHat 7.7 x86_64.  
 R Version: 4.2.3. 
 R Packages:  
-Seurat (v4.4.0) (https://satijalab.org/seurat/). 
-SeuratObject (v5.0.1). 
+Seurat (v4.4.0) (https://satijalab.org/seurat/).   
+SeuratObject (v5.0.1).  
 circlize (v0.4.15)   
-ComplexHeatmap (v2.14.0) (https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)
-clusterProfiler (v4.6.0) (https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
-ggpubr (v0.6.0) (https://rdrr.io/cran/ggpubr/)
-biomaRt (v2.54.0)
-paletteer (v1.5.0)
-rstatix (v0.7.2)
-readxl (v1.4.3)
-harmony (v0.1.0) (https://portals.broadinstitute.org/harmony/articles/quickstart.html)
-hdWGCNA (v0.2.18) (https://smorabit.github.io/hdWGCNA/)
-ggplot2 (v3.4.4) (https://ggplot2.tidyverse.org)
-tidyverse (v2.0.0)
+ComplexHeatmap (v2.14.0) (https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html).  
+clusterProfiler (v4.6.0) (https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html).  
+ggpubr (v0.6.0) (https://rdrr.io/cran/ggpubr/).  
+biomaRt (v2.54.0).  
+paletteer (v1.5.0).  
+rstatix (v0.7.2).  
+readxl (v1.4.3).  
+harmony (v0.1.0) (https://portals.broadinstitute.org/harmony/articles/quickstart.html).  
+hdWGCNA (v0.2.18) (https://smorabit.github.io/hdWGCNA/).  
+ggplot2 (v3.4.4) (https://ggplot2.tidyverse.org).  
+tidyverse (v2.0.0).  
 
 
 ```R
