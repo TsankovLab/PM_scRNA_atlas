@@ -31,7 +31,8 @@ packages = c(
   'paletteer',
   'extrafont',
   'scCustomize',
-  'circlize'
+  'circlize',
+  'SeuratDisk'
 )
 lapply(packages, require, character.only = TRUE)
 

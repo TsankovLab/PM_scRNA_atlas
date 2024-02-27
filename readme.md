@@ -3,7 +3,7 @@ Scripts are organized per cellular compartment and figures in the paper. To down
 
 ## Installation
 
-To install this repository, run the following commands:
+To install this repository, run the following command:
 
 ```bash
 
@@ -56,3 +56,17 @@ install.packages("ggplot2", version = "3.4.4")
 install.packages ("tidyverse", version = "2.0.0")
 
 ```
+
+
+## Fetal endothelial analysis
+For comparison analysis of PLVAP+ EC with fetal and adult normal lungs please download data from He et al. at:
+https://fetal-lung.cellgeni.sanger.ac.uk/scRNA.html
+and from Travaglini et al. at:
+https://www.synapse.org/#!Synapse:syn21041850/wiki/600865
+
+
+
+
+
+
+

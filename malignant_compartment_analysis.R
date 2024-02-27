@@ -4,14 +4,16 @@ projdir = 'scRNA/malignants/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
 
-library (circlize)
-source ('../../scripts/useful_functions.R')
-source ('../../scripts/load_libraries.R')
-source ('../../scripts/scrna_pipeline/ggplot_aestetics.R')
-source ('../../scripts/projects/meso_prj/meso_naive_RNA/palettes.R')
+scripts_dir = '/ahg/regevdata/projects/ICA_Lung/Bruno/scripts/projects/meso_prj/scRNA_PM_atlas_repo/'
+source (paste0(scripts_dir,'palettes.R'))
+source (paste0(scripts_dir,'ggplot_aestetics.R'))
+source (paste0(scripts_dir,'R_utils.R'))
+source (paste0(scripts_dir,'R_libraries.R'))
 
 # Import seurat object
-srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/srt.rds')
+#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/srt.rds')
+srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/srt.rds')
+srt = srt[, srt$celltype == 'Malignant']
 
 #### Import bulk RNA subtype signatures to define malignant score ####
 
