@@ -31,8 +31,8 @@ readxl (v1.4.3).
 harmony (v0.1.0) (https://portals.broadinstitute.org/harmony/articles/quickstart.html).  
 hdWGCNA (v0.2.18) (https://smorabit.github.io/hdWGCNA/).  
 ggplot2 (v3.4.4) (https://ggplot2.tidyverse.org).  
-tidyverse (v2.0.0).  
-
+tidyverse (v2.0.0).    
+patchwork (v1.1.2)
 
 ```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -54,6 +54,7 @@ install.packages("harmony", version = "0.1.0")
 devtools::install_github('smorabit/hdWGCNA', ref='v0.2.18')
 install.packages("ggplot2", version = "3.4.4")
 install.packages ("tidyverse", version = "2.0.0")
+install.packages ("patchwork", version = "1.1.2")
 
 ```
 

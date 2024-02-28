@@ -1,29 +1,62 @@
 set.seed(1234)
 
-projdir = 'scRNA/myeloid'
+projdir = '/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/reproduction2/scRNA/myeloid/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
-source ('../../scripts/palettes.R')
-source ('../../scripts/ggplot_aestetics.R')
-source ('../../scripts/R_utils.R')
-source ('../../scripts/R_libraries.R')
+source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
+source ('../../PM_scRNA_atlas/scripts/R_utils.R')
+source ('../../PM_scRNA_atlas/scripts/palettes.R')
+source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
 #scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
-scs_sample_avg = read.csv ('../../data/scs_score_per_sample.csv', row.names=1)
+scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
 #srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
 srt = readRDS ('../srt.rds')
-srt = srt[, srt$celltype_simplified %in% c('Endothelial','Fibroblasts','SmoothMuscle')]
+srt = srt[, srt$celltype_simplified2 %in% c('Myeloid','pDC')]
 
-# Load Seurat object
-srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/myeloid_subset/sampleID2_harmony_nCount_RNA_regressed/srt.rds')
-sampleID = c(p786 = 'P1',p13 = 'P13',p846 = 'P3', p12 = 'P12', p7 = 'P6', p8 = 'P2', p848 = 'P5', p4 = 'P7', p11 = 'P11', p811 = 'P4', p826 = 'P8', p9 = 'P9', p10 = 'P10')
-srt$sampleID = unname (sampleID[as.character(srt$sampleID2)])
-srt$sampleID = factor (srt$sampleID, levels = sampleID)
+batch = 'sampleID'
+reductionSave = paste0(paste(batch,collapse='_'),'_harmony')
+reductionKey = paste0(paste(batch,collapse='_'),'harmonyUMAP_')
+reductionName = paste0 (paste(batch,collapse='_'),'_harmony_umap')
+reductionGraphKnn = paste0 (paste(batch,collapse='_'),'_harmony_knn')
+reductionGraphSnn = paste0 (paste(batch,collapse='_'),'_harmony_snn')
 
-reductionName = 'sampleID2_harmony_umap'
+# Compute variable features using scran pkg
+nfeat=2000
+sce = SingleCellExperiment (list(counts=srt@assays$RNA@counts, logcounts = srt@assays$RNA@data),
+rowData=rownames(srt)) 
+sce = modelGeneVar(sce)
+# remove batchy genes
+batchy_genes = c('RPL','RPS','MT-')
+sce = sce[!apply(sapply(batchy_genes, function(x) grepl (x, rownames(sce))),1,any),]
+vf = getTopHVGs(sce, n=nfeat)
+VariableFeatures (srt) = vf
+
+# Process merged data
+srt = NormalizeData (object = srt, normalization.method = "LogNormalize", scale.factor = 10000)
+srt = ScaleData (srt, features = VariableFeatures (object=srt))
+srt = RunPCA (srt, features = VariableFeatures (object = srt), npcs = ifelse(ncol(srt) <= 30,ncol(srt)-1,30), ndims.print = 1:5, nfeat.print = 5, verbose = FALSE)
+  
+# Run Harmony
+srt = srt %>% 
+RunHarmony (batch, plot_convergence = FALSE, reduction = 'pca', reduction.save= reductionSave) %>%
+RunUMAP (reduction = reductionSave, dims = 1:15, reduction.name = reductionName, reduction.key=reductionKey)
+
+# Run denovo clustering on non-adjusted reductions
+srt = FindNeighbors (object = srt, reduction = reductionSave, dims = 1:15, k.param = 30,
+                              verbose = TRUE, force.recalc = T, graph.name=c(reductionGraphKnn,reductionGraphSnn))
+
+
+### FIGURE 4A / S4A - celltype umap ####
+pdf ('Plots/FIGURE_4A_S4A_celltypes_umap.pdf', 5,width = 6)
+DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palette_myeloid)
+DimPlot (srt, group.by = 'sampleID', reduction = reductionName) + 
+scale_color_manual (values=palette_sample)
+dev.off()
+
 
 
 #### Plot markers ####
@@ -42,16 +75,7 @@ umap_df = cbind (umap_df, t(srt@assays$RNA@data[markers_found,]))
   theme_void() + NoLegend())
 
 png ('Plots/FIGURE_4B_celltypes_markers_fplots2.png',width = 2000,1600,res=300)
-#wrap_plots (p1,ncol=3)
 wrap_plots (umap_p1)
-dev.off()
-
-
-### FIGURE 4A / S4A - umap cell type samples ####
-pdf ('Plots/FIGURE_4A_S4A_celltype_dimplot.pdf')
-DimPlot (srt, reduction = reductionName, group.by = 'celltype_cc_deconvolved', cols = palette_myeloid)
-DimPlot (srt, group.by = 'sampleID2', label=F, combine=F, reduction = reductionName)[[1]] + ggtitle (paste(ncol(srt), 'cells')) +
-scale_color_manual(values = palette_sample)
 dev.off()
 
 
@@ -84,7 +108,7 @@ dev.off()
 # Show barplots of NMF cell abundance
 p = cellComp (
   seurat_obj = srt, 
-  metaGroups = c('celltype','sampleID2'),
+  metaGroups = c('celltype','sampleID'),
   plot_as = 'bar',
   ptable_factor = c(1),
   prop = TRUE,
@@ -100,8 +124,8 @@ dev.off()
 motif_window = 'tss500bp'
 
 # Generate heatmap of TFs ####
-motifs_table = read.csv ('../SCENIC_myeloid_motifs.csv', skip=2) 
-auc_mtx = read.csv ('../SCENIC_myeloid_auc_mtx.csv')
+motifs_table = read.csv ('../../PM_scRNA_atlas/data/SCENIC_myeloid_motifs.csv', skip=2) 
+auc_mtx = read.csv ('../../PM_scRNA_atlas/data/SCENIC_myeloid_auc_mtx.csv')
 rownames (auc_mtx) = auc_mtx[,1]
 auc_mtx = auc_mtx[,-1]
 colnames (auc_mtx) = paste0('SCENIC_',colnames(auc_mtx))
@@ -227,9 +251,8 @@ dev.off()
 ### FIGURE 4C - pairwise spearman correlation across samples ####
 # Generate heatmap of nmf modules correlation across samples
 # Add track showing corelation of each module to sarcomatoid module
-library (circlize)
 ccomp_df = srt_tam@meta.data[,names(cnmf_spectra_unique_comb)]
-ccomp_df = aggregate (ccomp_df, by=as.list(srt_tam@meta.data[,'sampleID4',drop=F]), 'mean')
+ccomp_df = aggregate (ccomp_df, by=as.list(srt_tam@meta.data[,'sampleID',drop=F]), 'mean')
 rownames(ccomp_df) = ccomp_df[,1]
 ccomp_df = ccomp_df[,-1]
 ccomp_df = cbind (ccomp_df, scScore = scs_sample_avg[rownames(ccomp_df),])

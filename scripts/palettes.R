@@ -83,5 +83,5 @@ palette_scenic = rev(colorRampPalette(brewer.pal(10,'RdYlBu'))(50))
 palette_celltypes_normal = setNames(brewer.pal(11,'Paired'),rev(c('AT1','AT2','Basal','Secretory','Ionocytes','Neuroendocrine','Tuft.like','Mesothelium','Fibroblast','SmoothMuscle','Ciliated')))
 
 
-for (pal in ls()[grep('palette',ls())]) store_pal (list(pal = get(pal)))
+#for (pal in ls()[grep('palette',ls())]) store_pal (list(pal = get(pal)))
 
