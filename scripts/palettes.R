@@ -1,8 +1,5 @@
 
 
-library (circlize)
-projdir_init = '/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/'
-
 
 palette_celltype_simplified = c(
   B_cells = 'magenta2',

@@ -202,7 +202,7 @@ print (box)
 dev.off()
 
 
-#### FIGURE 3A - Generate Neftel diagram using the four subtypes from bueno ####
+#### FIGURE 2A - Generate Neftel diagram using the four subtypes from bueno ####
 max_sarc = pmax(srt$Sarcomatoid, srt$`Biphasic-S`)
 max_epit = pmax(srt$Epithelioid, srt$`Biphasic-E`)
 srt$y_axis <- log2(abs(max_sarc - max_epit) + 1)

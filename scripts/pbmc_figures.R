@@ -8,10 +8,12 @@ options(warn = 1)
 projdir = '/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/reproduction/scRNA/pbmc/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
-source ('../../../../scripts/scrna_pipeline/useful_functions.R')
-source ('../../../../scripts/scrna_pipeline/load_libraries.R')
-source ('../../../../scripts/scrna_pipeline/ggplot_aestetics.R')
-source ('../../../../scripts/projects/meso_prj/meso_naive_RNA/MPM_naive_13_pallettes.R')
+
+scripts_dir = '../../scripts/'
+source (paste0(scripts_dir,'palettes.R'))
+source (paste0(scripts_dir,'ggplot_aestetics.R'))
+source (paste0(scripts_dir,'R_utils.R'))
+source (paste0(scripts_dir,'R_libraries.R'))
 
 # Load scS-score
 scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)

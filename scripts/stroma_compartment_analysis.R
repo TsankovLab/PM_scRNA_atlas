@@ -4,19 +4,18 @@ projdir = 'scRNA/stromal/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
 
-scripts_dir = '/ahg/regevdata/projects/ICA_Lung/Bruno/scripts/projects/meso_prj/scRNA_PM_atlas_repo/'
-source (paste0(scripts_dir,'palettes.R'))
-source (paste0(scripts_dir,'ggplot_aestetics.R'))
-source (paste0(scripts_dir,'R_utils.R'))
-source (paste0(scripts_dir,'R_libraries.R'))
+source ('../../scripts/palettes.R')
+source ('../../scripts/ggplot_aestetics.R')
+source ('../../scripts/R_utils.R')
+source ('../../scripts/R_libraries.R')
 
 # Load scS-score
 #scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
-scs_sample_avg = read.csv (paste0(scripts_dir,'scs_score_per_sample.csv'), row.names=1)
+scs_sample_avg = read.csv ('../../data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
 #srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
-srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/srt.rds')
+srt = readRDS ('../srt.rds')
 srt = srt[, srt$celltype_simplified %in% c('Endothelial','Fibroblasts','SmoothMuscle')]
 
 scs_sample_avg
@@ -97,7 +96,7 @@ dev.off()
 ### subset endothelial ####
 library (readxl)
 srt_endo = srt[,srt$celltype %in% c('Artery','PLVAP','Vein')]
-cnmf_spectra_unique_comb = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Ems_20"))
+cnmf_spectra_unique_comb = as.list (read_excel( "../../data/cnmf_per_compartment.xlsx", sheet = "Ems_20"))
 
 srt_endo = ModScoreCor (
         seurat_obj = srt_endo, 

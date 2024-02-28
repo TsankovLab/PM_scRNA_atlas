@@ -4,10 +4,12 @@ set.seed(1234)
 projdir = 'scRNA/' # define project directory
 system (paste('mkdir -p',projdir))
 setwd (projdir)
-source ('../scripts/useful_functions.R') # Load functions 
-source ('../scripts/load_libraries.R') # Load libraries
-source ('../scripts/scrna_pipeline/ggplot_aestetics.R') # Load ggplot themes
-source ('../scripts/pallettes.R') # load palettes
+
+scripts_dir = '../../scripts/'
+source (paste0(scripts_dir,'palettes.R'))
+source (paste0(scripts_dir,'ggplot_aestetics.R'))
+source (paste0(scripts_dir,'R_utils.R'))
+source (paste0(scripts_dir,'R_libraries.R'))
 
 # Load Seurat object
 srt = readRDS (paste0(projdir,'srt_main.rds'))
