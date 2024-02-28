@@ -32,7 +32,8 @@ harmony (v0.1.0) (https://portals.broadinstitute.org/harmony/articles/quickstart
 hdWGCNA (v0.2.18) (https://smorabit.github.io/hdWGCNA/).  
 ggplot2 (v3.4.4) (https://ggplot2.tidyverse.org).  
 tidyverse (v2.0.0).    
-patchwork (v1.1.2)
+patchwork (v1.1.2). 
+scRepertoire (v2.0.0) (https://github.com/ncborcherding/scRepertoire)
 
 ```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -47,6 +48,7 @@ BiocManager::install("ComplexHeatmap", version = "2.14.0")
 BiocManager::install("clusterProfiler", version = "4.6.0")
 install.packages("ggpubr", version = "0.6.0")
 BiocManager::install("biomaRt", version = "2.54.0")
+BiocManager::install("scRepertoire", version = "2.0.0")
 install.packages("paletteer", version = "1.5.0")
 install.packages("rstatix", version = "0.7.2")
 install.packages ("readxl", version = "v1.4.3")

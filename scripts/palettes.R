@@ -59,8 +59,8 @@ palette_module_correlation_fun = colorRamp2(c(-1,0,1), c(palette_module_correlat
 # Set palette
 palette_bulk = setNames (as.character(paletteer::paletteer_d("rcartocolor::ArmyRose")[c(1,2,5,7,3,1,7)]), c('Epithelioid','Biphasic-E','Biphasic-S','Sarcomatoid','Biphasic','E_score','S_score'))
 
-palette_t_cells = setNames (as.character (paletteer::paletteer_d("fishualize::Bodianus_rufus",4)), c('CD8+','CD4+','Tregs','TFH'))
-palette_nk_cells = setNames (c("#D3E3CAFF", "#92A587FF", "#2F3525FF"), c('NK_CD56bright','NK_CD56dim','NKT_cells'))
+palette_t_cells = setNames (as.character (paletteer::paletteer_d("fishualize::Bodianus_rufus",4)), c('CD8','CD4','Tregs','TFH'))
+palette_nk_cells = setNames (c("#D3E3CAFF", "#92A587FF", "#2F3525FF"), c('FGFBP2_NK','KLRC1_NK','NKlike_Tcells'))
 palette_tnk_cells = c(palette_t_cells, palette_nk_cells)
 
 palette_protein_expression = c(low="darkblue",mid= "white",high= "darkgreen") 

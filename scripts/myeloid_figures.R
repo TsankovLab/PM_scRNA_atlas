@@ -147,15 +147,10 @@ hm
 dev.off()
   
 
-
-
 ### FIGURE S4C - TF expression across celltypes ####
-user.path = "/ahg/regevdata/projects/ICA_Lung/Maggie_fast/"
-TF_G = read.table(paste0(user.path, "/genelists/HumanTFs.txt"), sep="\t", header = TRUE, row.names=1)
-
+TF_G = read.table('../../PM_scRNA_atlas/data/HumanTFs.txt', sep="\t", header = TRUE, row.names=1)
 
 celltype_order = c('Mono_CD14','Mono_CD16','TAMs','cDC1','cDC2','mregDC','pDC','Mast')
-
 Idents (srt) = 'celltype'
 levels (srt) = celltype_order
 degClusters = FindAllMarkers (srt[rownames(srt)%in% TF_G$HGNC.symbol,], max.cells.per.ident = 1000, group.by = 'celltype',min.pct = .1, verbose = T)
@@ -170,7 +165,7 @@ Heatmap (
   cluster_rows=F,
   row_names_side = 'left',
   cluster_columns=F, 
-  col = palette_gene_expression2,
+  col = palette_gene_expression_fun,
   column_names_rot = 45,
   row_names_gp = gpar (fontsize = 6),
   column_names_gp = gpar (fontsize = 6))
@@ -180,9 +175,8 @@ dev.off()
 
 
 ### subset tams ####
-library (readxl)
 srt_tam = srt[, srt$celltype == 'TAMs']
-cnmf_spectra_unique_comb = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Mms_20"))
+cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Mms_20"))
 
 srt_tam = ModScoreCor (
         seurat_obj = srt_tam, 
@@ -191,15 +185,12 @@ srt_tam = ModScoreCor (
         pos_threshold = NULL, # threshold for fetal_pval2
         listName = 'Mms', outdir = paste0(projdir,'Plots/'))
 
-
-
 ### FIGURE S4C - pairwise spearman correlation across cells ####
-library (circlize)
 # Generate heatmap of nmf modules correlation across cells
 # Add track showing corelation of each module to sarcomatoid module
 
 # Load scS-score
-scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
+scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 ccomp_df = srt_tam@meta.data[,names (cnmf_spectra_unique_comb)]
 cor_mat = cor (ccomp_df, method = 'spearman')
@@ -256,15 +247,15 @@ ccomp_df = aggregate (ccomp_df, by=as.list(srt_tam@meta.data[,'sampleID',drop=F]
 rownames(ccomp_df) = ccomp_df[,1]
 ccomp_df = ccomp_df[,-1]
 ccomp_df = cbind (ccomp_df, scScore = scs_sample_avg[rownames(ccomp_df),])
+ccomp_df = na.omit (ccomp_df)
 cor_mat = cor (ccomp_df, method = 'spearman')
-col_fun = colorRamp2(c(1, 0, -1), c(palette_sample[3], palette_sample[length(palette_sample)/2], palette_sample[length(palette_sample)-3]))
+
 scScore_cor = cor_mat[,'scScore']
 cor_mat = cor_mat[-ncol(cor_mat), -ncol(cor_mat)]
-palette_module_correlation = paletteer::paletteer_c("pals::kovesi.diverging_bwr_40_95_c42",100)
 scScore_cor = scScore_cor[-length(scScore_cor)]
 
 # triangle heatmap
-ha = HeatmapAnnotation(scScore = scScore_cor, col = list (scScore = col_fun), which='row')
+ha = HeatmapAnnotation(scScore = scScore_cor, col = list (scScore = palette_sample2_fun), which='row')
 hm = draw (Heatmap (cor_mat, 
   left_annotation = ha,
   rect_gp = gpar(type = "none"),
@@ -293,8 +284,8 @@ ext_markers = c(
 motif_window = 'tss500bp'
 
 # Generate heatmap of TFs ####
-motifs_table = read.csv ('../SCENIC_myeloid_motifs.csv', skip=2) 
-auc_mtx = read.csv ('../SCENIC_myeloid_auc_mtx.csv')
+motifs_table = read.csv ('../../PM_scRNA_atlas/data/SCENIC_myeloid_motifs.csv', skip=2) 
+auc_mtx = read.csv ('../../PM_scRNA_atlas/data/SCENIC_myeloid_auc_mtx.csv')
 rownames (auc_mtx) = auc_mtx[,1]
 auc_mtx = auc_mtx[,-1]
 colnames (auc_mtx) = paste0('SCENIC_',colnames(auc_mtx))

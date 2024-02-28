@@ -1,30 +1,58 @@
 set.seed(1234)
 
-projdir = '/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/reproduction/scRNA/tnk/'
+
+projdir = 'scRNA/tnk/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
-source ('../../scripts/useful_functions.R')
-source ('../../scripts/load_libraries.R')
-source ('../../../../scripts/scrna_pipeline/useful_functions.R')
-source ('../../../../scripts/scrna_pipeline/ggplot_aestetics.R')
-source ('../../../../scripts/projects/meso_prj/meso_naive_RNA/MPM_naive_13_pallettes.R')
+source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
+source ('../../PM_scRNA_atlas/scripts/R_utils.R')
+source ('../../PM_scRNA_atlas/scripts/palettes.R')
+source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
-scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
+#scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
+scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/TNK_cells_subset/sampleID2_harmony/srt.rds')
+#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
+srt_main = readRDS ('../srt.rds')
+srt = srt_main[, srt_main$celltype_simplified %in% c('T_cells','NK')]
 
 # load palettes
 # palettes = readRDS (paste0('../../palettes.rds'))
 # for (i in seq_along (palettes)) assign (names(palettes)[i], palettes[[i]])
 
-reductionName = 'sampleID2_harmony_umap'
+batch = 'sampleID'
+reductionSave = paste0(paste(batch,collapse='_'),'_harmony')
+reductionKey = paste0(paste(batch,collapse='_'),'harmonyUMAP_')
+reductionName = paste0 (paste(batch,collapse='_'),'_harmony_umap')
+reductionGraphKnn = paste0 (paste(batch,collapse='_'),'_harmony_knn')
+reductionGraphSnn = paste0 (paste(batch,collapse='_'),'_harmony_snn')
 
-sampleID = c(p786 = 'P1',p13 = 'P13',p846 = 'P3', p12 = 'P12', p7 = 'P6', p8 = 'P2', p848 = 'P5', p4 = 'P7', p11 = 'P11', p811 = 'P4', p826 = 'P8', p9 = 'P9', p10 = 'P10')
-srt$sampleID = unname (sampleID[as.character(srt$sampleID2)])
-srt$sampleID = factor (srt$sampleID, levels = sampleID)
+# Compute variable features using scran pkg
+nfeat=3000
+sce = SingleCellExperiment (list(counts=srt@assays$RNA@counts, logcounts = srt@assays$RNA@data),
+rowData=rownames(srt)) 
+sce = modelGeneVar(sce)
+# remove batchy genes
+batchy_genes = c('RPL','RPS','MT-')
+sce = sce[!apply(sapply(batchy_genes, function(x) grepl (x, rownames(sce))),1,any),]
+vf = getTopHVGs(sce, n=nfeat)
+VariableFeatures (srt) = vf
 
+# Process merged data
+srt = NormalizeData (object = srt, normalization.method = "LogNormalize", scale.factor = 10000)
+srt = ScaleData (srt, features = VariableFeatures (object=srt))
+srt = RunPCA (srt, features = VariableFeatures (object = srt), npcs = ifelse(ncol(srt) <= 30,ncol(srt)-1,30), ndims.print = 1:5, nfeat.print = 5, verbose = FALSE)
+  
+# Run Harmony
+srt = srt %>% 
+RunHarmony (batch, plot_convergence = FALSE, reduction = 'pca', reduction.save= reductionSave) %>%
+RunUMAP (reduction = reductionSave, dims = 1:15, reduction.name = reductionName, reduction.key=reductionKey)
+
+# Run denovo clustering on non-adjusted reductions
+srt = FindNeighbors (object = srt, reduction = reductionSave, dims = 1:15, k.param = 30,
+                              verbose = TRUE, force.recalc = T, graph.name=c(reductionGraphKnn,reductionGraphSnn))
 
 # FIGURE 5A / S5A - celltype UMAP ####
 dp = DimPlot (srt, group.by = 'celltype', 
@@ -40,17 +68,13 @@ dev.off()
 
 # FIGURE 5B - dotplot of T cell subtype markers ####
 top_markers = c('IL7R','SELL','CCR7','FOXP3','IL2RA','TNFRSF18','CXCL13','IL21','TOX2','CD8A','CD8B','CCL5','CD3D','KLRC1','XCL1','FCER1G','GNLY','FGFBP2','SPON2')
-srt$celltype = factor (srt$celltype, levels = c('CD4+', 'Tregs','TFH','CD8+','NKT_cells','NK_CD56bright','NK_CD56dim'))
-srt$celltype2 = as.character(srt$celltype)
-srt$celltype2[srt$celltype2 == 'CD4+'] = 'CD4'
-srt$celltype2[srt$celltype2 == 'CD8+'] = 'CD8'
-srt$celltype2 = factor (srt$celltype2, levels = c('CD4','Tregs','TFH','CD8','NKT_cells','NK_CD56bright','NK_CD56dim'))
+srt$celltype = factor (srt$celltype, levels = c('CD4', 'Tregs','TFH','CD8','NKlike_Tcells','KLRC1_NK','FGFBP2_NK'))
 
 dp = geneDot (
   seurat_obj = srt,
   #gene = top_tfs2, 
   gene = factor (top_markers, levels = top_markers),
-  x = 'celltype2', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
+  x = 'celltype', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
   y = NULL,
   min_expression = 0,
   facet_ncol = 5,
@@ -58,7 +82,7 @@ dp = geneDot (
   scale.data=TRUE,
   x_name ='samples',
   swap_axes = T,
-  y_name = 'celltype2',
+  y_name = 'celltype',
   plotcol = palette_gene_expression2) +
     gtheme_italic
 
@@ -77,13 +101,13 @@ ptable_factor = 1,
 prop=T) +
 theme_minimal()
 #cp$data$cNMF__r_max = factor (cp$data$cNMF__r_max, levels = names (cnmf_spectra_filtered[row_order(hm)])) 
-pdf (paste0(projdir, 'Plots/FIGURE_5B_sample_abundance_celltype_stacked_barplot.pdf'))
+pdf (paste0('Plots/FIGURE_5B_sample_abundance_celltype_stacked_barplot.pdf'))
 cp
 dev.off()
 
 
 library (readxl)
-cnmf_spectra_unique_comb = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Tms_20"))
+cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Tms_20"))
 
 srt = ModScoreCor (
         seurat_obj = srt, 
@@ -92,16 +116,9 @@ srt = ModScoreCor (
         pos_threshold = NULL, # threshold for fetal_pval2
         listName = 'Tms', outdir = paste0(projdir,'Plots/'))
 
-srt_t = srt[, srt$celltype %in% c('CD4+','Tregs','TFH','CD8+')]
+srt_t = srt[, srt$celltype %in% c('CD4','Tregs','TFH','CD8')]
 
 ### FIGURE S5C - pairwise spearman correlation across cells ####
-library (circlize)
-# Generate heatmap of nmf modules correlation across cells
-# Add track showing corelation of each module to sarcomatoid module
-
-# Load scS-score
-scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
-
 ccomp_df = srt_t@meta.data[,names (cnmf_spectra_unique_comb)]
 cor_mat = cor (ccomp_df, method = 'spearman')
 
@@ -124,7 +141,6 @@ hm = draw (Heatmap (cor_mat,
 pdf (paste0('Plots/FIGURE_S5C_cnmf_cor_heatmap_triangle_cells.pdf'),5.5,4.5)
 hm
 dev.off()
-
 
 ### FIGURE S5B - Make dotplot of top markers for each nmf ####
 cnmf_spectra_unique_comb_ordered = cnmf_spectra_unique_comb[row_order(hm)]
@@ -153,12 +169,12 @@ dev.off()
 ### FIGURE 5C - pairwise spearman correlation across samples ####
 # Generate heatmap of nmf modules correlation across samples
 # Add track showing corelation of each module to sarcomatoid module
-library (circlize)
 ccomp_df = srt_t@meta.data[,names(cnmf_spectra_unique_comb)]
-ccomp_df = aggregate (ccomp_df, by=as.list(srt_t@meta.data[,'sampleID4',drop=F]), 'mean')
+ccomp_df = aggregate (ccomp_df, by=as.list(srt_t@meta.data[,'sampleID',drop=F]), 'mean')
 rownames(ccomp_df) = ccomp_df[,1]
 ccomp_df = ccomp_df[,-1]
 ccomp_df = cbind (ccomp_df, scScore = scs_sample_avg[rownames(ccomp_df),])
+ccomp_df = na.omit (ccomp_df)
 cor_mat = cor (ccomp_df, method = 'spearman')
 #col_fun = colorRamp2(c(1, 0, -1), c(palette_sample[3], palette_sample[length(palette_sample)/2], palette_sample[length(palette_sample)-3]))
 scScore_cor = cor_mat[,'scScore']
@@ -186,7 +202,6 @@ hm = draw (Heatmap (cor_mat,
 pdf (paste0('Plots/FIGURE_5C_modules_cnmf_cor_heatmap_triangle.pdf'),5.5,4.5)
 hm
 dev.off()
-
 
 
 # FIGURE 5E - Test individually each exhaustion marker ####
@@ -274,13 +289,13 @@ ext_avg = t (ext_avg)
 col_split2 = sapply (colnames(ext_avg), function(x) unlist(strsplit (x, '_'))[2])
 col_split2 = col_split2[order(col_split2)]
 ext_avg = ext_avg[,names(col_split2)]
-
-hm = draw (Heatmap (t(scale (t(ext_avg))), 
+ext_avgs = scale (t(ext_avg))
+hm = draw (Heatmap (t(ext_avgs), 
   cluster_columns=F,
   column_split = col_split2,
-  clustering_distance_rows='pearson' ,
+  clustering_distance_rows='pearson',
   clustering_distance_columns = 'pearson', 
-  col=palette_gene_expression_fun, 
+  col=palette_gene_expression_fun(ext_avgs), 
   heatmap_legend_param= list (direction = 'horizontal'),
   #row_km=2, 
   #column_km=2,
@@ -289,50 +304,17 @@ hm = draw (Heatmap (t(scale (t(ext_avg))),
 pdf ('Plots/FIGURE_5F_exhaustion_markers_per_celltype_heatmap.pdf',width = 4, height=2.8)
 hm
 dev.off()
-
-# FIGURE 5X - Show distribution relevant Tms ####
+  
+# FIGURE 5E - Show distribution relevant Tms ####
 ccomp_df = srt@meta.data
 dp = lapply (c('Tm2','Tm5','Tm7'), function(x) ggplot(ccomp_df, aes_string(x = x, group = 'SE_group')) +
   geom_density(aes(fill = SE_group),linewidth=.1, alpha = 0.6) + scale_fill_manual (values = palette_SE_group) + gtheme + NoLegend())
-pdf ('Plots/FIGURE_5x_cell_distributions_Tm2_Tm5_Tm7_density.pdf',width = 4, height=1.6)
+pdf ('Plots/FIGURE_5E_cell_distributions_Tm2_Tm5_Tm7_density.pdf',width = 4, height=1.6)
 wrap_plots (dp)
 dev.off()
 
 
-
-# FIGURE 5G - Show MHC-II genes in heatmap ####
-tm4genes = cnmf_spectra_unique_comb[['Tm4']]
-ext_markers = c('HLA-DPB1','HLA-DPA1', 'HLA-DQA1','HLA-DRB5','GZMK','CD8B')
-ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('sampleID4', 'celltype'))
-ext_avg = log2 (as.data.frame (t(ext_avg[[1]]))+1)
-#ext_avg$group = rownames (ext_avg)
-# ext_avg = gather (ext_avg, gene, avg_expression, 1:(ncol(ext_avg)-1))
-# ext_avg$sample = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[1])
-ext_avg = t (ext_avg)
-col_split2 = sapply (colnames(ext_avg), function(x) unlist(strsplit (x, '_'))[2])
-col_split2 = col_split2[order(col_split2)]
-ext_avg = ext_avg[,names(col_split2)]
-ht_ann = sapply (colnames(ext_avg), function(x) unlist(strsplit (x, '_'))[1])
-ht_ann = as.character (srt$SE_group[match(ht_ann, srt$sampleID4)])
-ht_ann = HeatmapAnnotation (S_group = ht_ann, col = list(S_group = palette_SE_group))
-hm = draw (Heatmap (t(scale (t(ext_avg))), 
-  top_annotation = ht_ann,
-  cluster_columns=F,
-  column_split = col_split2,
-  clustering_distance_rows='euclidean' ,
-  clustering_distance_columns = 'euclidean', 
-  col=palette_gene_expression_fun, 
-  heatmap_legend_param= list (direction = 'horizontal'),
-  #row_km=2, 
-  #column_km=2,
-#  right_annotation = ha,
-  border=T))
-pdf ('Plots/FIGURE_5G_Tm4_markers_per_celltype_heatmap.pdf',width = 12, height=3)
-hm
-dev.off()
-
-
-# FIGURE 5G - Repeat per subtype ####
+# FIGURE 5G - MHCII per subtype ####
 ext_markers = c('HLA-DPB1','HLA-DPA1', 'HLA-DQA1','HLA-DRB5','GZMK')
 ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('sampleID4','SE_group'))
 ext_avg = log2(as.data.frame (t(ext_avg[[1]]))+1)
@@ -362,11 +344,39 @@ pdf ('Plots/FIGURE_5G_MHCII_markers.pdf',2.5,width = 2.8)
 box
 dev.off()
 
-srt_b = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/Bcells_plasma_subset/sampleID2_harmony/srt.rds')
-sampleID = c(p786 = 'P1',p13 = 'P13',p846 = 'P3', p12 = 'P12', p7 = 'P6', p8 = 'P2', p848 = 'P5', p4 = 'P7', p11 = 'P11', p811 = 'P4', p826 = 'P8', p9 = 'P9', p10 = 'P10')
-srt_b$sampleID = unname (sampleID[as.character(srt_b$sampleID2)])
-srt_b$sampleID = factor (srt_b$sampleID, levels = sampleID)
+srt_b = srt_main[, srt_main$celltype_simplified %in% c('B_cells','Plasma')]
 
+batch = 'sampleID'
+reductionSave = paste0(paste(batch,collapse='_'),'_harmony')
+reductionKey = paste0(paste(batch,collapse='_'),'harmonyUMAP_')
+reductionName = paste0 (paste(batch,collapse='_'),'_harmony_umap')
+reductionGraphKnn = paste0 (paste(batch,collapse='_'),'_harmony_knn')
+reductionGraphSnn = paste0 (paste(batch,collapse='_'),'_harmony_snn')
+
+# Compute variable features using scran pkg
+nfeat=3000
+sce = SingleCellExperiment (list(counts=srt_b@assays$RNA@counts, logcounts = srt_b@assays$RNA@data),
+rowData=rownames(srt_b)) 
+sce = modelGeneVar(sce)
+# remove batchy genes
+batchy_genes = c('RPL','RPS','MT-')
+sce = sce[!apply(sapply(batchy_genes, function(x) grepl (x, rownames(sce))),1,any),]
+vf = getTopHVGs(sce, n=nfeat)
+VariableFeatures (srt_b) = vf
+
+# Process merged data
+srt_b = NormalizeData (object = srt_b, normalization.method = "LogNormalize", scale.factor = 10000)
+srt_b = ScaleData (srt_b, features = VariableFeatures (object=srt_b))
+srt_b = RunPCA (srt_b, features = VariableFeatures (object = srt_b), npcs = ifelse(ncol(srt_b) <= 30,ncol(srt_b)-1,30), ndims.print = 1:5, nfeat.print = 5, verbose = FALSE)
+  
+# Run Harmony
+srt_b = srt_b %>% 
+RunHarmony (batch, plot_convergence = FALSE, reduction = 'pca', reduction.save= reductionSave) %>%
+RunUMAP (reduction = reductionSave, dims = 1:15, reduction.name = reductionName, reduction.key=reductionKey)
+
+# Run denovo clustering on non-adjusted reductions
+srt_b = FindNeighbors (object = srt_b, reduction = reductionSave, dims = 1:15, k.param = 30,
+                              verbose = TRUE, force.recalc = T, graph.name=c(reductionGraphKnn,reductionGraphSnn))
 
 # FIGURE S5B -- markers dotplot ####
 top_markers = c('CD79B','CD79A','CD19','CD37','RGS13','LRMP','MEF2B','LMO2','HMCES','IGHG3','IGHGP','IGHG4')
@@ -430,10 +440,13 @@ dp
 dev.off()
 
 ### FIGURE 5I - cellcycle distribution ####
-library(ggplot2)
-library(ggridges)
-
 #theme_set(theme_classic())
+cc.genes <- readLines('../../PM_scRNA_atlas/data/regev_lab_cell_cycle_genes.txt')
+s.genes <- cc.genes[1:43]
+g2m.genes <- cc.genes[44:97]
+srt_b = CellCycleScoring (object = srt_b, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE)
+srt_b$cc = srt_b$S.Score + srt_b$G2M.Score
+
 ccomp_df = srt_b@meta.data[, c('cc','celltype')]
 rp = ggplot(ccomp_df, aes_string(x = 'cc', y = 'celltype')) +
   geom_density_ridges(aes(fill = celltype), alpha = 0.7, color = NA) +
@@ -447,9 +460,9 @@ dev.off()
 
 ### FIGURE 5H - cellcycle distribution ####
 gctfh_markers = c('TOX2','CXCR5','PDCD1','BCL6','TCF7')
-srt2 = srt[,srt$celltype == 'TFH']
+srt_tfh = srt[,srt$celltype == 'TFH']
 dotp3 = geneDot (
-seurat_obj = srt2,
+seurat_obj = srt_tfh,
 gene = gctfh_markers,
 x = 'sampleID', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
 min_expression = 0,
@@ -471,9 +484,7 @@ dev.off()
 #####################
 ### TCR analysis ####
 #####################
-  
 # Import TCR of tumors
-library (scRepertoire)
 data.path_P7_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
 data.path_P6_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_7/count_matrices/TD005870_AlexanderTsankov/Tsankov-meso-prepolyic-01212022/outs/per_sample_outs/Tsankov-meso-prepolyic-01212022/vdj_t/filtered_contig_annotations.csv'
 data.path_P2_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
@@ -492,7 +503,7 @@ vdj.dirs = c(
   data.path_P12_tumor,
   data.path_P13_tumor)
 tcrL_tumor = lapply (vdj.dirs, function(x) read.csv(x))
-names (tcrL_tumor) = c('P7','P6','P8','P9','P11','P12','P13')
+names (tcrL_tumor) = c('P7','P6','P2','P9','P11','P12','P13')
 
 contig_list = c(tcrL_tumor)
 combinedTCR <- combineTCR (contig_list, 
@@ -526,19 +537,8 @@ srt = combineExpression (combinedTCR, srt,
   #)
 srt_tcr = srt[,srt$sampleID %in% c('P7','P6','P9','P11','P12','P13')]
 srt_tcr = srt_tcr[, !is.na (srt_tcr$cloneSize)]
-srt_tcr = srt_tcr[,srt_tcr$sampleID != 'P2']
 clonesize_name = setNames (c('Single','NonExpanded','Expanded','None'), c('Single (0 < X <= 1)','NonExpanded (1 < X <= 5)','Expanded (5 < X <= Inf)', 'None ( < X <= 0)'))
 srt_tcr$cloneSize = unname(clonesize_name[as.character(srt_tcr$cloneSize)])
-# Set palette
-#clonotype_levels = c('Small (1e-04 < X <= 0.001)','Medium (0.001 < X <= 0.01)','Large (0.01 < X <= 0.1)')
-#clonotype_levels = c('NonExpanded (0 < X <= 1)','Expanded (1 < X <= Inf)', NA)
-
-#palette_clonotype = list(palette_clonotype = setNames (c(as.character (paletteer::paletteer_d("trekcolors::romulan2",9))[c(5,1)],'grey55'),c(clonotype_levels)))
-# clonotype_levels = c('Single','NonExpanded','Expanded')
-# palette_clonotype = list(palette_clonotype = setNames (c(as.character (paletteer::paletteer_d("beyonce::X58"))),c(clonotype_levels)))
-
-
-
 
 ### Find which cell type have clonal expansion ####
 cc_bar_tumor = cellComp (
@@ -551,7 +551,7 @@ cc_bar_tumor = cellComp (
   facet_ncol = 10
   ) + theme_classic() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-pdf (paste0(projdir,'Plots/clonotype_celltypes.pdf'), 8,3)
+pdf ('Plots/clonotype_celltypes.pdf', 8,3)
 cc_bar_tumor
 dev.off()
 
@@ -577,17 +577,15 @@ cc_box = cellComp (
   ) + gtheme
 cc_box$data$celltype = factor (cc_box$data$celltype, levels = as.character(cc_box$data$celltype[order(-cc_box$data$Freq)]))
 
-pdf(paste0('Plots/FIGURE_6A_Expanded_vs_nonExpanded_barplot.pdf'),4,3)
+pdf(paste0('Plots/FIGURE_5A_Expanded_vs_nonExpanded_barplot.pdf'),4,3)
 cc_box
 dev.off()
-
-
 
 
 # FIGURE 6B - Show expanded clonotypes have higher exhaustion ####  
 # Add modulesscore of exhaustion markers
 # Add exhaustion modules
-srt_tcr = srt_tcr[,srt_tcr$celltype == 'CD8+']
+srt_tcr = srt_tcr[,srt_tcr$celltype == 'CD8']
 #srt_tcr = srt_tcr[, srt_tcr$celltype == 'CD8+']
 
 ccomp_df = as.data.frame (srt_tcr@meta.data)
@@ -605,7 +603,7 @@ geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
 gtheme_no_text
 
-pdf ('Plots/FIGURE_6B_expanded_exhaustion.pdf', height = 3.3,width = 2)
+pdf ('Plots/FIGURE_5B_expanded_exhaustion.pdf', height = 3.3,width = 2)
 box2
 dev.off()
 
@@ -626,7 +624,7 @@ geom_point (position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
 gtheme_no_text
 
-pdf ('Plots/FIGURE_6B_expanded_MHCII.pdf',height = 3.3,width = 2)
+pdf ('Plots/FIGURE_5B_expanded_MHCII.pdf',height = 3.3,width = 2)
 box2
 dev.off()
 
@@ -650,7 +648,7 @@ gtheme_no_text
 # box2$layers[[1]]$aes_params$alpha =  .7
 # box2$layers[[1]]$geom_params$linewdith =  .1
 # box2$layers[[1]]$aes_params$lwd =  .1
-pdf ('Plots/FIGURE_6B_expanded_cytox.pdf',height = 3.3,width = 2)
+pdf ('Plots/FIGURE_5B_expanded_cytox.pdf',height = 3.3,width = 2)
 box2
 dev.off()
 
@@ -658,7 +656,6 @@ dev.off()
 
 
 # FIGURE S5 - proportion of CD8 expanded and exhausted in SE groups ####
-
 # metaGroupName = 'exhaustclones'
 metaGroupName = 'cloneSize'
 #srt_tcr_cd8_exp = srt_tcr_cd8[,srt_tcr_cd8$cloneSize == 'Expanded (1 < X <= Inf)']
@@ -687,24 +684,19 @@ cc_box = cc_box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
 bracket.nudge.y = 0, hide.ns = T,
 label = "p")
 
-pdf(paste0('Plots/FIGURE_6C_Exhausted_Expanded_vs_nonExpanded_SE_group_boxplot2.pdf'),width=2.2,2.5)
+pdf(paste0('Plots/FIGURE_5C_Exhausted_Expanded_vs_nonExpanded_SE_group_boxplot2.pdf'),width=2.2,2.5)
 cc_box
 dev.off()
-
-
-
-
 
 
 
 ##########################################
 ### Compare tumor and pbmc clonotypes ####
 ##########################################
-library (scRepertoire)
-
 # Load seurat objects from tumor and PBMC ####
 # PBMC (select only PRE-polyICLC)
-srt_pbmc = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_PBMC_CITEseq2_analysis/_cellranger_filtered_Filter_400_1000_10/sampleID_harmony_cc_nCount_RNA_regressed/srt.rds')
+srt_pbmc = readRDS ('../srt_pbmc.rds')
+srt_pbmc = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_PBMC_CITEseq2_analysis/')
 srt_pbmc = srt_pbmc[,srt_pbmc$batch == 'batch2']
 
 # Tumor
@@ -731,10 +723,6 @@ srt_tumor = RenameCells(
 # Merge
 srt_merged = merge (srt_tumor, srt_pbmc)
 srt_merged$site = ifelse (grepl ('pbmc',colnames (srt_merged)), 'pbmc','tumor')
-# srt_merged = RenameCells (
-#     srt_merged,
-#     new.names = paste0 (colnames(srt_merged),'-1'))
-
 
 # Import TCR_contigs of PBMCs ####
 data.path_pbmc1 = '/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
@@ -823,10 +811,12 @@ srt_merged = combineExpression (combinedTCR,
 
 srt_merged = srt_merged[, !is.na(srt_merged$cloneSize)]
 
-cnmf_t = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/TNK_cells_subset/sampleID2_harmony/T_only_subset/sampleID2_harmony/Tm_cnmf_combined.rds')
+
+cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Tms_20"))
+
 srt_merged = ModScoreCor (
         seurat_obj = srt_merged, 
-        geneset_list = cnmf_t, 
+        geneset_list = cnmf_spectra_unique_comb, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
         listName = 'Tms', outdir = paste0(projdir,'Plots/'))
@@ -869,47 +859,29 @@ meta_P9 = srt_merged@meta.data[grep ('^P9', colnames(srt_merged)),]
 colnames (cs3) = c('CTstrict2','pbmc','tumor','class','sum','pbmc_fraction','tumor_fraction')
 meta_P9 = cbind (meta_P9, cs3[meta_P9$CTstrict,])
 
+### Find expanded clones in both tumor and blood across samples ####
 cs_df = do.call (rbind, list (meta_P7, meta_P2, meta_P9))
 cs_df = cs_df[,colnames (cs3)]
 srt_merged@meta.data = cbind (srt_merged@meta.data, cs_df[match(colnames(srt_merged), rownames(cs_df)),])
 srt_merged$site = ifelse (grepl('tumor',colnames(srt_merged)), 'tumor','pbmc')
-# cs_l = list (p4_tumor = cs1, p8_tumor = cs2, p9_tumor = cs3)
-# combinedTCR_tumor = combinedTCR[grepl ('tumor', names(combinedTCR))]
-# CTgene_shared = do.call (rbind, lapply (seq_along(combinedTCR_tumor), function(x) 
-#     data.frame (
-#       barcode = combinedTCR_tumor[[x]]$barcode[combinedTCR_tumor[[x]]$CTstrict %in% as.character(cs_l[[x]]$Var1)],
-#       clone = combinedTCR_tumor[[x]]$CTstrict[combinedTCR_tumor[[x]]$CTstrict %in% as.character(cs_l[[x]]$Var1)])))
-
-# srt_merged@meta.data = cbind (srt_merged@meta.data, CTgene_shared[match (colnames(srt_merged), CTgene_shared$barcode),])
-# srt_merged$shared = !is.na(srt_merged$clone)
-# srt_merged$shared = ifelse (srt_merged$cloneSize == 'Expanded (1 < X <= Inf)' & srt_merged$shared, 'expanded_shared','not-shared')
-# table (srt_merged$celltype, srt_merged$shared, srt_merged$sampleID4)
-#srt_merged_exp = srt_merged[, srt_merged$cloneSize %in% c('Expanded (5 < X <= Inf)','NonExpanded (1 < X <= 5)') ]
 dual = sapply (unique(srt_merged$CTstrict), function(x) all(c('pbmc','tumor') %in% srt_merged$site[srt_merged$CTstrict == x]))
 names(dual)[dual]
 ccomp_df = srt_merged@meta.data[srt_merged$CTstrict %in% names(dual)[dual], ]
-#ccomp_df = ccomp_df[!is.na(ccomp_df$class),]
 table (ccomp_df$site)
 
 
-# Check the exhaustion cnmf 
-exhaustion_module = 'Tm5'
 
-# Define exhausted-expanded clones ####
-#srt_merged = srt_merged[,srt_merged$cloneSize == 'Expanded (1 < X <= Inf)']
-#clones_l = split(srt_merged@meta.data[,exhaustion_module], paste0(srt_merged$sampleID4, srt_merged$CTstrict))
+# Compute mean exhaustion for each clonotype ####
+exhaustion_module = 'Tm5' # define exhaustion module
 clones_l = split(srt_merged@meta.data[,exhaustion_module], paste0(srt_merged$CTstrict, srt_merged$sampleID4, srt_merged$site))
 
 clones = unlist (lapply (clones_l, function(x) mean (x)))
-#names (clones) = names(clones)
 ext_cut = summary (clones)['Mean']
 
-#ccomp_df = srt_merged@meta.data[, c('sample1_fraction','sample2_fraction','class','exhausted', exhaustion_module, 'sum','CTstrict','sampleID4','CTaa','site')]
 ccomp_df = split (ccomp_df, paste0(ccomp_df$CTstrict, ccomp_df$sampleID4, ccomp_df$site))
 ccomp_df = do.call (rbind, unname(lapply (ccomp_df, function(x) data.frame (
   CTstrict = x$CTstrict[1],
   exhaustion = mean(x[,exhaustion_module]), 
-  #exhausted = x$exhausted[1], 
   class = x$class[1], 
   sampleID4 = x$sampleID4[1],
   tumor_fraction = x$tumor_fraction[1],
@@ -917,32 +889,23 @@ ccomp_df = do.call (rbind, unname(lapply (ccomp_df, function(x) data.frame (
   sum = x$sum[1],
   site = x$site[1]))))
 
-# Pair tumor and pbmc CTstrict sequences
+# Plot dual expanded clonotypes ####
 ccomp_df2 = ccomp_df[ccomp_df$class == 'dual.expanded',]
 ccomp_df2 = ccomp_df2[!is.na(ccomp_df2$class),]
 
 ccomp_df3 = reshape(ccomp_df2, idvar = "CTstrict", timevar = "site", direction = "wide")
 ccomp_df3$ex_mean = rowMeans  (ccomp_df3[,c('exhaustion.pbmc','exhaustion.tumor')])
-#ccomp_dfs = ccomp_df[ccomp_df$class == 'dual.expanded',]
 sp = ggplot (ccomp_df3, aes (
   x = exhaustion.pbmc, 
   y = exhaustion.tumor, 
   color = ex_mean, 
   size= sum.tumor#, 
-  #alpha=class2_alpha, 
-  #label = label#,
-#  color = sampleID4,
-  #stroke=2
   ))+
 geom_point(shape=19) +
 gtheme + 
 paletteer::scale_color_paletteer_c("ggthemes::Red") +
-#scale_color_manual (values = palette_sample) + 
-#geom_text_repel (size=3, max.overlaps =1000) +
- # geom_hline(yintercept=ext_cut, linetype="dashed", 
- #                color = "red", size=0.5)
 
-pdf ('Plots/exhausted_shared_clonotypes2.pdf', height = 2.6,3.5)
+pdf ('Plots/FIGURE_5O_exhausted_shared_clonotypes2.pdf', height = 2.6,3.5)
 sp
 dev.off()
 

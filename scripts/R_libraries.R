@@ -32,7 +32,9 @@ packages = c(
   'extrafont',
   'scCustomize',
   'circlize',
-  'SeuratDisk'
+  'SeuratDisk',
+  'ggridges',
+  'scRepertoire'
 )
 lapply(packages, require, character.only = TRUE)
 

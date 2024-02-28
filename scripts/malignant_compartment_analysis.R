@@ -4,11 +4,10 @@ projdir = 'scRNA/malignants/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
 
-scripts_dir = '../../scripts/'
-source (paste0(scripts_dir,'palettes.R'))
-source (paste0(scripts_dir,'ggplot_aestetics.R'))
-source (paste0(scripts_dir,'R_utils.R'))
-source (paste0(scripts_dir,'R_libraries.R'))
+source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
+source ('../../PM_scRNA_atlas/scripts/R_utils.R')
+source ('../../PM_scRNA_atlas/scripts/palettes.R')
+source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Import seurat object
 #srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/srt.rds')

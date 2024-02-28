@@ -2,12 +2,12 @@ set.seed(1234)
 
 projdir = 'scRNA/stromal/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
-setwd (projdir)
 
-source ('../../scripts/palettes.R')
-source ('../../scripts/ggplot_aestetics.R')
-source ('../../scripts/R_utils.R')
-source ('../../scripts/R_libraries.R')
+setwd (projdir)
+source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
+source ('../../PM_scRNA_atlas/scripts/R_utils.R')
+source ('../../PM_scRNA_atlas/scripts/palettes.R')
+source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
 #scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
