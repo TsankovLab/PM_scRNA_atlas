@@ -15,10 +15,9 @@ scs_sample_avg = read.csv ('../../data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
 #srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
-srt = readRDS ('../srt.rds')
+srt = readRDS ('../srt_tumor.rds')
 srt = srt[, srt$celltype_simplified %in% c('Endothelial','Fibroblasts','SmoothMuscle')]
 
-scs_sample_avg
 batch = 'sampleID'
 reductionSave = paste0(paste(batch,collapse='_'),'_harmony')
 reductionKey = paste0(paste(batch,collapse='_'),'harmonyUMAP_')

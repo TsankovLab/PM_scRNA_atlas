@@ -105,8 +105,7 @@ pdf (paste0('Plots/FIGURE_5B_sample_abundance_celltype_stacked_barplot.pdf'))
 cp
 dev.off()
 
-
-library (readxl)
+# Import cNMF modules from T cells and compute scores across TNK cells for each 
 cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Tms_20"))
 
 srt = ModScoreCor (
@@ -116,12 +115,12 @@ srt = ModScoreCor (
         pos_threshold = NULL, # threshold for fetal_pval2
         listName = 'Tms', outdir = paste0(projdir,'Plots/'))
 
+# Subset seurat object only for T cells populations
 srt_t = srt[, srt$celltype %in% c('CD4','Tregs','TFH','CD8')]
 
 ### FIGURE S5C - pairwise spearman correlation across cells ####
 ccomp_df = srt_t@meta.data[,names (cnmf_spectra_unique_comb)]
 cor_mat = cor (ccomp_df, method = 'spearman')
-
 
 # triangle heatmap
 hm = draw (Heatmap (cor_mat, 
@@ -129,9 +128,6 @@ hm = draw (Heatmap (cor_mat,
   clustering_distance_rows='euclidean' ,
   clustering_distance_columns = 'euclidean', 
   col=palette_module_correlation_fun, 
-  #row_km=2, 
-  #column_km=2,
-#  right_annotation = ha,
   border=F,
   ,
   cell_fun = function(j, i, x, y, w, h, fill) {
@@ -167,8 +163,6 @@ dev.off()
 
 
 ### FIGURE 5C - pairwise spearman correlation across samples ####
-# Generate heatmap of nmf modules correlation across samples
-# Add track showing corelation of each module to sarcomatoid module
 ccomp_df = srt_t@meta.data[,names(cnmf_spectra_unique_comb)]
 ccomp_df = aggregate (ccomp_df, by=as.list(srt_t@meta.data[,'sampleID',drop=F]), 'mean')
 rownames(ccomp_df) = ccomp_df[,1]

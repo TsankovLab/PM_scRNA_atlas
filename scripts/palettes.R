@@ -24,7 +24,7 @@ palette_celltype_simplified = c(
 
 palette_gene_expression = as.character(paletteer::paletteer_c("grDevices::Blue-Red 3", 100))
 palette_gene_expression2 = as.character(paletteer::paletteer_c("grDevices::Blue-Red 3", 100))[c(1,50,100)]
-palette_gene_expression_fun = colorRamp2(c(-1, 0, 1), c(palette_gene_expression2))
+palette_gene_expression_fun = function(x) {return(colorRamp2(c(min(x), 0, max(x)), c(palette_gene_expression2)))}
 palette_sample = c(
 '#7c10a3
 #9443b3
@@ -69,8 +69,7 @@ palette_feature_protein = c("lightgrey", "darkgreen")
 
 palette_b_cells = c(B_cells = 'mediumorchid1', GC_B_cells = 'magenta4', Plasma = 'lightskyblue1')
 
-clonotype_levels = c('Single','NonExpanded','Expanded')
-palette_clonotype = palette_clonotype = setNames (c(as.character (paletteer::paletteer_d("beyonce::X58"))),c(clonotype_levels))
+palette_clonotype = setNames (c(as.character (paletteer::paletteer_d("beyonce::X58"))),c('NonExpanded','Small','Large'))
 #palette_clonotype = palette_clonotype[1:4]
 
 pallette_pbmc_celltype = setNames (rev(as.character(paletteer::paletteer_d("khroma::smoothrainbow")[c(1,3,5,7,9,11,13,15)])), c('CD4','CD8','ILC','MAIT','NK','NK Proliferating','NK_CD56bright','Treg'))

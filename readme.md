@@ -10,6 +10,7 @@ To install this repository, run the following command:
 git clone https://github.com/TsankovLab/PM_scRNA_atlas.git
 
 ```
+and download in the same folder seurat objects of tumor and pbmc scRNA from GSE190597 
 
 These are the R packages required to reproduce the scRNA analysis. Additionally, to install cNMF (https://github.com/dylkot/cNMF ) and SCENIC (https://github.com/aertslab/SCENIC) softwares please refer to the corresponding GitHub pages
 
@@ -32,7 +33,7 @@ harmony (v0.1.0) (https://portals.broadinstitute.org/harmony/articles/quickstart
 hdWGCNA (v0.2.18) (https://smorabit.github.io/hdWGCNA/).  
 ggplot2 (v3.4.4) (https://ggplot2.tidyverse.org).  
 tidyverse (v2.0.0).    
-patchwork (v1.1.2). 
+patchwork (v1.1.2).  
 scRepertoire (v2.0.0) (https://github.com/ncborcherding/scRepertoire)
 
 ```R

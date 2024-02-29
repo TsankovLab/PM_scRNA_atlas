@@ -1,18 +1,17 @@
 ### SCRIPT TO REPRODUCE FIGURES: 1D, S1A, S1B, S1C, 3G, 4C, 4F, 6B
 set.seed(1234)
 
-projdir = 'scRNA/' # define project directory
-system (paste('mkdir -p',projdir))
+projdir = 'scRNA/main/' # define project directory
+system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
 
-scripts_dir = '../../scripts/'
-source (paste0(scripts_dir,'palettes.R'))
-source (paste0(scripts_dir,'ggplot_aestetics.R'))
-source (paste0(scripts_dir,'R_utils.R'))
-source (paste0(scripts_dir,'R_libraries.R'))
+source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
+source ('../../PM_scRNA_atlas/scripts/R_utils.R')
+source ('../../PM_scRNA_atlas/scripts/palettes.R')
+source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load Seurat object
-srt = readRDS (paste0(projdir,'srt_main.rds'))
+srt = readRDS (paste0(projdir,'srt_tumor.rds'))
 
 
 ### FIGURE 1D ####
