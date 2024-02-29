@@ -1,6 +1,6 @@
 set.seed(1234)
 
-projdir = '/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/reproduction2/scRNA/myeloid/'
+projdir = 'scRNA/myeloid/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
 source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
@@ -9,11 +9,11 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
-#scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
+
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
+
 srt_tumor = readRDS ('../srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype_simplified2 %in% c('Myeloid','pDC')]
 

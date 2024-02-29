@@ -10,13 +10,11 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
-#scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
-scs_sample_avg = read.csv ('../../data/scs_score_per_sample.csv', row.names=1)
+scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
-srt = readRDS ('../srt_tumor.rds')
-srt = srt[, srt$celltype_simplified %in% c('Endothelial','Fibroblasts','SmoothMuscle')]
+srt_tumor = readRDS ('../srt_tumor.rds')
+srt = srt_tumor[, srt_tumor$celltype_simplified %in% c('Endothelial','Fibroblasts','SmoothMuscle')]
 
 batch = 'sampleID'
 reductionSave = paste0(paste(batch,collapse='_'),'_harmony')
@@ -93,7 +91,6 @@ dp
 dev.off()  
 
 ### subset endothelial ####
-library (readxl)
 srt_endo = srt[,srt$celltype %in% c('Artery','PLVAP','Vein')]
 cnmf_spectra_unique_comb = as.list (read_excel( "../../data/cnmf_per_compartment.xlsx", sheet = "Ems_20"))
 
@@ -199,13 +196,13 @@ dev.off()
 ############################################################################
 
 # Load He dataset ####
-Convert("/ahg/regevdata/projects/ICA_Lung/Bruno/Public_data/fetal_lung_endothelial/C3filtered.h5ad", "/ahg/regevdata/projects/ICA_Lung/Bruno/Public_data/fetal_lung_endothelial/h5seurat")
-srt_fetal = LoadH5Seurat("/ahg/regevdata/projects/ICA_Lung/Bruno/Public_data/fetal_lung_endothelial/h5seurat")
+Convert("fetal_lung_endothelial_h5seurat")
+srt_fetal = LoadH5Seurat("fetal_lung_endothelial_h5seurat")
 srt_fetal$celltype = srt_fetal$new_celltype
 head (srt_fetal)
 
 # Load Travaglini dataset ####
-srt_adult = get(load("/ahg/regevdata/projects/ICA_Lung/Results/Krasnow/lung_and_blood_gcdata.Rda"))
+srt_adult = readRDS("travaglini_lung_atlas.rds")
 srt_adult = UpdateSeuratObject (srt_adult)
 srt_adult = srt_adult[, srt_adult$free_annotation %in% c('Artery','Bronchial Vessel 1','Bronchial Vessel 2','Capillary','Capillary Aerocyte','Capillary Intermediate 1','Capillary Intermediate 2','Vein','Vascular Smooth Muscle')]
 srt_adult$sampleID = srt_adult$sample
@@ -224,15 +221,19 @@ low_celltype_filter = names(table (srt_fetal_adult$celltype)[table (srt_fetal_ad
 srt_fetal_adult = srt_fetal_adult[,srt_fetal_adult$celltype %in% low_celltype_filter]
 
 # FIGURE 3E - make boxplot of fetal module score ####
-fetal_endo_MPM_deg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/Endothelial_subset/sampleID2_harmony_nCount_RNA_regressed/DEG_celltype_logFC_0.25_padj_0.01/DEG.csv')
-fetal_endo_MPM_deg_genes = fetal_endo_MPM_deg[fetal_endo_MPM_deg$cluster == 'COL4A1',]
-fetal_endo_MPM_deg_genes = fetal_endo_MPM_deg_genes[fetal_endo_MPM_deg_genes$avg_log2FC > 0,]
-fetal_endo_MPM_deg_genes = fetal_endo_MPM_deg_genes[fetal_endo_MPM_deg_genes$p_val_adj < 0.05, ]
-fetal_endo_MPM_deg_genes = head (fetal_endo_MPM_deg_genes[order (fetal_endo_MPM_deg_genes$p_val_adj), 'gene'],15)
+
+# Find DEG in PLVAP EC 
+Idents(srt_endo) = 'celltype'
+degClusters = FindAllMarkers (srt_endo, max.cells.per.ident = 1000, min.pct = .1, logfc.threshold = .25, verbose = T)
+
+fetal_endo_PM_deg_genes = degClusters[fetal_endo_MPM_deg$cluster == 'PLVAP',]
+fetal_endo_PM_deg_genes = fetal_endo_PM_deg_genes[fetal_endo_PM_deg_genes$avg_log2FC > 0,]
+fetal_endo_PM_deg_genes = fetal_endo_PM_deg_genes[fetal_endo_PM_deg_genes$p_val_adj < 0.05, ]
+fetal_endo_PM_deg_genes = head (fetal_endo_PM_deg_genes[order (fetal_endo_PM_deg_genes$p_val_adj), 'gene'],15)
 
 srt_fetal_adult  = ModScoreCor (
         seurat_obj = srt_fetal_adult, 
-        geneset_list = list(endo_fetal = fetal_endo_MPM_deg_genes), 
+        geneset_list = list(endo_fetal = fetal_endo_PM_deg_genes), 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
         listName = 'fetal', outdir = paste0(projdir,'Plots/'))
@@ -263,21 +264,21 @@ srt_endo$location = 'pleura'
 srt_endo$free_annotation = srt_endo$celltype
 shared_feat = rownames(srt_endo)[rownames(srt_endo) %in% rownames(srt_adult)]
 
-srt_adult_mpm = merge (srt_endo[shared_feat,], srt_adult[shared_feat,])
-srt_adult_mpm = NormalizeData (object = srt_adult_mpm, normalization.method = "LogNormalize", scale.factor = 10000)
+srt_adult_PM = merge (srt_endo[shared_feat,], srt_adult[shared_feat,])
+srt_adult_PM = NormalizeData (object = srt_adult_PM, normalization.method = "LogNormalize", scale.factor = 10000)
 
-srt_adult_mpm$celltype = gsub (' ','_',srt_adult_mpm$celltype)
+srt_adult_PM$celltype = gsub (' ','_',srt_adult_PM$celltype)
 
 nfeat = 2000
-srt_adult_mpm_distal = srt_adult_mpm[,srt_adult_mpm$location %in% c('pleura','distal')]
+srt_adult_PM_distal = srt_adult_PM[,srt_adult_PM$location %in% c('pleura','distal')]
 
 # Run seurat integration ####
-DefaultAssay(srt_adult_mpm_distal) = 'RNA'
+DefaultAssay(srt_adult_PM_distal) = 'RNA'
 nfeat_int = 3000
 k.weight = 30
 metaGroupNames = c('location')
 
-srtL = SplitObject (srt_adult_mpm_distal, split.by = metaGroupNames[1])
+srtL = SplitObject (srt_adult_PM_distal, split.by = metaGroupNames[1])
 
 # normalize and identify variable features for each dataset independently
 srtL = lapply(X = srtL, FUN = function(x) {
@@ -290,14 +291,14 @@ srtL = lapply(X = srtL, FUN = function(x) {
 features = SelectIntegrationFeatures (object.list = srtL, nfeatures = nfeat_int)
 
 anchors = FindIntegrationAnchors (object.list = srtL, anchor.features = features)
-srt_adult_mpm_distal = IntegrateData (anchorset = anchors, k.weight=k.weight)
+srt_adult_PM_distal = IntegrateData (anchorset = anchors, k.weight=k.weight)
 # specify that we will perform downstream analysis on the corrected data note that the
 # original unmodified data still resides in the 'RNA' assay
-DefaultAssay(srt_adult_mpm_distal) = "RNA"
+DefaultAssay(srt_adult_PM_distal) = "RNA"
 
 library (scran)
-sce = SingleCellExperiment (list(counts=srt_adult_mpm_distal@assays$RNA@counts, logcounts = srt_adult_mpm_distal@assays$RNA@data),
-rowData=rownames(srt_adult_mpm_distal)) 
+sce = SingleCellExperiment (list(counts=srt_adult_PM_distal@assays$RNA@counts, logcounts = srt_adult_PM_distal@assays$RNA@data),
+rowData=rownames(srt_adult_PM_distal)) 
 sce = modelGeneVar(sce)
 
 # remove batchy genes
@@ -305,7 +306,7 @@ batchy_genes = c('RPL','RPS','MT-','MALAT')
 sce = sce[!apply(sapply(batchy_genes, function(x) grepl (x, rownames(sce))),1,any),]
 vf = getTopHVGs(sce, n=nfeat)
     
-gcdata.avg = AverageExpression (srt_adult_mpm_distal, group.by = 'celltype',return.seurat = T) # ,assays = 'integrated')
+gcdata.avg = AverageExpression (srt_adult_PM_distal, group.by = 'celltype',return.seurat = T) # ,assays = 'integrated')
 VariableFeatures(gcdata.avg) = vf
 DefaultAssay (gcdata.avg) = 'integrated'
 gcdata.avg <- ScaleData(gcdata.avg)
@@ -316,9 +317,9 @@ library (circlize)
 
 corr = cor(mtx,method = 'spearman')
 
-srt_adult_mpm_distal$project[is.na(srt_adult_mpm_distal$project)] = 'PM'
-ha = HeatmapAnnotation (' ' = srt_adult_mpm_distal$project[match (rownames(corr),srt_adult_mpm_distal$celltype)], col=list(' ' = pallette_fetal_vs_adult))
-ha2 = rowAnnotation (' ' = srt_adult_mpm_distal$project[match (rownames(corr),srt_adult_mpm_distal$celltype)], col=list(' ' = pallette_fetal_vs_adult))
+srt_adult_PM_distal$project[is.na(srt_adult_PM_distal$project)] = 'PM'
+ha = HeatmapAnnotation (' ' = srt_adult_PM_distal$project[match (rownames(corr),srt_adult_PM_distal$celltype)], col=list(' ' = pallette_fetal_vs_adult))
+ha2 = rowAnnotation (' ' = srt_adult_PM_distal$project[match (rownames(corr),srt_adult_PM_distal$celltype)], col=list(' ' = pallette_fetal_vs_adult))
 rownames (corr) = gsub ('_',' ', rownames(corr))
 rownames (corr) = gsub ('PLVAP','PLVAP+ EC', rownames(corr))
 colnames (corr) = gsub ('_',' ', colnames(corr))
@@ -349,7 +350,7 @@ srt_fib = ModScoreCor (
 
 ### FIGURE S3E - pairwise CN correlations across sample and cells ####
 # Run correlation across samples 
-scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
+scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 ccomp_df = srt_fib@meta.data[,names(cnmf_spectra_unique_comb)]
 ccomp_df = aggregate (ccomp_df, by=as.list(srt_fib@meta.data[,'sampleID4',drop=F]), 'mean')
 rownames(ccomp_df) = ccomp_df[,1]
@@ -426,7 +427,7 @@ dev.off()
 # Load Travaglini dataset ####
 srt_fib$status = 'tumor'
 srt_fib$location = 'pleura'
-srt_adult <- get(load("/ahg/regevdata/projects/ICA_Lung/Results/Krasnow/lung_and_blood_gcdata.Rda"))
+srt_adult = readRDS("travaglini_lung_atlas.rds")
 srt_adult = UpdateSeuratObject (srt_adult)
 srt_adult = srt_adult[, srt_adult$free_annotation %in% c('Alveolar Fibroblast','Adventitial Fibroblast','Fibromyocyte','Myofibroblast','Pericyte','Lipofibroblast')]
 srt_adult$sampleID4 = srt_adult$sample
@@ -493,7 +494,7 @@ dev.off()
 
 ### FIGURE 3F - SCENIC only on MPM endothelial ####
 # Import results
-auc_mtx <- read.csv('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/Endothelial_subset/sampleID2_harmony_nCount_RNA_regressed/SCENIC/vg_2000_mw_tss500bpMPM/auc_mtx.csv')
+auc_mtx <- read.csv('../../PM_scRNA_atlas/data/SCENIC_Endothelial_auc_mtx.csv')
 rownames (auc_mtx) = auc_mtx[,1]
 auc_mtx = auc_mtx[,-1]
 colnames (auc_mtx) = paste0('SCENIC_',colnames(auc_mtx))
@@ -505,7 +506,7 @@ bc_scenic = gsub ('\\.','-', bc_scenic)
 celltypes_scenic = srt_endo$celltype
 
 # Generate heatmap of TFs ####
-motifs_table = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/Endothelial_subset/sampleID2_harmony_nCount_RNA_regressed/SCENIC/vg_2000_mw_tss500bpMPM/motifs.csv', skip=2) 
+motifs_table = read.csv ('../../PM_scRNA_atlas/data/SCENIC_Endothelial_motifs.csv', skip=2) 
 
 pValThreshold = 1e-2
 auc_mtx_avg = aggregate (auc_mtx, by=list(unname(celltypes_scenic)), mean)

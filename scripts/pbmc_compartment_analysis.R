@@ -18,7 +18,7 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_PBMC_CITEseq2_analysis/_cellranger_filtered_Filter_400_1000_10/sampleID_harmony_cc_nCount_RNA_regressed/srt.rds')
+
 srt = readRDS ('../srt_pbmc.rds')
 
 # Normalize, scale and compute UMAP after correcting for sampleID batch with harmony
@@ -261,12 +261,13 @@ dev.off()
 #### Load PBMC TCR-sequencing from biopsy samples ####
 meta_pbmc = srt@meta.data[srt$batch == 'batch2',]
 meta_pbmc$sampleID = as.character (meta_pbmc$sampleID)
-data.path_pbmc1 = '/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
-data.path_pbmc2 = '/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-2/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
+
+# Unzip TCR contig files before this
+data.path_pbmc1 = 'GSM7114958_PBMC_Processed_TCR-2-1_TCR_all_contig_annotations.csv'
+data.path_pbmc2 = 'GSM7114959_PBMC_Processed_TCR-2-2_TCR_all_contig_annotations.csv'
 vdj.dirs = c(data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####
-#meta_pbmc$hash_pool = sapply (meta_pbmc$pool_batch, function(x) unlist(strsplit (x, '\\-'))[2])
 meta_pbmc$hash_pool = gsub ('_batch2','', meta_pbmc$pool_batch)
 
 # Check barcodes per pool are unique ####
@@ -286,8 +287,8 @@ tcrL_pbmc = split (tcrL_pbmc, tcrL_pbmc$sampleID)
 names (tcrL_pbmc) = paste0(names(tcrL_pbmc) ,'_pbmc')
 
 # Load PBMC TCR-sequencing from resection samples ####
-data.path1 = '/ahg/regevdata/projects/lungCancerBueno/10x/immunai_transfer_2020-03-20/processed/30-472307723_2021-01-05-2-1_TCR_all_contig_annotations.csv'
-data.path2 = '/ahg/regevdata/projects/lungCancerBueno/10x/immunai_transfer_2020-03-20/processed/30-472307723_2021-01-05-2-2_TCR_all_contig_annotations.csv'
+data.path1 = '30-472307723_2021-01-05-2-1_TCR_all_contig_annotations.csv'
+data.path2 = '30-472307723_2021-01-05-2-2_TCR_all_contig_annotations.csv'
 vdj.dirs = c(data.path1, data.path2)
 meta_pbmc_batch1 = srt@meta.data[srt$batch == 'batch1',]
 meta_pbmc_batch1$sampleID = as.character (meta_pbmc_batch1$sampleID)

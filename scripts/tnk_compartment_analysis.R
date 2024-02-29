@@ -10,13 +10,11 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
-#scs_sample_avg = read.csv ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/scs_score_per_sample.csv', row.names=1)
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/stroma_subset/sampleID2_harmony/srt.rds')
-srt_main = readRDS ('../srt.rds')
-srt = srt_main[, srt_main$celltype_simplified %in% c('T_cells','NK')]
+srt_tumor = readRDS ('../srt_tumor.rds')
+srt = srt_tumor[, srt_tumor$celltype_simplified %in% c('T_cells','NK')]
 
 # load palettes
 # palettes = readRDS (paste0('../../palettes.rds'))
@@ -338,7 +336,7 @@ pdf ('Plots/FIGURE_5G_MHCII_markers.pdf',2.5,width = 2.8)
 box
 dev.off()
 
-srt_b = srt_main[, srt_main$celltype_simplified %in% c('B_cells','Plasma')]
+srt_b = srt_tumor[, srt_tumor$celltype_simplified %in% c('B_cells','Plasma')]
 
 batch = 'sampleID'
 reductionSave = paste0(paste(batch,collapse='_'),'_harmony')
@@ -479,13 +477,13 @@ dev.off()
 ### TCR analysis ####
 #####################
 # Import TCR of tumors
-data.path_P7_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
-data.path_P6_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_7/count_matrices/TD005870_AlexanderTsankov/Tsankov-meso-prepolyic-01212022/outs/per_sample_outs/Tsankov-meso-prepolyic-01212022/vdj_t/filtered_contig_annotations.csv'
-data.path_P2_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P9_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P11_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_11/230714/ZHAO8mesothelioma/cellranger_output/ALTS04_Zhao8scSeq_0_v1/per_sample_outs/ALTS04_Zhao8scSeq_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P12_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_12/230718/cellranger_output/ALTS04_Zhao9scSeq_0_v1/per_sample_outs/ALTS04_Zhao9scSeq_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P13_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_13/231101/ZHAO12mesothelioma/cellranger_output/ALTS04_Zhao12scSeq_0_v1/per_sample_outs/ALTS04_Zhao12scSeq_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P7_tumor = 'patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
+data.path_P6_tumor = 'patient_7/count_matrices/TD005870_AlexanderTsankov/Tsankov-meso-prepolyic-01212022/outs/per_sample_outs/Tsankov-meso-prepolyic-01212022/vdj_t/filtered_contig_annotations.csv'
+data.path_P2_tumor = 'patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P9_tumor = 'patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P11_tumor = 'patient_11/230714/ZHAO8mesothelioma/cellranger_output/ALTS04_Zhao8scSeq_0_v1/per_sample_outs/ALTS04_Zhao8scSeq_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P12_tumor = 'patient_12/230718/cellranger_output/ALTS04_Zhao9scSeq_0_v1/per_sample_outs/ALTS04_Zhao9scSeq_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P13_tumor = 'patient_13/231101/ZHAO12mesothelioma/cellranger_output/ALTS04_Zhao12scSeq_0_v1/per_sample_outs/ALTS04_Zhao12scSeq_0/vdj_t/filtered_contig_annotations.csv'
 
 
 vdj.dirs = c(
@@ -690,11 +688,9 @@ dev.off()
 # Load seurat objects from tumor and PBMC ####
 # PBMC (select only PRE-polyICLC)
 srt_pbmc = readRDS ('../srt_pbmc.rds')
-srt_pbmc = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_PBMC_CITEseq2_analysis/')
 srt_pbmc = srt_pbmc[,srt_pbmc$batch == 'batch2']
 
 # Tumor
-#srt_tumor = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/srt.rds')
 srt_tumor = srt[,srt$sampleID %in% c('P7','P2','P9')]
 
 # Harmonize barcode suffixes and merge seurat object ####
@@ -719,8 +715,8 @@ srt_merged = merge (srt_tumor, srt_pbmc)
 srt_merged$site = ifelse (grepl ('pbmc',colnames (srt_merged)), 'pbmc','tumor')
 
 # Import TCR_contigs of PBMCs ####
-data.path_pbmc1 = '/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
-data.path_pbmc2 = '/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-2/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
+data.path_pbmc1 = '2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
+data.path_pbmc2 = '2023-03-29-1-2/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
 vdj.dirs = c (data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####
@@ -748,9 +744,9 @@ tcrL_pbmc = tcrL_pbmc[sapply (tcrL_pbmc, nrow) > 1]
 names (tcrL_pbmc) = paste0(names(tcrL_pbmc) ,'_pbmc')
 
 # Import TCR of tumors ####
-data.path_P7_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
-data.path_P2_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P9_tumor = '/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P7_tumor = 'patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
+data.path_P2_tumor = 'patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P9_tumor = 'patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv'
 
 vdj.dirs = c (data.path_P7_tumor, data.path_P2_tumor, data.path_P9_tumor)
 tcrL_tumor = lapply (vdj.dirs, function(x) read.csv(x))
