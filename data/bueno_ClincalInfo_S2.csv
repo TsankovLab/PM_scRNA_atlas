@@ -1,0 +1,218 @@
+Tumor ID,Matched Normal ID,DNA Tumor ID,DNA Matched Normal ID,RNA Tumor ID,Primary Tissue,Tissue Diagnosis,HistologyReduced,ConsensusCluster,Epithelioid_for_SA,Sarcomatoid_for_SA,Exome,Targeted exome (gene panel -SPET),RNA-seq,2.5M Array,WGS (tumor and normal sequenced),% Epithelioid,% Sarcomatoid,Sex,Smoking History,Asbestos exposure,Fibers/gm lung,Status,Survival from surgery (years),Age at surgery (years),Stage,Type of Surgery,preop Treatment (1= treated; 0= untreated),Type of pre-op Treatment,FISH chrom3,FISH chrom22,NF2 (FISH),NF2 status 2.5M array,NF2 fusion,PD-L1 expression (RPKM)
+X602PT,602XN,17881597,17881598,17865214,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,F,"yes, quit 35 yrs ago",yes,,d,2.28,66.9,T3N0Mx (7th),RPDC,0,,,,normal,,,1.499362725
+X612PT,612XN,17881609,17881610,17865223,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,none,none known,,d,1.29,49.1,pT2N1Mx,REPP,0,,,,abnormal,,,2.380689125
+X620PT,620XN,17881619,17881620,17865228,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,3 pack years,yes,,a,5.94,63.8,pT1NxMx,RPDC,0,,,,normal,,,0.606692663
+X625PT,625XN,17881623,17881624,17865231,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,,unknown,,d,0.75,71.3,pT3N2Mx,LPDC,0,,,,abnormal,,,1.146569812
+X639PT,639XN,17881631,17881632,17865240,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,45 pack years,yes,,d,2.91,64.2,pT2N2Mx,RPDC,0,,,,abnormal,,,1.131415076
+X648PT,648XN,17881639,17881640,17865246,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,remote social,none known,,d,2.95,70.9,pT3N0Mx,RPDC,0,,,,abnormal,,,0.873921925
+M15PT,M15XN,5141217,5141218,9259716,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,30 pack years,yes,,d,0.37,51,,L EPP,0,,,del 22q,NA,loss,,0.750789911
+M21PT,M21XN,1538684,1538685,9259742,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,10 pack years; quit 1966,yes,,d,1,64.8,T3 N0 MX (6th),R EPP,0,,del 3p,del 22q,NA,loss,,1.865468858
+M27PT,M27XN,1538672,1538673,9259753,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,Y,100,0,M,26 pack years; quit 1989,yes,94,d,1.44,64.7,T2 N1 MX (6th),R EPP,0,,3,del 22q,NA,loss,,0.493907724
+M28PT,M28XN,1538682,1538683,9259746,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,30 pack years; quit 1977,yes,,d,1.12,70.7,,R P/DC,0,,"del 3p, add 3",del 22q,NA,,,1.543316338
+M32PT,M32XN,5141215,5141216,9259713,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,15 pack years; quit 1979,yes,742,d,1.2,64.3,,R EPP,0,,,,abnormal,,fusion,2.886395385
+M37PT,M37XN,1538652,1538653,9259708,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,,d,0.73,65,T3 N2 MX (6th),L EPP,0,,,,normal,loss,,0.855678553
+M3PT,M3XN,1538644,1538645,9259676,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,483,d,0.02,75.5,T2 N1 MX (6th),R EPP,0,,,,NA,loss,,0.58674473
+M40PT,M40XN,5141287,5141288,9259724,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,,d,0.48,66.3,T3 N1 MX (6th),L EPP,0,,,,abnormal,loss,,18.24063186
+M41PT,M41XN,5141271,5141272,9259692,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,44 pack years; quit 1992,yes,,d,2.16,57.3,T2 N1 MX (6th),R EPP,0,,,,abnormal,loss,,5.18966331
+M45PT,M45XN,1538638,1538639,9259711,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,,,100,0,F,33 pack years; quit 1992,yes,,d,4.01,58.8,T2 N0 MX (6th),R EPP,0,,,,abnormal,,fusion,21.99182664
+M46PT,M46XN,5141201,5141202,9259677,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,,d,1.06,66.7,T3 N0 MX (6th),L EPP,0,,,,abnormal,loss,fusion,0.581037287
+M49PT,M49XN,1538634,1538635,9259667,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,267,d,0.34,84.2,yT3 N0 MX (6th),L P/DC,0,,,,abnormal,loss,,0.526129272
+M54PT,M54XN,5141249,5141250,9259732,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,36,d,0.48,63.7,,L EPP,0,,,,abnormal,,,0.571798084
+M60PT,M60XN,5141251,5141252,9259735,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,F,none,none,,d,0.68,54.1,T4 N1 MX (6th),R EPP,0,,,,abnormal,,,0.47596378
+M630PT,M630XN,18036156,18036187,17865235,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,,Y,Y,,,>99,0,F,10 pack years,none known,,d,2.55,67.2,pT4NxMx,RPDC,0,,,,normal,,fusion,2.703477997
+M631PT,,,,17865236,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,,Y,,,100,0,F,4 pack years,unknown,,d,0.45,30.7,pT2N0Mx,RPDC,0,,,,abnormal,,,1.289045611
+M632PT,M632XN,18036157,18036188,17865274,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,F,none,yes,3,d,0.28,58.9,ypT4N2Mx,RPDC,1,cis-pem x4,del 3p,del 22q,NA,,,0.762284424
+M653PT,M653XN,18036165,18036196,17865248,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,none,yes,,d,0.77,82.8,pT2N0Mx,RPDC,0,,,del 22q,NA,,,0.587884618
+M663PT,M663XN,18036168,18036199,17865281,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,none,none known,,d,1.11,61.1,ypT4N2,REPP,1,cis-pemx5 ,,,abnormal,,,2.513004687
+M679PT,M679XN,18604995,18604996,17865268,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,35 pack years,yes,175,d,1.05,75.4,pT3N1,REPP,0,,,,abnormal,,,0.985890201
+M690PT,M690XN,18604954,18604915,18604876,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,F,1 pack years,yes,,d,0.53,65.7,ypT4N2Mx,RPDC,1,pem-cisx6,,,abnormal,,,1.875517671
+M707PT,M707XN,18604971,18604932,18604893,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,100,0,M,5 pack years,yes,,d,1.34,76.8,pT2N0Mx,RPDC,0,,,,abnormal,,,4.287709533
+M74PT,M74XN,5141239,5141240,9259697,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,40 pack years,yes,,d,0.87,86,,R P/DC,0,,,,normal,,,0.252756077
+M76PT,M76XN,5141185,5141186,9259720,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,none,,d,1.22,66.4,T4 N0 MX (6th),L EPP,0,,add 3q27,del 22q,NA,,,1.574204004
+M87PT,M87XN,5141275,5141276,9259745,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,Y,100,0,M,"40 years, 1/4 pack per day, quit 2009",possible,88,d,0.98,58.5,T3 N2 (7th),R EPP,0,,,,abnormal,,,0.868794256
+M93PT,M93XN,1538614,1538615,9259664,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,Y,100,0,F,none,none known,0,a,3.96,41.4,pT3 N0 (7th),L EPP,0,,,,abnormal,loss,,0.742902542
+M95PT,M95XN,5141179,5141180,9259699,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,none,yes,,d,0.94,68.3,T4 N2 (7th) ,R EPP,0,,,,abnormal,loss,,1.043355381
+M9PT,M9XN,5141263,5141264,9259734,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,100,0,M,15 pack years; quit 1995,yes,197,a,7.88,45.8,T2 N1 MX (6th),L EPP,0,,,,normal,,,0.492560359
+M2PT,M2XN,5141193,5141194,9259744,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,Y,,Y,Y,,95,5,M,none,none,5,d,0.67,71.1,T3 N2 (7th),L P/DC,0,,,del 22q,NA,loss,,2.415818296
+M43PT,M43XN,5141187,5141188,9259725,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,95,5,M,none,yes,,d,0.42,82.3,,Thoracotomy,0,,del 3p,del 22q,NA,loss,,4.632072308
+X628PT,628XN,17881625,17881626,17865233,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,90,10,M,17 pack years,yes,,d,3.02,34.1,pT3N0Mx,LEPP,0,,,,abnormal,,,1.756285131
+X662PT,662XN,17881655,17881656,17865256,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,,Y,Y,,,90,10,M,15 pack years,yes,,a,3.33,56.8,pT3N2Mx,REPP,0,,,,normal,,,0.654149582
+M11PT,M11XN,5141169,5141170,9259670,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,90,10,M,none,yes,624,d,1.07,68.2,T2 N1 MX (6th),L EPP,0,,del 3p,del 22q,NA,loss,,1.114772328
+M29PT,M29XN,1538662,1538663,9259730,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,Y,90,10,F,5 pack years,yes,3,d,1.56,71,T2 N0 MX (6th),L EPP,0,,"del 3p, add 3",del 22q,NA,,,14.35315992
+M604PT,,,,17865216,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,,Y,,,90,10,F,none,none known,,a,8.39,27.3,pT0NxMx,RPDC,0,,del3,del 22,NA,,,5.274226843
+M640PT,M640XN,18036159,18036190,17865273,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,90,10,M,none,yes,,d,0.77,72.1,ypT3N2Mx,RPDC,1,cis-pem x4,,,abnormal,,,1.03676388
+M686PT,M686XN,18604950,18604911,18604872,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,,Y,Y,,,90,10,M,none,yes,196,d,0.36,64.2,ypT2N0Mx,REPP,1,cis-pemx7,del 3,del 22q,,,,0.794723366
+M82PT,M82XN,5141221,5141222,9259727,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,90,10,M,"20 pack-year, quit 2002",none known,,d,2.22,67.8,positive level8 nodes,Right radical visceral and parietal pleurectomy,0,,,,abnormal,loss,,1.354358824
+M98PT,M98XN,5141199,5141200,9259659,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,Y,,Y,Y,,90,10,M,40 yr intermittent cigar smoking,39 years known,,d,2.05,65.2,pT4 N1 (7th),R EPP,0,,del 3q25q26,,abnormal,loss,,0.979582702
+M47PT,M47XN,1538632,1538633,9259666,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,,,85,15,F,none,yes,,d,1.57,84.5,,P/DC,0,,,,abnormal,,,2.966011312
+M664PT,M664XN,18036169,18036200,17865271,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,,Y,Y,,,85,15,M,none,yes,,d,2.1,76.9,ypT4N0Mx,RPDC,1,pem-cis x6,,,abnormal,,,0.987084232
+M1PT,M1XN,5141181,5141182,9259715,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,80,20,F,20 pack years; quit 1987,none,,a,4.78,60.8,,R P/DC,0,,,,abnormal,loss,,0.453028065
+M36PT,M36XN,5141233,5141234,9259674,Lung,Mesothelioma,Epithelioid,Biphasic-E,yes,no,Y,,Y,Y,,80,20,M,none,none,,d,1.51,73.4,T3 N0 MX (6th),R EPP,0,,,,normal,,,0.701242719
+M627PT,,,,17865232,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,,,Y,,,80,20,M,none,yes,,d,1.21,64.5,pT3N0Mx,LEPP,0,,,,abnormal,,,2.245086439
+M85PT,M85XN,5141245,5141246,9259706,Lung,Mesothelioma,Biphasic,Biphasic-E,yes,no,Y,,Y,Y,,80,20,M,cigars every now and then only,none known,38,d,0.76,69.4,T3 N0 MX (7th edition),R EPP,0,,,,abnormal,loss,,11.49992607
+M50PT,M50XN,5141253,5141254,9259749,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,Y,,Y,Y,,75,25,M,quit 1979,yes,,d,2.04,61.4,T2 N2 MX (6th),L EPP,0,,,,normal,loss,,0.830695982
+M53PT,M53XN,5141189,5141190,9259731,Lung,Mesothelioma,Epithelioid,Biphasic-E,no,no,Y,,Y,Y,,75,25,M,15 pack years; still current as of 2008,yes,34,d,0.63,63.2,pT4 N3 MX (6th),L EPP,0,,,,abnormal,loss,,3.112076702
+X647PT,647XN,17881637,17881638,17865245,Lung,Mesothelioma,Epithelioid,Biphasic-E,no,no,,Y,Y,,,70,30,M,none,none known,,d,2.09,50.6,pT3N2Mx,REPP,0,,del 3p,del 22,NA,,,0.385061868
+M659PT,M659XN,18036167,18036198,17865253,Lung,Mesothelioma,Epithelioid,Biphasic-E,no,no,,Y,Y,,,70,30,M,remote social sporadic,yes,392,d,0.48,65.6,pT3N2Mx,LEPP,0,,,,abnormal,,,1.245954897
+M614PT,M614XN,18036153,18036184,17865278,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,65,35,M,none,yes,895,d,0.64,62,ypT4N1Mx,REPP,1,cis-pemx3,,del 22p,abnormal,,,0.871646908
+M697PT,M697XN,18604961,18604922,18604883,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,65,35,M,none,yes,,d,0.47,69.5,pT3N2Mx,LEPP,0,,,extra copies,abnormal,,,1.105993543
+M714PT,M714XN,18604978,18604939,18604900,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,65,35,M,5 pack years,yes,,a,0.16,73.1,ypT3N2Mx,LEPP,1,pem-carbo x3,,del 22,,,,1.002799376
+M79PT,M79XN,5141235,5141236,9259675,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,Y,,Y,Y,,65,35,M,"1 pack per week for 5 years, quit 1970","none known, but was in Navy for 2 years",,d,1.38,81.3,T3 NX MX (6th),Left partial visceral and parietal pleurectomy,0,,,,abnormal,loss,,1.908166268
+X611PT,611XN,17881607,17881608,17865222,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,60,40,M,none,yes,,d,1.06,75,pT2N0Mx,REPP,0,,,del 22,,,,1.298865755
+M13PT,M13XN,1538622,1538623,9259739,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,Y,,Y,Y,Y,60,40,M,18 pack years,yes,,d,1.75,51.8,T3 N0 MX (6th),R EPP,0,,,,abnormal,loss,,4.104509017
+M710PT,M710XN,18604974,18604935,18604896,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,60,40,F,17 pack years,none known,,a,1.09,51.9,pT2N0Mx,RPDC,0,,,,abnormal,,,0.662433496
+M86PT,M86XN,1538616,1538617,9259694,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,Y,,Y,Y,Y,60,40,F,none,none known,,d,0.25,33.3,T3 N0 MX (6th),R EPP,0,,del 3p,del 22p,NA,loss,,3.759798746
+M685PT,M685XN,18604949,18604910,18604871,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,50,50,M,70 pack years,yes,46,d,0.55,74.4,ypT3N1Mx,REPP,1,cis-pemx4  ,,del 22q,,,,0.471758108
+M97PT,M97XN,1538654,1538655,9259710,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,Y,,Y,Y,,50,50,F,none,"none known, but husband used to install asbestos pipe",,d,0.26,68.2,pT3 N0 (7th),L EPP,0,,,,,,,4.634267553
+M656PT,M656XN,18604991,18604992,17865250,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,Y,Y,,,30,70,M,none,none known,,a,0.22,63.7,pT3N1Mx,REPP,0,,,,abnormal,,,0.309399666
+M641PT,M641XN,,,17865241,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,,,Y,,,25,75,M,36 pack years,yes,,d,0.68,80.5,pT4N0Mx,RPDC,0,,del 3p,del 22,NA,,fusion,0.939432754
+M30PT,M30XN,5141259,5141260,9259740,Lung,Mesothelioma,Biphasic,Biphasic-E,no,no,Y,,Y,Y,,0,>99,M,none,yes,,d,1.49,84.8,,L P/DC,0,,,del 22q,,,,0.635541505
+M19PT,M19XN,5141237,5141238,9259688,Lung,Mesothelioma,Epithelioid,Biphasic-E,maybe2,no,Y,,Y,Y,,NA,NA,F,19 pack years; quit 1968,yes,,d,0.19,73.3,,Thoracotomy,0,,,,normal,,,1.337718055
+M33PT,M33XN,1538660,1538661,9259754,Lung,Mesothelioma,Epithelioid,Biphasic-E,maybe2,no,Y,,Y,Y,,NA,NA,M,none,yes,112,d,1.42,74.8,pT3 pN0 MX (6th),R EPP,0,,,,NA,,,1.166441159
+M64PT,M64XN,1538626,1538627,9259707,Lung,Mesothelioma,Epithelioid,Biphasic-E,maybe2,no,Y,,Y,Y,Y,NA,NA,M,none,yes,,d,0.87,56.1,,R P/DC,0,,del 3p,del 22q,NA,loss,,1.216793753
+M67PT,M67XN,5141213,5141214,9259712,Lung,Mesothelioma,Epithelioid,Biphasic-E,maybe2,no,Y,,Y,Y,,NA,NA,M,none,yes,,d,2.29,52.8,T3 N0 MX (6th),R EPP,0,,,,abnormal,loss,,0.650485918
+M26PT,M26XN,5141177,5141178,9259696,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,100,0,M,40 pack years; quit 1986,yes,337,d,0.46,61.8,T4 N0 MX (6th),R EPP,0,,,,abnormal,loss,,18.19266287
+M39PT,M39XN,5141207,5141208,9259687,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,100,0,M,30 pack years; quit 2007,yes,1028,d,0.76,60.1,pT3 N0 MX (6th),L EPP,0,,del 3p,del 22q,NA,loss,fusion,5.032360151
+M51PT,M51XN,5141173,5141174,9259678,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,100,0,M,none,none,,d,1.69,82,T4 N2 MX (6th),L EPP,0,,,,normal,loss,,0.843784858
+M57PT,M57XN,5141231,5141232,9259673,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,100,0,F,second hand smoke,yes,697,d,0.81,69,T3 N2 MX (6th),L EPP,0,,,,abnormal,,,0.782527536
+M61PT,M61XN,5141161,5141162,9259656,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,100,0,M,12 pack years; quit 1992,yes,,d,1.59,60.2,T3 N2 M0 (6th),L EPP,0,,,,normal,,,0.872507833
+M635PT,,,,17865237,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,,Y,,,100,0,M,none,yes,,d,1.08,71.5,pT2N2Mx,LEPP,0,,,del 22q,NA,,,0.869134795
+M668PT,M668XN,18036172,18036203,17865270,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,100,0,M,none,yes,,d,0.47,61.7,ypT3N1,LEPP,1,cis-pem x4,,,normal,,,4.48465875
+M687PT,M687XN,18604951,18604912,18604873,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,100,0,M,2 pack years,yes,,d,2.63,82.1,ypT3N0Mx,RPDC,1,carbo-pem x2 ,del 3,del 22q,,,,0.094690016
+M689PT,M689XN,18604953,18604914,18604875,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,100,0,M,12 pack years,yes,,d,0.37,72.8,ypT1N2Mx,RPDC,1,pem-carbox6,del 3,del 22q,abnormal,,,1.042539581
+M69PT,M69XN,1538630,1538631,9259657,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,,,100,0,M,none,yes,,d,1.69,78,T3 N2 MX (6th),L EPP,0,,,,abnormal,,,1.309842729
+M31PT,M31XN,1538648,1538649,9259686,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,,Y,Y,,95,5,M,40 pack year; quit 1982,yes,,d,0.65,70.2,,R P/DC,0,,,,NA,loss,,7.819820533
+M25PT,M25XN,5141267,5141268,9259693,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,90,10,M,none,none,782,a,0.23,66.2,T4 N2 MX (6th),R EPP,0,,"del 3p, add 3q",del 22q,NA,loss,,0.601884647
+M670PT,M670XN,18036174,18036205,17865259,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,90,10,M,40 pack years,yes,,d,0.82,63.9,pT3N2Mx,RPDC,0,,,,abnormal,,,0.564496204
+M91PT,M91XN,1538640,1538641,9259663,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,Y,,Y,Y,,90,10,M,none,yes,,d,1.59,68.4,T4 N2 MX (7th),R EPP,0,,,,abnormal,,,11.745778
+X617PT,617XN,17881615,17881616,17865272,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,85,15,M,none,yes,437,d,0.64,63.3,ypT2N1Mx,LEPP,1,carbo-taxolx4,,,abnormal,,,0.573173718
+X613PT,613XN,17881611,17881612,17865224,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,80,20,M,none,yes,,a,1.01,45.2,pT2N2Mx,LEPP,0,,del 3p,del 22q,,,,0.811270624
+M605PT,,,,17865217,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,,Y,,,80,20,M,none,none known,,d,0.09,65.4,pT3N0Mx,REPP,0,,,,abnormal,,,3.9891084
+M692PT,M692XN,18604956,18604917,18604878,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,80,20,M,20 pack years,yes,,a,1.88,68.6,pT4N1,REPP,0,,,del 22q,abnormal,,fusion,0.339604969
+M719PT,M719XN,18604983,18604944,18604905,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,80,20,M,80 pack years,yes,770,d,0.34,73.7,ypT3N2Mx,REPP,1,cis-pemx4,del 3p,del 22q,abnormal,,,1.178803137
+M84PT,M84XN,5141257,5141258,9259748,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,80,20,F,none,yes,710,d,1.2,60.3,T3 N2 MX (6th),L EPP,0,,,,NA,loss,,2.916076123
+M699PT,M699XN,18604963,18604924,18604885,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,75,25,M,4 pack years,yes,,a,1.47,68.9,pT3N1,REPP,0,,,del 22,abnormal,,,2.637534061
+X649PT,649XN,17881641,17881642,17865285,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,70,30,M,none,yes,17,d,0.58,53.8,ypT3N1Mx,REPP,1,cis-pem-dox,,,abnormal,,fusion,3.008004008
+M34PT,M34XN,5141265,5141266,9259682,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,Y,,Y,Y,,70,30,M,7 pack years; quit 1978,yes,,d,1.81,70,pT3 N2 MX (6th),L EPP,0,,,,extra copies,loss,,10.37644517
+M669PT,M669XN,18036173,18036204,17865276,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,70,30,M,none,yes,64,a,2.05,58.7,ypT4N1,REPP,1,cis-pem x4,,,abnormal,,,0.919720915
+M706PT,M706XN,18604970,18604931,18604892,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,70,30,M,10 pack years,yes,,a,1.84,69.3,pT3N0,REPP,0,,,del 22,abnormal,,,0.923448071
+M675PT,M675XN,18036179,18036210,17865264,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,65,35,M,4 pack years,yes,102,d,0.7,69.7,pT4N2,REPP,0,,,,abnormal,,,1.976731462
+M677PT,M677XN,18604993,18604994,17865266,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,60,40,M,none,yes,,d,0.9,55.5,pT3N2,LEPP,0,,,,abnormal,,,2.803984239
+X643PT,643XN,17881635,17881636,17865243,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,,Y,Y,,,50,50,M,100 pack years,unknown,0,d,1.49,76.3,pT1N2,RPDC,0,,,,NA,,,0.948223934
+M626PT,M626XN,18604987,18604988,17865280,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,50,50,F,5 pack years,none known,,d,1.22,72.8,ypT2N2Mx,REPP,1,cis-pemx3,del 3p,add 22,abnormal,,,2.061552418
+X655PT,655XN,17881645,17881646,17865249,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,40,60,M,none,none known,,d,1.49,79.2,ypT3N0Mx,LPDC,1,pem-carbox3,,,abnormal,,,1.192396117
+M56PT,M56XN,1538676,1538677,9259718,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,Y,,Y,Y,,40,60,M,none,yes,1975,d,0.53,66.8,T3 N2 MX (6th),L EPP,0,,,,abnormal,loss,,1.911710735
+M629PT,M629XN,18036155,18036186,17865234,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,40,60,M,80 pack years,yes,368,d,0.38,59.3,pT3N2Mx,REPP,0,,del 3,del 22q,ab/extra copies,,,0.95052782
+M671PT,M671XN,18036175,18036206,17865260,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,40,60,M,none,none known,,a,3.38,56.2,pT3N2Mx,RPDC,0,,del 3p,del 22q,abnormal,,,2.356812608
+M673PT,M673XN,18036177,18036208,17865262,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,40,60,M,none,yes,158,a,2.98,53.7,pT3N1,LEPP,0,,,,abnormal,,,1.622183443
+M678PT,M678XN,18036180,18036211,17865267,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,40,60,M,none,yes,,d,0.06,69.3,pT2N1,REPP,0,,del 3p,,,,fusion,0.937451042
+M711PT,M711XN,18604975,18604936,18604897,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,40,60,M,54 pack years,yes,,a,1.25,61.6,pT1N0Mx,RPDC,0,,,,abnormal,,,0.587744994
+X642PT,642XN,17881633,17881634,17865242,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,35,65,M,24 pack years,yes,,d,0.82,72.2,pT4N2Mx,LEPP,0,,,,abnormal,,,8.747486885
+M17PT,M17XN,1538680,1538681,9259695,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,30,70,M,116 pack years; quit 1984,yes,,d,0.65,69.6,,R P/DC,0,,,,abnormal,loss,,2.473725602
+M700PT,M700XN,18604964,18604925,18604886,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,30,70,M,hookah pipe,yes,,d,0.77,45.5,ypT3N0,REPP,0,,del 3,,abnormal,,,2.576915494
+M90PT,M90XN,1538650,1538651,9259705,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,no,Y,,Y,Y,,30,70,M,"yes, 1 ppd x 12 yrs",yes,,d,1.06,61.2,T2 N1 (7th),R EPP,0,,del 3p/add 3p21,del 22q,NA,loss,,1.635083278
+M623PT,M623XN,18036154,18036185,17865229,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,,Y,Y,,,25,75,M,10 pack years,yes,39,d,1.85,67.5,pT2NxMx,RPDC,0,,,,abnormal,,fusion,18.31200496
+M7PT,M7XN,5141277,5141278,9259723,Lung,Mesothelioma,Biphasic,Biphasic-S,no,no,Y,,Y,Y,,25,75,F,none,none,,d,1.42,68.7,T2 N0 Mx (6th),L P/DC,0,,,del 22q,NA,loss,,2.226793209
+X618PT,618XN,17881617,17881618,17865279,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,yes,,Y,Y,,,20,80,M,none,yes,,d,1.59,72.3,ypT3N2Mx,RPDC,1,multtiple cycles,,,abnormal,,,0.776522445
+X660PT,660XN,17881651,17881652,17865254,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,,Y,Y,,,20,80,F,none,probable,,d,0.38,76.5,pT3N2Mx,LPDC,0,,,,abnormal,,,13.51446769
+M638PT,M638XN,18036158,18036189,17865239,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,yes,,Y,Y,,,20,80,F,40 pack years,yes,,d,1.25,66.8,,MDST,0,,,,abnormal,,fusion,4.153475254
+M645PT,M645XN,18036162,18036193,17865277,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,yes,,Y,Y,,,20,80,M,10 pack years,yes,,d,1.26,67.7,ypT1N0Mx,LPDC,1,cis-pem x4,del 3p,,abnormal,,,1.187756323
+X624PT,624XN,17881621,17881622,17865230,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,,Y,Y,,,5,95,M,none,yes,325,d,1.92,63.8,pT3N1Mx,REPP,0,,,,normal,,,2.693620514
+M16PT,M16XN,5141281,5141282,9259691,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,Y,,Y,Y,,5,95,M,90 pack years; quit 2006,yes,,d,0.69,63.2,T3 N0 MX (6th),R EPP,0,,add 3(q25),del 22q,NA,,,20.60759378
+X606PT,606XN,,,17865218,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,yes,,,Y,,,0,100,M,none,yes,199,d,7.72,59.4,pT1N0,REPP,0,,del 3p,del 22q,NA,,,14.84836819
+X615PT,615XN,17881613,17881614,17865225,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,,Y,Y,,,0,>99,M,none,yes,413,d,0.79,69.6,pT3N1Mx,LEPP,0,,,,abnormal,,,2.829023808
+M12PT,M12XN,5141223,5141224,9259729,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,Y,,Y,Y,,0,>99,M,pipe smoker 7 years; quit 1981,yes,,d,1.08,60.9,T2 N0 MX (6th),L EPP,0,,del 3p,del 22q,abnormal,loss,,3.926424244
+M688PT,M688XN,18604952,18604913,18604874,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,,Y,Y,,,0,>99,M,10 pack years,yes,,d,0.63,61.4,pT4N0Mx,RPDC,0,,del 3,del 22q,,,,10.81119479
+M701PT,M701XN,18604965,18604926,18604887,Lung,Mesothelioma,Biphasic,Biphasic-S,no,yes,,Y,Y,,,0,>99,M,none,none known,,d,1.18,78,pT3N0Mx,RPDC,0,,,del 22,,,,4.702545589
+M22PT,M22XN,1538666,1538667,9259717,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,maybe,Y,,Y,Y,Y,NA,NA,M,none,yes,,d,2.61,63.3,T3 N1 MX (6th),R EPP,0,,,,NA,,,6.154837831
+M24PT,M24XN,1538678,1538679,9259680,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,maybe,Y,,Y,Y,,NA,NA,M,60 pack years; quit 1967,none mentioned,120,d,0.61,78.7,pT4 N1 MX (6th),L EPP,0,,del 3p,del 22q,NA,,,6.104812582
+M676PT,,,,17865265,Lung,Mesothelioma,Epithelioid,Biphasic-S,no,maybe,,,Y,,,NA,NA,M,13 pack years,yes,,d,1.02,73.4,pT3N1,LEPP,0,,,,abnormal,,,11.68115171
+X603PT,603XN,17881599,17881600,17865215,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,remote social,none known,,d,1.51,56.9,pT4N2Mx,RPDC,0,,,,abnormal,,,1.391590827
+X607PT,607XN,17881603/18604984,17881604,17865219,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,none,yes,,d,1.73,64.4,pM1,ADBK,0,,,,abnormal,,,0.686614
+X634PT,634XN,17881627,17881628,17865283,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,20 pack years,yes,,d,4.67,56,ypT3N0Mx,LEPP,1,cis-pemx1,,,normal,,,4.003495552
+X636PT,636XN,17881629,17881630,17865238,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,none known,,d,1.73,62.5,pT3NxMx,LBx,0,,del 3p,del 22q,NA,,,1.472069585
+X657PT,657XN,17881647,17881648,17865251,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,45 pack years,yes,,a,3.86,75.4,pT3N0Mx,LPDC,0,,,,normal,,,0.364654159
+X658PT,658XN,17881649,17881650,17865252,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,10 pack years,yes,0,a,3.71,56.6,pT2N2Mx,REPP,0,,,,abnormal,,,0.619462684
+X661PT,661XN,17881653,17881654,17865255,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,unknown,unknown,,a,3.76,77.6,pT2N2Mx,RPDC,0,,,,normal,,,1.511794019
+M100PT,M100XN,5141197,5141198,9259658,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,none,none known,1488,d,1.52,62.6,pT4 N2  (7th),L EPP,0,,del 3p,del 22q,,,,0.591791896
+M101PT,M101XN,8305349,8305350,13485843,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,,,100,0,M,"1ppd x 6 years, quit before 1980",yes,,d,0.67,62.1,ypT4 N2 (7th),R EPP,1,cis-pemx4,,,abnormal,,,1.667456983
+M14PT,M14XN,5141165,5141166,9259668,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,30 pack years; quit 1970,yes,,d,2.47,80.7,,L P/DC,0,,del 3p,del 22q,NA,loss,,2.456745808
+M18PT,M18XN,5141225,5141226,9259743,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,,,100,0,M,none,yes,,d,5.24,65.8,,L EPP,0,,,,abnormal,,,3.621168806
+M23PT,M23XN,5141285,5141286,9259679,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,8 pack years; quit 1976,none,,d,0.23,56.3,T2 N0 Mx (6th),L EPP,0,,,,abnormal,loss,,2.129686729
+M35PT,M35XN,5141269,5141270,9259736,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,82 pack years; quit 1987,yes,,d,2.43,72.7,,R P/DC,0,,,,abnormal,loss,,0.439527527
+M42PT,M42XN,5141247,5141248,9259721,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,Y,100,0,M,none,yes,,a,5.83,63.2,pT1b N0 MX (6th),R EPP,0,,,,normal,,,2.011413591
+M48PT,M48XN,1538642,1538643,9259665,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,none,yes,,d,1.65,69.1,T4 N0 MX (6th),L P/DC,0,,del 3p,del 22q,NA,loss,,0.412276343
+M4PT,M4XN,1538646,1538647,9259681,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,10 pack years; quit 1965,yes,17,a,8.84,64.2,T3 N2 MX (6th),R EPP,0,,,,abnormal,loss,,2.318923931
+M52PT,M52XN,1538636,1538637,9259671,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,none,none,,d,0.74,47.8,T3 N0 MX (6th),R EPP,0,,,,abnormal,,,1.788432057
+M608PT,M608XN,18036152,18036183,17865220,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,none known,183,d,2.76,60.1,pT4N2Mx,LEPP,0,,,,normal,,,0.753467631
+M616PT,,,,17865226,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,,Y,,,100,0,M,none,yes,516,d,2.14,66.1,pT4NxMx,LPDC,1,carbo-taxol,,,abnormal,,,1.525118616
+M619PT,M619XN,18604985,18604986,17865227,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,yes,1132,d,0.8,49.7,pT2N0Mx,REPP,0,,del 3p,del 22q,,,,1.08512289
+M621PT,,,,17865282,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,,Y,,,100,0,M,20 pack years,yes,163,d,1.18,71.5,ypT2NxMx,RPDC,1,cis-pemx4,,,normal,,,4.886127974
+M646PT,M646XN,18036163,18036194,17865244,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,23 pack years,possible,,a,4.24,63.3,pT2N0Mx,RPDC,0,,del 3p,del 22,NA,,,0.872902912
+M672PT,M672XN,18036176,18036207,17865261,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,none known,,a,2.82,44.3,pT4N2,LEPP,0,,,,abnormal,,,4.153028646
+M681PT,M681XN,18604945,18604906,18604867,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,4 pack years,none known,,a,0.8,59.6,pT1N0Mx,RPDC,0,,,,abnormal,,,0.880445599
+M683PT,M683XN,18604947,18604908,18604869,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,20 pack years,none known,,a,2.18,73.6,pT2N2Mx,RPDC,0,,,,abnormal,,,2.290536201
+M684PT,M684XN,18604948,18604909,18604870,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,15 pack years,yes,105,d,1.39,67.4,ypT3N1,LEPP,1,carbo-pemx4,del 3,del 22q,,,,0.454049817
+M68PT,M68XN,1538668,1538669,9259738,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,Y,100,0,M,none,none,22,a,5.01,38.3,T3 N2 MX (6th),L EPP,0,,,,abnormal,loss,,0.851210667
+M693PT,M693XN,18604957,18604918,18604879,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,none,none known,,a,1.82,18.8,pT3N1,REPP,0,,,del 22q,abnormal,,,8.350626263
+M694PT,M694XN,18604958,18604919,18604880,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,7.5 pack years,yes,,a,2.51,34.4,ypT2N2Mx,RPDC,1,cis-pemx4,extra copies,extra copies,normal,,,1.11139029
+M695PT,M695XN,18604959,18604920,18604881,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,none known,,a,1.4,62.7,pT3N2Mx,REPP,0,,,,normal,,,0.902249087
+M696PT,M696XN,18604960,18604921,18604882,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,none,none known,,d,2.14,69.9,pT2N0Mx,RPDC,0,,,del 22,abnormal,,,1.022265974
+M702PT,M702XN,18604966,18604927,18604888,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,none known,,a,1.62,30.2,ypT3N0,LEPP,0,,,del 22,abnormal,,,2.294372554
+M705PT,M705XN,18604969,18604930,18604891,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,none,yes,,a,0.17,75.3,ypT2N0Mx,RPDC,1,pem-carbo,,del 22,abnormal,,,0.497002582
+M708PT,M708XN,18604972,18604933,18604894,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,40 pack years,none known,,a,1.54,63.6,pT1bN2,LPDC,0,,,del 22,abnormal,,,2.767994817
+M70PT,M70XN,5141227,5141228,9259660,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,F,none,none,,d,1.42,68.7,T2 N0 Mx (6th),L P/DC,0,,,,normal,,,4.599161261
+M712PT,,,,18604898,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,,Y,,,100,0,F,none,none known,,a,0.87,79.9,pT2N0Mx,RPDC,0,,,,abnormal,,,3.104051912
+M713PT,,,,18604899,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,,Y,,,100,0,M,none,none known,,a,0.9,79.2,pT2N2Mx,RPDC,0,,,,abnormal,,,2.758423906
+M717PT,M717XN,18604981,18604942,18604903,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,M,50 pack years,yes,,a,0.43,76,pT2N2Mx,RPDC,0,,del 3,del 22,abnormal,,,2.464357191
+M718PT,M718XN,18604982,18604943,18604904,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,100,0,F,none,none known,,a,0.32,75.6,pT2N0Mx,RPDC,0,,,del 22,,,,0.460220076
+M73PT,M73XN,1538664,1538665,9259737,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,Y,100,0,F,none,none,,a,3.79,56.8,,R P/DC,0,,del 3p,del 22q,abnormal,,,1.958706861
+M81PT,M81XN,1538656,1538657,9259714,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,none,yes,,d,1.6,65.3,T4 N1 MX (6th),Left extrapleural pleurectomy,0,,,,normal,,,1.471267497
+M83PT,M83XN,5141183,5141184,9259719,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,none,yes,0,d,1.25,59.6,T3 N0 MX (6th),R EPP,0,,del 3p/add 3p11,del 22,NA,loss,,0.998353483
+M89PT,M89XN,5141167,5141168,9259669,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,none but had second hand smoke in 20s and 30s,none known,860,d,2.12,71.5,T3 N1 (7th),L EPP,0,,,,abnormal,,,4.553190924
+M92PT,M92XN,5141195,5141196,9259751,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,"10 pack-year, quit 2005",yes,47,d,0.91,38.3,pT3 N2 (7th),R EPP,0,,,,abnormal,loss,,0.79128501
+M94PT,M94XN,5141209,5141210,9259698,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,100,0,M,"30 pack-year, quit 1995",yes,,a,3.83,60.8,pT3 N1 Mx (7th),L EPP,0,,,,abnormal,,,1.606071422
+M665PT,M665XN,18036170,18036201,17865257,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,90,10,F,10 pack years,questionable,,a,3.4,63,pT3N0,REPP,0,,,,abnormal,,,2.016703434
+M698PT,M698XN,18604962,18604923,18604884,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,90,10,M,none,yes,,a,1.43,36.4,yT4N2M1,REPP,0,,,del 22,abnormal,,,8.258626826
+M709PT,M709XN,18604973,18604934,18604895,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,90,10,M,10 pack years,none known,,d,1.46,69.7,pT2N2Mx,LPDC,0,,,,normal,,,1.199517944
+M715PT,M715XN,18604979,18604940,18604901,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,Y,Y,,,90,10,M,15 pack years,yes,,d,0.3,81.2,pT3N2Mx,LEPP,0,,,,abnormal,,,2.327155483
+M716PT,M716XN,18604980,18604941,18604902,Lung,Mesothelioma,Biphasic,Epithelioid,yes,no,,Y,Y,,,90,10,M,45 pack years,yes,866,d,0.3,68.1,pT1bN1Mx,LEPP,0,,del 3,del 22,,,,0.689061743
+M71PT,M71XN,5141175,5141176,9259689,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,90,10,M,30 pack years; quit 1980,yes,0,d,2.78,74.5,T4 N2 MX (6th),L EPP,0,,,,normal,,,2.440830232
+M72PT,M72XN,1538618,1538619,9259728,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,Y,90,10,M,20 pack years; current as of 2009,yes,75,a,4.85,54.6,T3 N0 MX (6th),L EPP,0,,,,abnormal,loss,,13.84902141
+M80PT,M80XN,5141219,5141220,9259722,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,Y,,Y,Y,,90,10,M,"52 pack-year, quit 1996",yes,,d,0.28,71.5,chest wall invasion,Left partial visceral and parietal pleurectomy,0,,,,abnormal,loss,,1.909757969
+M622PT,,,,17865286,Lung,Mesothelioma,Epithelioid,Epithelioid,yes,no,,,Y,,,20,80,M,7 pack years,none known,,d,4.18,64.7,ypT3N3Mx,RPDC,1,cis-pemx4,,,normal,,,1.173861668
+M88PT,M88XN,1538612,1538613,9259684,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,Y,,Y,Y,Y,90,10,M,"20 pack years, quit 1989",unknown,1,d,1.05,59.6,pT3 N2 (7th),L EPP,0,,,,abnormal,loss,fusion,1.119529597
+M99PT,M99XN,1538628,1538629,9259709,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,Y,85,15,M,none,yes,,d,0.29,57.7,T3 N0 Mx (7th),R EPP,0,,del 3p,del 22q,NA,loss,fusion,21.33459649
+M75PT,M75XN,5141171,5141172,9259672,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,,50,50,M,10 pack years; quit 1974. smoked pipe daily as of 2009,unknown,1894,d,11.05,62.3,T2 N1 MX (6th),R EPP,0,,,,abnormal,loss,,7.558662264
+M20PT,M20XN,5141205,5141206,9259685,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,Y,,Y,Y,,10,90,F,40 pack years,yes,,d,0.21,67.2,T2 N2 MX (6th),R EPP,0,,,,NA,,,5.04190252
+M44PT,M44XN,5141255,5141256,9259690,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,,10,90,M,17 pack years; quit 1972,yes,,d,1.45,81.4,T4 N2 MX (6th),R EPP,0,,,,abnormal,,fusion,32.77501207
+M55PT,M55XN,5141273,5141274,9259700,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,Y,,Y,Y,,10,90,M,15 pack years; quit 1993,yes,1024,d,0.39,56.7,T4 N0 MX (6th),L EPP,0,,,,NA,loss,,33.19449181
+M674PT,M674XN,18036178,18036209,17865263,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,,Y,Y,,,10,90,M,0.5 pack years,yes,,d,1.96,72,pT3N0,LPDC,0,,,,abnormal,,,6.792531927
+M62PT,M62XN,5141243,5141244,9259703,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,Y,,Y,Y,Y,5,95,F,none,none,,a,5.02,43.2,,R EPP,0,,,del 22,NA,,,2.676810184
+M691PT,M691XN,18604955,18604916,18604877,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,,Y,Y,,,5,95,M,15 pack years,yes,,d,0.39,69.7,pT2N0Mx,LPDC,0,,,,abnormal,,,1.92692781
+M703PT,M703XN,18604967,18604928,18604889,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,,Y,Y,,,5,95,M,none,yes,,d,0.54,77,ypT3N2,REPP,1,cis-pem x6,,,abnormal,,,16.33670168
+X651PT,651XN,17881643,17881644,17865247,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,,Y,Y,,,0,100,M,40 pack years,yes,,d,0.78,64.1,pT4N0Mx,RPDC,0,,,,normal,,,19.78424381
+M58PT,M58XN,5141203,5141204,9259683,Lung,Mesothelioma,Desmoplastic,Sarcomatoid,no,yes,Y,,Y,Y,,0,100,M,none,yes,286,d,0.25,73.3,T4 N0 MX (6th),R EPP,0,,,del 22q,NA,,fusion,5.760797236
+M66PT,M66XN,5141283,5141284,9259752,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,Y,,Y,Y,,0,100,M,100 pack years; quit 1988,none,,a,4.16,68.3,,R P/DC,0,,,,NA,,,46.64331079
+M682PT,M682XN,18604946,18604907,18604868,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,,Y,Y,,,0,100,M,13 pack years,yes,,d,0.79,79.6,pT2NxMx,LPDC,0,,,,,,,0.410138466
+M6PT,M6XN,1538674,1538675,9259750,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,Y,,Y,Y,Y,0,100,M,42 pack years; quit 1981,none,,d,0.65,70.5,pT2 N0 (7th),R EPP,0,,,,normal,loss,fusion,22.05626553
+M77PT,M77XN,1538670,1538671,9259733,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,Y,,Y,Y,Y,0,100,M,35 pack-year(quit in 1993),yes,,d,0.95,59.7,"""extensive chest wall invasion""",thoracotomy and resection of a 20 cm intrapleural_sarcomatoid_mesothelioma,0,,potential,,,loss,,1.843696792
+M96PT,M96XN,1538624,1538625,9259747,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,Y,,Y,Y,Y,0,100,M,"1/4ppd x 10 years, quit 1964",yes,,d,0.36,71.3,pT3 N1 (7th edition),R EPP,0,,,,normal,,,6.161662745
+X667PT,667XN,17881657,17881658,17865258,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,,Y,Y,,,0,>99,M,none,yes,,d,0.25,54.3,pT3N0Mx,RPDC,0,,,,normal,,,9.213618183
+M10PT,M10XN,5141191,5141192,9259741,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,,0,>99,M,40 pack years,none,,d,2.1,62.2,,R EPP,0,,,,normal,,,3.407951698
+M38PT,M38XN,5141279,5141280,9259702,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,,0,>99,M,35 pack years; quit 2007,yes,366,d,0.27,59,T3 N0 MX (6th),L EPP,0,,del 3p,,abnormal,loss,,0.086076659
+M59PT,M59XN,1538658,1538659,9259726,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,,0,>99,M,none,yes,0,d,0.22,47.2,T3 N1 MX (6th),L EPP,0,,,,abnormal,,,23.52593453
+M65PT,M65XN,5141241,5141242,9259701,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,Y,,Y,Y,,0,>99,M,second hand smoke,yes,1,d,0.81,60.2,T3 N1 MX (6th),R EPP,0,,del 3p,del 22q,NA,loss,,0.133475043
+M680PT,M680XN,18036181,18036212,17865269,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,,Y,Y,,,0,>99,M,50 pack years,yes,,d,2.52,64.2,pT3N0Mx,RPDC,0,,,,normal,,,19.97702036
+M704PT,M704XN,18604968,18604929,18604890,Lung,Mesothelioma,Biphasic,Sarcomatoid,no,yes,,Y,Y,,,0,>99,M,4 pack years,yes,,a,1.81,73.2,pT3N0Mx,LPDC,0,,del 3,del 22,,,,0.329357998
+M637PT,M637XN,18604989,18604990,17865284,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,,Y,Y,,,NA,NA,M,none,yes,5,a,3.89,44.1,ypT2N0Mx,LEPP,1,cis-pemx6,,,normal,,,5.566017795
+M63PT,M63XN,5141229,5141230,9259662,Lung,Mesothelioma,Sarcomatoid,Sarcomatoid,no,yes,Y,,Y,Y,Y,NA,NA,M,15 pack year,yes,,d,0.52,66.5,,R P/DC,0,,,,normal,,,23.02582995
+X610PT,610XN,17881605,17881606,17865221,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,,Y,Y,,,NA,NA,M,none,none known,,a,3.58,76.6,pTxN0Mx,RPDC,0,,,,normal,,,2.256688325
+M666PT,M666XN,18036171,18036202,17865275,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,,Y,Y,,,NA,NA,M,none,yes,,d,2.13,62.7,ypT4N0Mx,RPDC,1,pem-cisx3,,,normal,,,3.364692792
+M8PT,M8XN,5141211,5141212,9259704,Lung,Mesothelioma,Epithelioid,Sarcomatoid,no,yes,Y,,Y,Y,,NA,NA,M,none,yes,5071,d,0.82,59.2,T2 N0 MX (6th),R EPP,0,,,,normal,,,1.712543311
+M601PT,M601XN,18036151,18036182,,Lung,Mesothelioma,Epithelioid,,maybe,no,,Y,,,,100,0,M,2 pack years; cigars 40 yrs,possible,,d,3.5,,,RPDC,NA,,,,,,,NA
+M644PT,M644XN,18036161,18036192,,Lung,Mesothelioma,Epithelioid,,maybe,no,,Y,,,,100,0,M,none,yes,,d,1.14,62.3,,Bx,,,,,,,,NA
+M78PT,M78XN,5141163,5141164,,Lung,Mesothelioma,Epithelioid,,maybe,no,Y,,,Y,,100,0,F,none,none known,,d,2.98,67.8,T4 N0 MX (6th edition),L EPP,0,,,,abnormal,loss,,NA
+M650PT,M650XN,18036164,18036195,,Lung,Mesothelioma,Epithelioid,,maybe,no,,Y,,,,80,20,M,20 pack years,none known,,d,0.39,70.1,ypT3N0Mx,LPDC,,,,,,,,NA
+M654PT,M654XN,18036166,18036197,,Lung,Mesothelioma,Biphasic,,no,maybe,,Y,,,,10,90,F,none,none known,,d,0.38,72.5,pT1N0Mx,LPDC,NA,,,,,,,NA
+M103PT,M103XN,24301373,24301374,,Lung,Mesothelioma,Epithelioid,,maybe,no,,,,,Y,NA,NA,F,none,yes,54,d,2.75,63,pT3N2Mx,EPP,0,,,,,,,NA
