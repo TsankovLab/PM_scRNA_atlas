@@ -63,13 +63,18 @@ install.packages ("patchwork", version = "1.1.2")
 
 
 ## Fetal endothelial analysis
-For comparison analysis of PLVAP+ EC with fetal and adult normal lungs please download data from He et al. at:
+For comparison analysis of PLVAP+ EC with fetal and adult normal lungs please download data from:
 https://fetal-lung.cellgeni.sanger.ac.uk/scRNA.html
-and from Travaglini et al. at:
+from study: He, Peng, et al. "A human fetal lung cell atlas uncovers proximal-distal gradients of differentiation and key regulators of epithelial fates." Cell 185.25 (2022): 4841-4860.
+
+and
 https://www.synapse.org/#!Synapse:syn21041850/wiki/600865
+from: Travaglini, Kyle J., et al. "A molecular cell atlas of the human lung from single-cell RNA sequencing." Nature 587.7835 (2020): 619-625.
 
-
-
+## NK cells pan-cancer atlas
+For comparison analysis of NK PM cells with NKs from an immune pan-cancer study (FIGURE 6C) please download immune pan-cancer altas from here:
+https://zenodo.org/records/5186413#%20.YRqbJC1h2v6 from following study:
+Nieto, Paula, et al. "A single-cell tumor immune atlas for precision oncology." Genome research 31.10 (2021): 1913-1926.
 
 
 

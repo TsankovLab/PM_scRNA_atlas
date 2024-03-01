@@ -900,3 +900,50 @@ sp
 dev.off()
 
 
+
+
+### FIGURE 6C ####
+gcdata_TIC = readRDS('TICAtlas.rds') # Please download from: https://zenodo.org/records/5186413#%20.YRqbJC1h2v6
+
+
+table(gcdata_TIC@meta.data$cell_type)
+table(gcdata_TIC@meta.data$source)
+
+
+# Subset for NK cells ####
+gcdata_TIC_nk = gcdata_TIC[,gcdata_TIC$cell_type == 'NK']
+table (gcdata_TIC_nk$cell_type,gcdata_TIC_nk$source)
+
+# Import NK from MPM
+srt_nk = srt[, srt$celltype %in% c('FGFBP2_NK','KLRC1_NK')]
+
+srt_nk_merged = merge (gcdata_TIC_nk, srt_nk)
+srt_nk_merged = NormalizeData (object = srt_nk_merged, normalization.method = "LogNormalize", scale.factor = 10000)
+srt_nk_merged$source[is.na(srt_nk_merged$source)] = 'PM'
+srt$subtype[is.na(srt$subtype)] = 'PM'
+
+gd = geneDot (
+srt,
+#gene = top_tfs2, 
+gene = 'KLRC1',
+x = 'subtype', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
+min_expression = 0,
+facet_ncol = 5,
+lim_expression = NULL,
+scale.data=T,
+x_name ='samples',
+y_name = 'celltype',
+returnDF = T)
+
+gd$groups = factor (gd$groups, levels = gd$groups[order (-gd$percent)])
+col_pal = setNames (c('red',rep('grey',13)), levels(gd$groups))
+bp = ggplot (gd, aes (x = groups, y = percent)) +
+geom_bar(aes (fill = groups), position="dodge", stat="identity") + 
+scale_fill_manual (values = col_pal) + NoLegend() + 
+gtheme
+
+
+png (paste0(projdir, 'Plots/KLRC1_positive.png'), width=900,height=700, res=300)
+bp
+dev.off()
+

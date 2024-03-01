@@ -399,62 +399,55 @@ dev.off()
 
 # FIGURE 6B - get NK activators and inhibitors and cross with CPDB database ####
 ### load cellphoneDB results ####
-LR_df = read.csv ('../LR_NK_CPDB.csv')
+LR_df = read.csv ('../../PM_scRNA_atlas/data/LR_NK_CPDB.csv')
 
 metaGroupNames = c('celltype_simplified2','sampleID')
-NK_inhib_sample = AverageExpression (srt, features = nk_inhibitors, group.by = metaGroupNames)
+NK_inhib_sample = AverageExpression (srt, features = LR_df$nk, group.by = metaGroupNames)
 NK_inhib_sample = log2(as.data.frame (t(NK_inhib_sample[[1]]))+1)
-NK_inhib_sample = NK_inhib_sample[,nk_inhibitors]
+NK_inhib_sample = NK_inhib_sample[,LR_df$nk]
 NK_inhib_sample = NK_inhib_sample[grep ('^NK_', rownames(NK_inhib_sample)),, drop=F]
 NK_inhib_sample$sample = rownames (NK_inhib_sample)
 NK_inhib_sample$sample = gsub ('NK_','',NK_inhib_sample$sample)
 NK_inhib_sample = gather (NK_inhib_sample,LR, expression, 1:(ncol (NK_inhib_sample) - 1))
 nk_gene_order = NK_inhib_sample$LR
 NK_inhib_sample = do.call (rbind, lapply (split(NK_inhib_sample, NK_inhib_sample$LR), function(x) data.frame (NKmean = median(x$expression), NKsd = sd(x$expression))))
+NK_inhib_sample$rec = rownames (NK_inhib_sample)
+NK_inhib_sample$rec = gsub ('\\.\\d','',NK_inhib_sample$rec)
 
-Mal_HLA_sample = AverageExpression (srt, features = nk_inhibitors_ligands, group.by = metaGroupNames)
+Mal_HLA_sample = AverageExpression (srt, features = LR_df$mal, group.by = metaGroupNames)
 Mal_HLA_sample = log2(as.data.frame (t(Mal_HLA_sample[[1]]))+1)
-Mal_HLA_sample = Mal_HLA_sample[,nk_inhibitors_ligands]
+Mal_HLA_sample = Mal_HLA_sample[,LR_df$mal]
 Mal_HLA_sample = Mal_HLA_sample[grep ('Malignant', rownames(Mal_HLA_sample)),, drop=F]
 Mal_HLA_sample$sample = rownames (Mal_HLA_sample)
 Mal_HLA_sample = gather (Mal_HLA_sample,LR, expression, 1:(ncol (Mal_HLA_sample) - 1))
 mal_gene_order = Mal_HLA_sample$LR
 Mal_HLA_sample = do.call (rbind, lapply (split(Mal_HLA_sample, Mal_HLA_sample$LR), function(x) data.frame (MALmean = median(x$expression), MALsd = sd(x$expression))))
+Mal_HLA_sample$lig = rownames (Mal_HLA_sample)
+Mal_HLA_sample$lig = gsub ('\\.\\d','',Mal_HLA_sample$lig)
 
 Mal_NK_df = cbind(NK_inhib_sample[unique(nk_gene_order),], Mal_HLA_sample[unique(mal_gene_order),])
-Mal_NK_df$label = sapply (rownames (Mal_NK_df), function(x) unlist(strsplit (x, '\\.'))[1])
-Mal_NK_df$label = paste0(Mal_NK_df$label, ':', LR_df$mal[match(Mal_NK_df$label, LR_df$nk)])
+Mal_NK_df$label = paste0(Mal_NK_df$rec, ':',Mal_NK_df$lig)
 Mal_NK_df$label2 = ifelse (Mal_NK_df$label == 'KLRC1:HLA-E', 'hit','nohit')
 sp = ggplot(data = Mal_NK_df, aes(x = NKmean, y = MALmean)) +
   geom_errorbar(
     aes(ymin = MALmean - MALsd, ymax = MALmean + MALsd),
-    width = 0.1,color= 'grey',
+    width = 0.1,color= 'grey', linewidth=0.3,
     position = position_dodge(0.1)
   ) +
   geom_errorbar(
     aes(xmin = NKmean - NKsd, xmax = NKmean + NKsd),
-    width = 0.1, color= 'grey',
+    width = 0.1, color= 'grey',linewidth=0.3,
     position = position_dodge(0.1)
   ) +
   geom_point(aes (color=label2)) +
   labs(title = "NK Inhibitors",
        x = "NK",
        y = "Malignant") + 
-  scale_color_manual (values = c(hit = 'red',nohit='grey')) + 
-  theme_minimal() + 
-  geom_text_repel (data = Mal_NK_df, aes(label = label), size=2) +
-  NoLegend()
+  scale_color_manual (values = c(hit = 'red',nohit='grey22')) + 
+  geom_text_repel (data = Mal_NK_df, aes(label = label), size=1.4, fontface='italic', segment.size=.1, max.overlaps=10) +
+  NoLegend() + gtheme_no_rot
 
 
-pdf ('figures/FIGURE_6B_NK_MAL_ligand_receptor_scatterplot.pdf', 3,width=2.7)
+pdf ('Plots/FIGURE_6B_NK_MAL_ligand_receptor_scatterplot.pdf', 3,width=2.7)
 sp
 dev.off()
-
-
-
-
-
-
-
-
-
