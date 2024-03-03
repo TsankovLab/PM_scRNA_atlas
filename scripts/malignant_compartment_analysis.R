@@ -10,14 +10,13 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Import seurat object
-#srt = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/srt.rds')
 srt_tumor = readRDS ('../srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype == 'Malignant']
 
 #### Import bulk RNA subtype signatures to define malignant score ####
 
 # Bueno ####
-top_bueno_genes = readRDS ('../bueno_molecular_subtype_deg.rds')
+top_bueno_genes = readRDS ('../../PM_scRNA_atlas/data/bueno_molecular_subtype_deg.rds')
 if (!all (colnames(srt@meta.data) %in% names(top_bueno_genes))) {
 
 srt = ModScoreCor (
@@ -29,8 +28,9 @@ srt = ModScoreCor (
 }
 
 # Import Blum S score gene signature ####
-top_blum_genes = readRDS ('../blum_se_score_genes.rds')
+top_blum_genes = readRDS ('../../PM_scRNA_atlas/data/blum_se_score_genes.rds')
 top_blum_genes = lapply (top_blum_genes, function(x) head (x, 20))
+names (top_blum_genes)= paste0(names(top_blum_genes), '_20')
 if (!all (colnames(srt@meta.data) %in% names(top_blum_genes))) {
 
 srt = ModScoreCor (
@@ -41,120 +41,10 @@ srt = ModScoreCor (
         listName = 'Blum', outdir = paste0(projdir,'Plots/'))
 }
 
-rerun_cnmf = TRUE
-if (run_cnmf)
-  {
-
-  #### Run cNMF ####
-  cnmf_out = paste0('cNMF_normalized/cNMF_5_30_vf3000')
-  library (scran)
-  dir.create (paste0(cnmf_out,'/Plots/'), recursive=T)
-  sce = SingleCellExperiment (list(counts=srt@assays$RNA@counts, logcounts = srt@assays$RNA@data),
-  rowData=rownames(srt)) 
-  sce = modelGeneVar(sce)
-  
-  # remove batchy genes
-  batchy_genes = c('RPL','RPS','MT-')
-  sce = sce[!apply(sapply(batchy_genes, function(x) grepl (x, rownames(sce))),1,any),]
-  vf = getTopHVGs(sce, n=3000)
-  
-  count_mat = t(srt@assays$RNA@counts[vf,])
-  norm_mat = t(srt@assays$RNA@data[vf,])
-  write.table (count_mat, 'cnmf/counts_nmf_3000.txt', sep='\t', col.names = NA)
-  write.table (norm_mat, 'cnmf/norm_nmf_3000.txt', sep='\t', col.names = NA)
-  
-  system ('cnmf prepare --output-dir ./ --name cnmf -c cnmf/counts_nmf_3000.txt --tpm cnmf/norm_nmf_3000.txt  -k 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 --n-iter 100 --seed 14 --numgenes 3000')
-  system ("qsub -cwd -b y -l h_vmem=2g,h_rt=3:00:00 -o . -e . -N cnmf -t 1-100 'source /broad/software/scripts/useuse; use Anaconda; source activate /ahg/regevdata/projects/ICA_Lung/Bruno/conda/cnmf; cnmf factorize --output-dir . --name cnmf --worker-index $SGE_TASK_ID'")
-  system ('cnmf combine --output-dir . --name cnmf')
-  system ('cnmf k_selection_plot --output-dir ./ --name cnmf')
-  system ('cnmf consensus --output-dir ./ --name cnmf --components 25 --local-density-threshold 0.3 --show-clustering')
-  
-  # Read in NMF results ####
-  cnmf_spectra = read.table (paste0(cnmf_out,'/cnmf/cnmf.spectra.k_25.dt_0_3.consensus.txt'))
-  
-  # Assign genes uniquely to cNMF modules based on spectra values
-  cnmf_spectra = t(cnmf_spectra)
-  max_spectra = apply (cnmf_spectra, 1, which.max)
-  
-  cnmf_spectra_unique = lapply (1:ncol(cnmf_spectra), function(x) 
-        {
-        tmp = cnmf_spectra[names(max_spectra[max_spectra == x]),x,drop=F]
-        tmp = tmp[order(-tmp[,1]),,drop=F]
-        head(rownames(tmp),top_nmf_genes)
-        })
-  names(cnmf_spectra_unique) = paste0('CN',seq_along(cnmf_spectra_unique))
-  
-  cnmf_spectra_unique_full = lapply (1:ncol(cnmf_spectra), function(x) 
-        {
-        tmp = cnmf_spectra[names(max_spectra[max_spectra == x]),x,drop=F]
-        tmp = tmp[order(-tmp[,1]),,drop=F]
-        rownames(tmp)
-        #head(rownames(tmp),top_nmf_genes)
-        })
-  
-  names(cnmf_spectra_unique_full) = paste0('CN',seq_along(cnmf_spectra_unique))
-  
-  write.csv (patchvecs (cnmf_spectra_unique_full), paste0(cnmf_out,'/cnmf_list_',k_selection,'_unique.csv'))
-  write.csv (patchvecs (cnmf_spectra_nonunique_full), paste0(cnmf_out,'/cnmf_list_',k_selection,'_nonunique.csv'))
-  
-  
-  srt = ModScoreCor (
-          seurat_obj = srt, 
-          geneset_list = cnmf_spectra_unique, 
-          cor_threshold = NULL, 
-          pos_threshold = NULL, # threshold for fetal_pval2
-          listName = 'Cms', outdir = paste0(projdir,'Plots/'))
-  
-    
-  # combine redundant cNMFs ####
-  combine_nmf = c('CN1','CN2_12','CN3','CN4','CN5','CN6_10','CN7',
-    'CN8_9','CN8_9','CN6_10','CN11','CN2_12','CN13','CN14','CN15','CN16','CN17_21',
-    'CN18','CN19_24','CN20','CN17_21','CN22','CN23','CN19_24','CN25')
-  
-  cnmf_spectra_unique_comb = split (cnmf_spectra_unique, combine_nmf)
-  cnmf_spectra_unique_comb = lapply (cnmf_spectra_unique_comb, function(x) if (length(x) > 1) lapply (x, function(y) head(y, 20)) else x)
-  cnmf_spectra_unique_comb = lapply  (cnmf_spectra_unique_comb, function(x) unlist(x))
-  
-  cnmf_spectra_unique_full_comb = split (cnmf_spectra_unique_full, combine_nmf)
-  cnmf_spectra_unique_full_comb = lapply  (cnmf_spectra_unique_full_comb, function(x) unlist(x))
-  
-  # change module numbering for paper ####
-  old_cnmf_numbers = names (cnmf_spectra_unique_comb)
-  new_cnmf_numbers = c(
-    CN1 = 'Cm1',
-    CN2_12 = 'Cm2',
-    CN3 = 'Cm3',
-    CN4 = 'Cm4',
-    CN5 = 'Cm5',
-    CN6_10 = 'Cm6',
-    CN7 = 'Cm7',
-    CN8_9 = 'Cm8',
-    CN11 = 'Cm9',
-    CN13 = 'Cm10',
-    CN14 = 'Cm11',
-    CN15 = 'Cm12',
-    CN16 = 'Cm13',
-    CN17_21 = 'Cm14',
-    CN18 = 'Cm15',
-    CN19_24 = 'Cm16',
-    CN20 = 'Cm17',
-    CN22 = 'Cm18',
-    CN23 = 'Cm19',
-    CN25 = 'Cm20')
-  
-  names (cnmf_spectra_unique_comb) = new_cnmf_numbers[names (cnmf_spectra_unique_comb)]
-  names (cnmf_spectra_unique_full_comb) = new_cnmf_numbers[names (cnmf_spectra_unique_full_comb)]
-  
-  saveRDS (cnmf_spectra_unique_comb, 'Cm_cnmf_combined.rds')
-  write.csv (patchvecs (lapply (cnmf_spectra_unique_comb, unname)),'Cm_cnmf_combined.csv')
-  saveRDS (cnmf_spectra_unique_full_comb, 'Cm_cnmf_combined_full.rds')
-  write.csv (patchvecs (lapply (cnmf_spectra_unique_full_comb, unname)),'Cm_cnmf_combined_full.csv')
-  } else {
-  library (readxl)
-  cnmf_spectra_unique_comb = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Cms_20"))
-  cnmf_spectra_unique_comb = readRDS ('/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/MPM_naive_13s_analysis/cellbender/_cellranger_raw_Filter_400_1000_25/sampling_harmony/malignant_stromal_subset/no_harmony/malignant_subset/no_harmony/Cm_cnmf_combined.rds')
-  cnmf_spectra_unique_comb_full = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Cms_full"))
-  }
+# Load cnmfs ####
+cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Cms_20"))
+cnmf_spectra_unique_comb = lapply (cnmf_spectra_unique_comb,function(x) x[x != 'NA'])
+cnmf_spectra_unique_comb_full = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Cms_full"))
 
 # re-compute nmf score after combining ####
 if (!all (colnames(srt@meta.data) %in% names(cnmf_spectra_unique_comb))) {
@@ -388,12 +278,12 @@ dev.off()
 
 # FIGURE 2D - Check consistency with bulkRNA of cNMF modules correlation to scS_score ####
 study  = c('bueno','tcga')
-bulk_stat = readRDS ('bueno_tcga_Cms_stats.rds')
+bulk_stat = readRDS ('../../PM_scRNA_atlas/data/bueno_tcga_Cms_stats.rds')
 
 sarc_nmf = 'Cm17'
 for (st in study)
   {
-  bulk_stat_study = bulk_stat[bulk_stat$dataset == st,]
+  bulk_stat_study = bulk_stat[bulk_stat$study == st,]
   # get cNMF correlation to S score across samples
   ccomp_df = srt@meta.data[,names (cnmf_spectra_unique_comb)]
   ccomp_df = aggregate (ccomp_df, by=as.list(srt@meta.data[,'sampleID',drop=F]), 'mean')
@@ -423,14 +313,14 @@ for (st in study)
       geom_text(aes(label=bulk_padj2), vjust=1, hjust=0.5)
   
   
-  pdf (paste0('Plots/FIGURE_2D_bulkRNA_',st,'_on_CNMFs_combined_2.pdf'), width=7, height=4)
+  pdf (paste0('Plots/FIGURE_2D_bulkRNA_',st,'_on_CNMFs_combined_3.pdf'), width=7, height=4)
   print (bp)
   dev.off()
   }
 
 
 # FIGURE S2E - Check nmfs overlap with blum gene sets ####
-blumL = readRDS ('blum_se_score_genes.rds')
+blumL = readRDS ('../../PM_scRNA_atlas/data/blum_se_score_genes.rds')
 
   mat_ov = ovmat (c(cnmf_spectra_unique_comb_full, blumL), 
   compare_lists = list(nmf = names(cnmf_spectra_unique_comb_full), 

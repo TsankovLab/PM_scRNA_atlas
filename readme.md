@@ -12,8 +12,7 @@ git clone https://github.com/TsankovLab/PM_scRNA_atlas.git
 ```
 and download in the same folder seurat objects of tumor and pbmc scRNA from GSE190597 
 
-These are the R packages required to reproduce the scRNA analysis. Additionally, to install cNMF (https://github.com/dylkot/cNMF ) and SCENIC (https://github.com/aertslab/SCENIC) softwares please refer to the corresponding GitHub pages
-
+These are the R packages required to reproduce the scRNA analysis. 
 System Requirements:
 
 Operating System: Tested on RedHat 7.7 x86_64.  
@@ -75,7 +74,6 @@ from: Travaglini, Kyle J., et al. "A molecular cell atlas of the human lung from
 For comparison analysis of NK PM cells with NKs from an immune pan-cancer study (FIGURE 6C) please download immune pan-cancer altas from here:
 https://zenodo.org/records/5186413#%20.YRqbJC1h2v6 from following study:
 Nieto, Paula, et al. "A single-cell tumor immune atlas for precision oncology." Genome research 31.10 (2021): 1913-1926.
-
 
 
 

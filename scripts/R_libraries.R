@@ -20,7 +20,6 @@ packages = c(
   'readxl',
   'scran',
   'harmony',
-  'org.Mm.eg.db',
   'org.Hs.eg.db',
   'viridis',
   'BiocParallel',
@@ -34,7 +33,14 @@ packages = c(
   'circlize',
   'SeuratDisk',
   'ggridges',
-  'scRepertoire'
+  'scRepertoire',
+  'survival',
+  'survminer',
+  'limma',
+  'BayesPrism',
+  'ggExtra',
+  'DirichletReg',
+  'GenomicFeatures'
 )
 lapply(packages, require, character.only = TRUE)
 
