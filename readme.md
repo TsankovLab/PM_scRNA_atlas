@@ -10,7 +10,7 @@ To install this repository, run the following command:
 git clone https://github.com/TsankovLab/PM_scRNA_atlas.git
 
 ```
-and download in the same folder seurat objects of tumor and pbmc scRNA from GSE190597 
+and download the seurat objects srt_tumor.rds and srt_pbmc.rds available at GSE190597 in same folder
 
 These are the R packages required to reproduce the scRNA analysis. 
 System Requirements:
