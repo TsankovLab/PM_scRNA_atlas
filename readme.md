@@ -48,7 +48,7 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 
 # Analysis packages
 install.packages("Seurat", version = "4.4.0")
-remotes::install_github("mojaveazure/seurat-disk", version = "0.0.0.9020")
+remotes::install_github("mojaveazure/seurat-disk", ref =  = "0.0.0.9020")
 BiocManager::install("scran")
 install.packages("harmony", version = "0.1.0")
 BiocManager::install("scRepertoire")
@@ -57,7 +57,9 @@ BiocManager::install("biomaRt")
 install.packages ("DirichletReg", version="0.7.1")
 install.packages("survival", version = "3.5.5")
 install.packages("survminer", version = "0.4.9")
-devtools::install_github('smorabit/hdWGCNA', ref='v0.2.18')
+devtools::install_github('smorabit/hdWGCNA', ref = 'v0.3.00')
+devtools::install_github("saeyslab/nichenetr", ref = "v2.0.4")
+
 
 # Data manipulation  packages
 install.packages("dplyr", version = "1.1.2")

@@ -186,7 +186,6 @@ dev.off()
 
 
 #### FIGURE 3G - Nichenet analysis in PLVAP+ endothelial vs rest ####
-library (nichenetr)
 receiver_cells = 'PLVAP+_EC'
 srt$celltype_nichenet = as.character (srt$celltype_simplified)
 srt$celltype_nichenet[srt$celltype == 'PLVAP'] = 'PLVAP+_EC'
