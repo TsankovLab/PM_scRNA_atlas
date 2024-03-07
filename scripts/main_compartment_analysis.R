@@ -17,7 +17,7 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load Seurat object
-srt = readRDS (paste0(projdir,'../srt_tumor.rds'))
+srt = readRDS ('../srt_tumor.rds')
 
 
 ### FIGURE 1D ####
@@ -189,7 +189,7 @@ dev.off()
 library (nichenetr)
 receiver_cells = 'PLVAP+_EC'
 srt$celltype_nichenet = as.character (srt$celltype_simplified)
-srt$celltype_nichenet[srt$celltype == 'COL4A1'] = 'PLVAP+_EC'
+srt$celltype_nichenet[srt$celltype == 'PLVAP'] = 'PLVAP+_EC'
 
 sender_cells = unique(srt$celltype_nichenet)[!unique(srt$celltype_nichenet) %in% receiver_cells]
 
@@ -199,17 +199,6 @@ weighted_networks = readRDS(url("https://zenodo.org/record/7074291/files/weighte
 
 Idents(srt) = srt$celltype_nichenet
 DE_table_receiver = FindMarkers (object = srt, ident.1 = 'PLVAP+_EC', ident.2 = 'Endothelial', min.pct = 0.10) %>% rownames_to_column("gene")
-
-# Filter targets for DEG in PLVAP+EC
-nichenet_output2 = nichenet_output
-nichenet_output2$top_targets = nichenet_output2$top_targets[nichenet_output2$top_targets %in% head(DE_table_receiver$gene,30)]
-pdf ('Plots/nichenet_PLVAP_VEC_2.pdf', width=10)
-nichenet_output2$ligand_expression_dotplot
-nichenet_output2$ligand_target_heatmap
-nichenet_output2$ligand_activity_target_heatmap
-nichenet_output2$ligand_receptor_heatmap
-dev.off()
-
 
 ## receiver
 receiver = "PLVAP+_EC"
@@ -241,17 +230,6 @@ ligand_activities = ligand_activities %>% arrange(-aupr_corrected) %>% mutate(ra
 
 best_upstream_ligands = ligand_activities %>% top_n(10, aupr_corrected) %>% arrange(-aupr_corrected) %>% pull(test_ligand) %>% unique()
 
-pdf ('figures/nichenet_ligands_sender_cells_dotplot.pdf')
-DotPlot(srt[,srt$celltype_nichenet %in% sender_cells], features = best_upstream_ligands %>% rev(), cols = palette_gene_expression) + scale_color_gradient2 (palette_gene_expression) + theme(
-      axis.text.x = element_text(angle = 90, vjust = 1, hjust=1, face='italic'),
-      axis.line =element_line(colour = 'black', size = .1),
-        axis.ticks = element_line(colour = "black", size = .1),
-      panel.background = element_blank()#,
-    #panel.border = element_blank(),
-    #panel.grid.major = element_blank(),
-    #panel.grid.minor = element_blank()
-  )
-dev.off()
 #srt$celltype_simplified
 gd2 = geneDot (
   seurat_obj = srt,
@@ -263,12 +241,11 @@ gd2 = geneDot (
   swap_axes = F,
   scale.data=T,
   plotcol = palette_gene_expression2) + gtheme_italic_y
-pdf ('figures/nichenet_ligands_sender_cells_dotplot2.pdf', height=3, width=4.5)
+pdf ('Plots/FIGURE_3G_nichenet_ligands_sender_cells_dotplot2.pdf', height=3, width=4.5)
 gd2 
 dev.off()
 
 active_ligand_target_links_df = best_upstream_ligands %>% lapply(get_weighted_ligand_target_links, geneset = geneset_oi, ligand_target_matrix = ligand_target_matrix, n = 200) %>% bind_rows() %>% drop_na()
-
 active_ligand_target_links = prepare_ligand_target_visualization(ligand_target_df = active_ligand_target_links_df, ligand_target_matrix = ligand_target_matrix, cutoff = 0)
 
 order_ligands = intersect(best_upstream_ligands, colnames(active_ligand_target_links)) %>% rev() %>% make.names()
@@ -277,12 +254,12 @@ rownames(active_ligand_target_links) = rownames(active_ligand_target_links) %>% 
 colnames(active_ligand_target_links) = colnames(active_ligand_target_links) %>% make.names() # make.names() for heatmap visualization of genes like H2-T23
 
 vis_ligand_target = active_ligand_target_links[order_targets,order_ligands] %>% t()
-vis_ligand_target = vis_ligand_target[, colnames(vis_ligand_target) %in% head (DE_table_receiver$gene,0)]
-p_ligand_target_network = vis_ligand_target %>% make_heatmap_ggplot("Prioritized ligands","Predicted target genes", color = "purple",legend_position = "top", x_axis_position = "top",legend_title = "Regulatory potential")  + theme (axis.text.x = element_text (angle = 45, vjust = 1, hjust=1, face= 'italic')) + 
+vis_ligand_target = vis_ligand_target[, colnames(vis_ligand_target) %in% head (DE_table_receiver$gene,30)]
+p_ligand_target_network = vis_ligand_target %>% make_heatmap_ggplot( "Prioritized ligands","Predicted target genes", color = "purple",legend_position = "top", x_axis_position = "top",legend_title = "Regulatory potential")  + theme (axis.text.x = element_text (angle = 45, vjust = 1, hjust=1, face= 'italic')) + 
 scale_fill_gradient2(low = "whitesmoke",  high = "purple", breaks = c(0,0.0045,0.0090))
 
 
-pdf ('Plots/nichenet_target_genes.pdf', width=5, height=4)
+pdf ('Plots/FIGURE_3G_nichenet_target_genes.pdf', width=5, height=4)
 p_ligand_target_network + theme (axis.text.x = element_text (angle = 45, vjust = 1, hjust=1, face = "italic"),axis.text.y = element_text(face = "italic"))
 dev.off()
 
@@ -327,7 +304,7 @@ legends = cowplot::plot_grid(
     align = "h", rel_widths = c(1.5, 2, 1))
 
 combined_plot = cowplot::plot_grid(figures_without_legend, legends, rel_heights = c(10,10), nrow = 2, align = "hv")
-pdf ('Plots/nichenet_combineplot.pdf', width=8, height=5)
+pdf ('Plots/FIGURE_3G_nichenet_combineplot.pdf', width=8, height=5)
 combined_plot
 dev.off()
 
@@ -397,7 +374,7 @@ for (x in ext_markers)
   label = "p.adj.signif") + NoLegend()
   }
 
-pdf ('Plots/VSIR_per_celltype.pdf',width = 5, height=4)
+pdf ('Plots/FIGURE_4C_VSIR_per_celltype.pdf',width = 5, height=4)
 boxl
 dev.off()
 
@@ -455,3 +432,4 @@ sp = ggplot(data = Mal_NK_df, aes(x = NKmean, y = MALmean)) +
 pdf ('Plots/FIGURE_6B_NK_MAL_ligand_receptor_scatterplot.pdf', 3,width=2.7)
 sp
 dev.off()
+
