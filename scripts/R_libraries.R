@@ -30,8 +30,6 @@ packages = c(
   'scRepertoire',
   'survival',
   'survminer',
-  'limma',
-  'BayesPrism',
   'ggExtra',
   'DirichletReg',
   'GenomicFeatures'
