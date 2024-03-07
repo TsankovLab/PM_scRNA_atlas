@@ -54,7 +54,7 @@ install.packages("harmony", version = "0.1.0")
 BiocManager::install("scRepertoire")
 BiocManager::install("clusterProfiler")
 BiocManager::install("biomaRt")
-install.pakcages ("DirichletReg", version="0.7.1")
+install.packages ("DirichletReg", version="0.7.1")
 install.packages("survival", version = "3.5.5")
 install.packages("survminer", version = "0.4.9")
 devtools::install_github('smorabit/hdWGCNA', ref='v0.2.18')
@@ -78,12 +78,12 @@ install.packages("rstatix", version = "0.7.2")
 install.packages ("RColorBrewer")
 install.packages ("viridis")
 install.packages("paletteer", version = "1.5.0")
-install.packages("ggplot2", version = "3.4.4")
+install.packages('http://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.4.4.tar.gz', repos=NULL, type="source")
 install.packages ("gplots", version = "3.1.3")
 install.packages("ggridges", version = "0.5.4")
 install.packages ("ggExtra", version = "0.10.1")
 install.packages ("patchwork", version = "1.1.2")
-
+install.packages ("scCustomize")
 ```
 
 
