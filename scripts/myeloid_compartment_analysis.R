@@ -1,19 +1,26 @@
+# Myeloid compartment analysis ####
+
+# Set seeds
 set.seed(1234)
 
+# Set option to convert errors to warnings to 1
+options(warn = 1)
+
+# Set project directory
 projdir = 'scRNA/myeloid/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
+
+# Load scripts
 source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
 source ('../../PM_scRNA_atlas/scripts/R_utils.R')
 source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load scS-score
-
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-
 srt_tumor = readRDS ('../srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype_simplified2 %in% c('Myeloid','pDC')]
 
@@ -80,8 +87,6 @@ dev.off()
 
 
 # FIGURE S4B - dotplot of Myeloid subtypes markers ####
-srt$celltype[srt$celltype == 'DC1'] = 'cDC1'
-srt$celltype[srt$celltype == 'DC2'] = 'cDC2'
 top_markers = c('CLEC9A','IDO1','DNASE1L3','CLNK','TACSTD2','HLA-DPB1','HLA-DPA1','HLA-DQA1','HLA-DRA','FTL','TPSB2','TPSAB1','CPA3','MS4A2','GATA2','FCN1','LYZ','VCAN','S100A6','C1QB','LST1','APOE','APOC1','C1QC','C1QA','LAMP3','CCL19','LAD1','NCCRP1','CCR7','GZMB','JCHAIN','CLIC3','LILRA4','ITM2C')
 srt$celltype = factor (srt$celltype, levels = c('cDC1','cDC2','Mast','Mono_CD14','Mono_CD16','TAMs','mregDC','pDC'))
 dp = geneDot (
@@ -276,10 +281,36 @@ hm
 dev.off()
 
 
-# Test individually each marker
+# FIGURE 4E - Test CXCLs expression in TAMs ####
 ext_markers = c(
   'CXCL9','CXCL10','CXCL11')
- 
+
+ext_avg = AverageExpression (srt_tam, features = ext_markers, group.by = c('sampleID','SE_group'))
+ext_avg = log2 (as.data.frame (t(ext_avg[[1]]))+1)
+ext_avg$SE_group = sapply (rownames(ext_avg), function(x) unlist(strsplit (x,'_'))[2])
+ext_avg$SE_group = factor (ext_avg$SE_group, levels = c('S-High','E-High'))
+ext_avg = gather (ext_avg, gene, expression, 1:(ncol (ext_avg) - 1))
+ext_avg$gene = factor (ext_avg$gene, levels = ext_markers)  
+box = ggplot (ext_avg, aes_string (x= 'SE_group', y= 'expression')) +
+geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
+geom_boxplot (aes_string(fill='SE_group'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
+scale_fill_manual (values = palette_SE_group) +
+facet_wrap (~gene, drop=TRUE, scales = 'free', ncol=length (ext_markers)) + gtheme_no_text
+
+stat.test = box$data %>%
+group_by (gene) %>%
+t_test(reformulate ('SE_group', 'expression')) %>%
+adjust_pvalue (method = "fdr") %>%
+add_significance ()
+stat.test = stat.test %>% add_xy_position (x = 'SE_group', step.increase=.4)
+box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
+bracket.nudge.y = 0, hide.ns = T,
+label = "p.adj.signif") + NoLegend()
+
+pdf ('Plots/FIGURE_4E_CXCLs_markers.pdf',2.5,width = 3)
+box
+dev.off()
+
 # Run SCENIC plots #### 
 motif_window = 'tss500bp'
 

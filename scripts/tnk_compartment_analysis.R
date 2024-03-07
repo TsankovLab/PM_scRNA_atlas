@@ -1,6 +1,12 @@
+# TNK compartment analysis ####
+
+# Set seeds
 set.seed(1234)
 
+# Set option to convert errors to warnings to 1
+options(warn = 1)
 
+# Set project directory
 projdir = 'scRNA/tnk/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
@@ -243,14 +249,10 @@ for (x in ext_markers)
   {
   ext_avg_sub = ext_avg[ext_avg$gene == x,]
   box = ggplot (ext_avg_sub, aes_string (x= 'SE_group', y= 'avg_expression')) +
-  #geom_violin (trim=TRUE, aes_string (fill = 'SE_group'),alpha = 0.7) +
   geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
   geom_boxplot (aes_string(fill = 'SE_group'), alpha = 0.7, lwd=.2, outlier.shape = NA) +
-  #geom_bar (stats='identity') +
-  #geom_jitter (color="black", size=0.4, alpha=0.9) +
   gtheme_no_text +
   ggtitle (x) +
-  #scale_fill_manual (values= module_pal) + 
   scale_fill_manual (values = palette_SE_group) +
   theme (axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap (~celltype, drop=TRUE, scales = 'free_x', ncol=4)
@@ -271,7 +273,6 @@ wrap_plots (boxl, ncol=5)
 dev.off()
 
 # FIGURE 5F - Repeat per subtype across samples to generate heatmap ####
-ext_markers
 ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('SE_group', 'celltype'))
 ext_avg = log2(as.data.frame (t(ext_avg[[1]]))+1)
 #ext_avg$group = rownames (ext_avg)
@@ -308,7 +309,7 @@ dev.off()
 
 # FIGURE 5G - MHCII per subtype ####
 ext_markers = c('HLA-DPB1','HLA-DPA1', 'HLA-DQA1','HLA-DRB5','GZMK')
-ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('sampleID4','SE_group'))
+ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('sampleID','SE_group'))
 ext_avg = log2(as.data.frame (t(ext_avg[[1]]))+1)
 ext_avg$SE_group = sapply (rownames(ext_avg), function(x) unlist(strsplit (x,'_'))[2])
 ext_avg$SE_group = factor (ext_avg$SE_group, levels = c('S-High','E-High'))
@@ -578,8 +579,6 @@ dev.off()
 # Add modulesscore of exhaustion markers
 # Add exhaustion modules
 srt_tcr = srt_tcr[,srt_tcr$celltype == 'CD8']
-#srt_tcr = srt_tcr[, srt_tcr$celltype == 'CD8+']
-
 ccomp_df = as.data.frame (srt_tcr@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
 ccomp_df = aggregate (ccomp_df$Tm5, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
@@ -595,7 +594,7 @@ geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
 gtheme_no_text
 
-pdf ('Plots/FIGURE_5B_expanded_exhaustion.pdf', height = 3.3,width = 2)
+pdf ('Plots/FIGURE_S5J_expanded_exhaustion.pdf', height = 3.3,width = 2)
 box2
 dev.off()
 
@@ -616,7 +615,7 @@ geom_point (position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
 gtheme_no_text
 
-pdf ('Plots/FIGURE_5B_expanded_MHCII.pdf',height = 3.3,width = 2)
+pdf ('Plots/FIGURE_S5J_expanded_MHCII.pdf',height = 3.3,width = 2)
 box2
 dev.off()
 
@@ -640,7 +639,7 @@ gtheme_no_text
 # box2$layers[[1]]$aes_params$alpha =  .7
 # box2$layers[[1]]$geom_params$linewdith =  .1
 # box2$layers[[1]]$aes_params$lwd =  .1
-pdf ('Plots/FIGURE_5B_expanded_cytox.pdf',height = 3.3,width = 2)
+pdf ('Plots/FIGURE_S5J_expanded_cytox.pdf',height = 3.3,width = 2)
 box2
 dev.off()
 
@@ -676,7 +675,7 @@ cc_box = cc_box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
 bracket.nudge.y = 0, hide.ns = T,
 label = "p")
 
-pdf(paste0('Plots/FIGURE_5C_Exhausted_Expanded_vs_nonExpanded_SE_group_boxplot2.pdf'),width=2.2,2.5)
+pdf(paste0('Plots/FIGURE_S5K_Exhausted_Expanded_vs_nonExpanded_SE_group_boxplot2.pdf'),width=2.2,2.5)
 cc_box
 dev.off()
 
@@ -717,7 +716,7 @@ srt_merged$site = ifelse (grepl ('pbmc',colnames (srt_merged)), 'pbmc','tumor')
 # Import TCR_contigs of PBMCs ####
 data.path_pbmc1 = '2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
 data.path_pbmc2 = '2023-03-29-1-2/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
-vdj.dirs = c (data.path_pbmc1, data.path_pbmc2)
+vdj.dirs = c(data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####
 #meta_pbmc$hash_pool = sapply (rownames(meta_pbmc), function(x) unlist(strsplit (x, '\\-'))[2])

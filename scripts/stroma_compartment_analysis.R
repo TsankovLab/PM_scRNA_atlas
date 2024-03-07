@@ -1,5 +1,12 @@
+# Stromal compartment analysis ####
+
+# Set seeds
 set.seed(1234)
 
+# Set option to convert errors to warnings to 1
+options(warn = 1)
+
+# Set project directory
 projdir = 'scRNA/stromal/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 

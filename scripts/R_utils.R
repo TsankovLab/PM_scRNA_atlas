@@ -234,13 +234,13 @@ cellComp = function (
  	#colnames (ccomp_df) = c(paste0('Var_',seq_along(metaGroups)), 'proportion')  
  	if (plot_as == 'box')
  		{
- 		p = ggplot (ccomp_df, aes_string (x= metaGroups[2], y= 'Freq')) +
+ 		p = ggplot (ccomp_df, aes_string (x= metaGroups[2], y= 'Freq')) +    		
   			theme (axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     		scale_fill_manual (values= pal) + xlab (metaGroups[2]) + ylab (ifelse (prop, 'proportion','counts'))
-    if (length(metaGroups > 2)) p = p + geom_boxplot(aes_string (fill= metaGroups[3]), outlier.size=.2, alpha = 0.7, lwd=.2) 
-    else p = p + geom_boxplot(aes_string (fill= metaGroups[2]), outlier.size=.2, alpha = 0.7, lwd=.2)		
+    if (length(metaGroups > 2)) p = p + geom_boxplot(aes_string (fill= metaGroups[3]),alpha = 0.7, lwd=.2, outlier.shape = NA)
+    else p = p + geom_boxplot(aes_string (fill= metaGroups[2]),alpha = 0.7, lwd=.2, outlier.shape = NA)
   	if (length(metaGroups) > 3) p = p + facet_wrap (as.formula(paste("~", metaGroups[4])), scales=facet_scales, ncol=facet_ncol)
-  	}	
+  	}		
   if (plot_as == 'bar')
  		{
  		p = ggplot (ccomp_df, aes_string (x= metaGroups[1], y= 'Freq')) +

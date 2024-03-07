@@ -45,6 +45,7 @@ palette_sample = setNames (palette_sample , c('P1','P13','P3','P12','P6','P2','P
 #palette_sample = setNames (as.character(paletteer::paletteer_c("pals::ocean.dense",13)))
 #palette_sample = c(palette_sample, P10 = 'grey')
 palette_sample2 = c(palette_sample[3], palette_sample[6], palette_sample[10])
+palette_sampling = setNames(c('black','grey'), c('biopsy','resection'))
 palette_SE_group = c('S-High'= unname(palette_sample[3]), 'E-High' = unname(palette_sample[10]))
 palette_sample2_fun = colorRamp2(c(1, 0, -1), c(palette_sample2))
 palette_sample_cnv = colorRamp2(c(.5, 0, -.5), c(palette_sample2))

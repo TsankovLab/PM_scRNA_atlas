@@ -15,7 +15,6 @@ packages = c(
   'ggrepel',
   'fgsea',
   'tidyr',
-  'gdata',
   'GSA',
   'readxl',
   'scran',

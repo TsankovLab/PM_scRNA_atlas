@@ -1,5 +1,12 @@
+# Malignant compartment analysis ####
+
+# Set seeds
 set.seed(1234)
 
+# Set option to convert errors to warnings to 1
+options(warn = 1)
+
+# Set project directory
 projdir = 'scRNA/malignants/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
@@ -17,7 +24,7 @@ srt = srt_tumor[, srt_tumor$celltype == 'Malignant']
 
 # Bueno ####
 top_bueno_genes = readRDS ('../../PM_scRNA_atlas/data/bueno_molecular_subtype_deg.rds')
-if (!all (colnames(srt@meta.data) %in% names(top_bueno_genes))) {
+if (!all (names(top_bueno_genes)  %in% colnames(srt@meta.data))) {
 
 srt = ModScoreCor (
         seurat_obj = srt, 
@@ -31,7 +38,7 @@ srt = ModScoreCor (
 top_blum_genes = readRDS ('../../PM_scRNA_atlas/data/blum_se_score_genes.rds')
 top_blum_genes = lapply (top_blum_genes, function(x) head (x, 20))
 names (top_blum_genes)= paste0(names(top_blum_genes), '_20')
-if (!all (colnames(srt@meta.data) %in% names(top_blum_genes))) {
+if (!all (names(top_blum_genes) %in% colnames(srt@meta.data))) {
 
 srt = ModScoreCor (
         seurat_obj = srt, 
@@ -47,8 +54,7 @@ cnmf_spectra_unique_comb = lapply (cnmf_spectra_unique_comb,function(x) x[x != '
 cnmf_spectra_unique_comb_full = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Cms_full"))
 
 # re-compute nmf score after combining ####
-if (!all (colnames(srt@meta.data) %in% names(cnmf_spectra_unique_comb))) {
-
+if (!all (names(cnmf_spectra_unique_comb) %in% colnames(srt@meta.data))) {
 srt = ModScoreCor (
         seurat_obj = srt, 
         geneset_list = cnmf_spectra_unique_comb, 
@@ -474,3 +480,7 @@ hm = Heatmap (
 pdf (paste0('Plots/FIGURE_2F_RNA_CNV_Cm_heatmap.pdf'),width=5,height=1.7)
 print (hm)
 dev.off()
+
+
+
+

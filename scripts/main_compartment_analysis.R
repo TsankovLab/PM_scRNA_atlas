@@ -1,6 +1,12 @@
-### SCRIPT TO REPRODUCE FIGURES: 1D, S1A, S1B, S1C, 3G, 4C, 4F, 6B
+# Main compartment analysis ####
+
+# Set seeds
 set.seed(1234)
 
+# Set option to convert errors to warnings to 1
+options(warn = 1)
+
+# Set project directory
 projdir = 'scRNA/main/' # define project directory
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
@@ -11,7 +17,7 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load Seurat object
-srt = readRDS (paste0(projdir,'srt_tumor.rds'))
+srt = readRDS (paste0(projdir,'../srt_tumor.rds'))
 
 
 ### FIGURE 1D ####
@@ -22,19 +28,18 @@ dp = geneDot (
   seurat_obj = srt,
   #gene = top_tfs2, 
   gene = factor (top_markers, levels = top_markers),
-  x = 'sampleID2', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
-  y = 'celltype_simplified2',
-  z = NULL, 
+  x = 'celltype_simplified2', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
   min_expression = 0,
   facet_ncol = 5,
   lim_expression = NULL,
   scale.data=TRUE,
   x_name ='samples',
   y_name = 'celltype',
-  plotcol = gene_expression_palette) +
+  swap_axes=T,
+  plotcol = palette_gene_expression2) +
   gtheme_italic
 
-pdf ('figures/FIGURE_1D_top_markers_celltype_expression.pdf', height=4.8, width=8.5)
+pdf ('Plots/FIGURE_1D_top_markers_celltype_expression.pdf', height=4.8, width=8.5)
 dp + theme(
     axis.text.x = element_text(face = "italic")
   )
@@ -48,10 +53,10 @@ vln_p = VlnPlot (srt, features = c("nFeature_RNAL", "nCount_RNAL", "percent.mt")
 vln_p = lapply (vln_p, function(x) x +
 scale_fill_manual(values = palette_sample))
 
-png ("FIGURE_S1A_QC_nFeat_nCount_m.percent_vlnPlot.png", 3300, 1000, res=300)
+png ("Plots/FIGURE_S1A_QC_nFeat_nCount_m.percent_vlnPlot.png", 3300, 1000, res=300)
 print (vln_p[[1]] | vln_p[[2]] | vln_p[[3]])
 dev.off()
-
+ 
 ### FIGURE S1B - TF expression across celltypes ####
 celltype_order =c('Malignant','Mesothelium','Fibroblasts','SmoothMuscle','Endothelial','Alveolar','Glia','Myeloid','T_cells','NK','B_cells','pDC','Plasma')
 DefaultAssay (srt) = 'RNA'
@@ -74,22 +79,22 @@ TF.use <- c(
 cluster.averages = AverageExpression(object = srt[TF.use,], group.by = 'celltype_simplified2', return.seurat = F)
 cluster.averages = log2(as.data.frame (cluster.averages[[1]])+1)
 cluster.averages = cluster.averages[TF.use, celltype_order]
-pdf("figures/FIGURE_S1C_heatmap.pdf", width =3,height=3, useDingbats=T)
+pdf("Plots/FIGURE_S1C_heatmap.pdf", width =3,height=3, useDingbats=T)
 Heatmap (
   t(scale (t(cluster.averages))), 
   cluster_rows=F,
   row_names_side = 'left',
   cluster_columns=F, 
-  col = palette_gene_expression_fun,
+  col = palette_gene_expression_fun(scale (t(cluster.averages))),
   column_names_rot = 45,
   row_names_gp = gpar(fontface = "italic",fontsize = 6),
   column_names_gp = gpar (fontsize = 6))
-#ggsave(paste0(figures.dir, "HM_celltype_cpdb_2.Avg.topTF.labelwilcox_S1B.png"), width = 8, height = 8, dpi = 500, type="cairo")    
+
 dev.off()
 
 # FIGURE S1C Composition plots by sampling ####
 metaGroupNames = c('celltype_simplified','sampleID')
-srt$immune = ifelse (srt$celltype_simplified %in% c('B_cells','T_cells','MonoMac','DCs','NK','Plasma','Mast','pDC'), 'immune','non-immune')
+srt$immune = ifelse (srt$celltype_simplified %in% c('B_cells','T_cells','MonoMac','cDCs','NK','Plasma','Mast','pDC'), 'immune','non-immune')
 
 metaGroupNames = c('sampleID','celltype_simplified2','sampling','immune')
 ccc_bar2 = cellComp (
@@ -106,8 +111,6 @@ ccc_bar2 = cellComp (
   )
 
 ### Run Diricthlet regression and extract pvalues ####
-library (tidyr)
-library (DirichletReg)
 drc_res = list()
 for (i in levels (ccc_bar2$immune))
   {
@@ -130,8 +133,9 @@ for (i in levels (ccc_bar2$immune))
   pvals$sampling = gsub ('as.factor\\(\\)','',pvals$sampling)
   pvals$group1 = 'biopsy'
   pvals$group2 = pvals$sampling
+  pvals$p_adj = p.adjust (pvals$p, method = 'fdr')
   pvals$p_sig = ''
-  pvals$p_sig = ifelse (pvals$p <= 0.05, ifelse (pvals$p <= 0.01,ifelse (pvals$p <= 0.001,'***','**'),'*'),'ns')
+  pvals$p_sig = ifelse (pvals$p_adj <= 0.05, ifelse (pvals$p_adj <= 0.01,ifelse (pvals$p_adj <= 0.001,'***','**'),'*'),'ns')
   drc_res[[i]] = pvals
   }
 
@@ -175,8 +179,8 @@ ccc_bar4 = ccc_bar3 + stat_pvalue_manual(
      vjust = 0.5,
     tip.length = 0.02
     )
-
-pdf (paste0('figures/FIGURE_S1C_sampling_celltype_fractions_diritchlet.pdf'),width=6, height=2.5)
+    
+pdf (paste0('Plots/FIGURE_S1C_sampling_celltype_fractions_diritchlet.pdf'),width=6, height=2.5)
 ccc_bar4
 dev.off()
 
@@ -278,7 +282,7 @@ p_ligand_target_network = vis_ligand_target %>% make_heatmap_ggplot("Prioritized
 scale_fill_gradient2(low = "whitesmoke",  high = "purple", breaks = c(0,0.0045,0.0090))
 
 
-pdf ('figures/nichenet_target_genes.pdf', width=5, height=4)
+pdf ('Plots/nichenet_target_genes.pdf', width=5, height=4)
 p_ligand_target_network + theme (axis.text.x = element_text (angle = 45, vjust = 1, hjust=1, face = "italic"),axis.text.y = element_text(face = "italic"))
 dev.off()
 
@@ -323,23 +327,49 @@ legends = cowplot::plot_grid(
     align = "h", rel_widths = c(1.5, 2, 1))
 
 combined_plot = cowplot::plot_grid(figures_without_legend, legends, rel_heights = c(10,10), nrow = 2, align = "hv")
-pdf ('figures/nichenet_combineplot.pdf', width=8, height=5)
+pdf ('Plots/nichenet_combineplot.pdf', width=8, height=5)
 combined_plot
 dev.off()
 
-### FIGURE 4C - boxplot of VISTA expression ####
+
+### FIGURE 4F - dotplot CXCLs and receptor across celltypes ####
+srt$celltype_simplified3 = as.character(srt$celltype_simplified)
+srt$celltype_simplified3[srt$celltype %in% c('Mono_CD16','Mono_CD14','TAMs')] = srt$celltype[srt$celltype %in% c('Mono_CD16','Mono_CD14','TAMs')]
+#srt$celltype_simplified3[srt$celltype %in% c('pDC')] = 'DCs'
+srt$celltype_simplified3[srt$celltype_simplified3 %in% c('T_cells')] = srt$celltype[srt$celltype_simplified3 %in% c('T_cells')]
+srt$celltype_simplified3 = factor (srt$celltype_simplified3, levels = rev(c('Malignant','Mesothelium','Glia','Alveolar','Fibroblasts','Endothelial','SmoothMuscle','Mono_CD16','Mono_CD14','TAMs','Mast','DCs','CD8','CD4','TFH','Tregs','NK','B_cells','Plasma','pDCs')))
+cxcl_markers = c('CXCL9','CXCL10','CXCL11','CXCR3')
+pdf ('Plots/FIGURE_4F_cxcls_and_receptor_expression2.pdf', height=4.5, width=4)
+  geneDot (
+  seurat_obj = srt,
+  gene = cxcl_markers,
+  x = 'celltype_simplified3',
+  y = 'SE_group',
+  min_expression = 0,
+  facet_ncol = 5,
+  lim_expression = NULL,
+  scale.data=TRUE,
+  swap_axes = T,
+  x_name ='samples',
+  y_name = 'celltype',
+  plotcol = palette_gene_expression2) + gtheme_italic
+dev.off()  
+
+### FIGURE 4C - VISTA expression ####
 ext_markers='VSIR'
-low_celltypes = c('Alveolar','LEC','Mesothelium','Glia') # remove cell types not represented by at least 3 samples
+low_celltypes = c('Alveolar','LEC','Mesothelium','Glia')
 srt2 = srt[,!srt$celltype %in% low_celltypes]
+srt2 = srt2[,srt2$sampleID != 'P10']
 srt2$celltype = gsub ('_','',srt2$celltype)
 ext_avg = AverageExpression (srt2, features = ext_markers, group.by = c('sampleID','celltype'))[[1]]
 rownames (ext_avg) = ext_markers
-ext_avg = as.data.frame (t(ext_avg))
+ext_avg = log2(as.data.frame (t(ext_avg))+1)
 ext_avg$group = rownames (ext_avg)
+
 ext_avg = gather (ext_avg, gene, avg_expression, 1:(ncol(ext_avg)-1))
 ext_avg$sample = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[1])
 ext_avg$celltype = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[2])
-ext_avg$SE_group = setNames(srt2$SE_group, srt2$sampleID2)[ext_avg$sample]
+ext_avg$SE_group = setNames(srt2$SE_group, srt2$sampleID)[ext_avg$sample]
 ext_avg$SE_group = factor (ext_avg$SE_group, levels = c('S-High','E-High'))
 celltype_order = ext_avg
 celltype_order =  do.call (rbind,lapply (split (celltype_order, celltype_order$celltype), function(x) data.frame(mean(x$avg_expression), x$celltype[1])))
@@ -350,15 +380,11 @@ for (x in ext_markers)
   {
   ext_avg_sub = ext_avg[ext_avg$gene == x,]
   box = ggplot (ext_avg_sub, aes_string (x= 'celltype', y= 'avg_expression')) +
-  #geom_violin (trim=TRUE, aes_string (fill = 'SE_group'),alpha = 0.7) +
   geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
-  geom_boxplot (aes_string(color='SE_group'),fill = 'white',alpha = 0.7, lwd=.2, outlier.shape = NA) +
+  geom_boxplot (aes_string(fill='SE_group'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
   ggtitle (x) +
-  #scale_fill_manual (values= module_pal) + 
-  scale_color_manual (values = palette_SE_group) +
+  scale_fill_manual (values = palette_SE_group) +
   gtheme
-  
-  #facet_wrap (~celltype, drop=TRUE, scales = 'free_x', ncol=4)
   
   stat.test = box$data %>% 
   group_by (celltype) %>%
@@ -371,31 +397,9 @@ for (x in ext_markers)
   label = "p.adj.signif") + NoLegend()
   }
 
-pdf ('figures/FIGURE_4C_VSIR_per_celltype.pdf',width = 5, height=4)
+pdf ('Plots/VSIR_per_celltype.pdf',width = 5, height=4)
 boxl
 dev.off()
-
-### FIGURE 4F - dotplot CXCLs and receptor across celltypes ####
-srt$celltype_simplified3 = as.character(srt$celltype_simplified)
-srt$celltype_simplified3[srt$celltype %in% c('Mono_CD16','Mono_CD14','TAMs')] = srt$celltype[srt$celltype %in% c('Mono_CD16','Mono_CD14','TAMs')]
-srt$celltype_simplified3[srt$celltype %in% c('pDC')] = 'DCs'
-cxcl_markers = c('CXCL9','CXCL10','CXCL11','CXCR3')
-pdf ('figures/FIGURE_4F_cxcls_and_receptor_expression.pdf', height=3.8, width=4)
-  geneDot (
-  seurat_obj = srt,
-  gene = cxcl_markers,
-  x = 'sampleID',
-  y = 'celltype_simplified3',
-  min_expression = 0,
-  facet_ncol = 5,
-  lim_expression = NULL,
-  scale.data=TRUE,
-  x_name ='samples',
-  y_name = 'celltype',
-  plotcol = gene_expression_palette)
-dev.off()  
-
-
 
 # FIGURE 6B - get NK activators and inhibitors and cross with CPDB database ####
 ### load cellphoneDB results ####
