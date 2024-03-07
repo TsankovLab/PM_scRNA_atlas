@@ -2,6 +2,7 @@
 message ('Load R packages')
 packages = c(
   'Seurat',
+  'nichenetr',
   'ggplot2',
   'gplots',
   'ggtree',
