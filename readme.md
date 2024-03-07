@@ -83,7 +83,7 @@ install.packages ("gplots", version = "3.1.3")
 install.packages("ggridges", version = "0.5.4")
 install.packages ("ggExtra", version = "0.10.1")
 install.packages ("patchwork", version = "1.1.2")
-
+install.packages ("scCustomize")
 ```
 
 
