@@ -9,8 +9,8 @@ options(warn = 1)
 # Set project directory
 projdir = 'scRNA/stromal/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
-
 setwd (projdir)
+
 source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
 source ('../../PM_scRNA_atlas/scripts/R_utils.R')
 source ('../../PM_scRNA_atlas/scripts/palettes.R')
@@ -73,7 +73,7 @@ ptable_factor = 1,
 prop=T) +
 theme_minimal()
 #cp$data$cNMF__r_max = factor (cp$data$cNMF__r_max, levels = names (cnmf_spectra_filtered[row_order(hm)])) 
-pdf (paste0(projdir, 'Plots/FIGURE_3B_sample_abundance_celltype_stacked_barplot.pdf'))
+pdf (paste0('Plots/FIGURE_3B_sample_abundance_celltype_stacked_barplot.pdf'))
 cp
 dev.off()
 
@@ -106,7 +106,7 @@ srt_endo = ModScoreCor (
         geneset_list = cnmf_spectra_unique_comb, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'Ems', outdir = paste0(projdir,'Plots/'))
+        listName = 'Ems', outdir = paste0('Plots/'))
 
 ### FIGURE S3C - pairwise CN correlations across sample and cells ####
 # Run correlation across samples 
@@ -243,7 +243,7 @@ srt_fetal_adult  = ModScoreCor (
         geneset_list = list(endo_fetal = fetal_endo_PM_deg_genes), 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'fetal', outdir = paste0(projdir,'Plots/'))
+        listName = 'fetal', outdir = paste0('Plots/'))
 
 ccomp = srt_fetal_adult@meta.data
 box = ggplot(ccomp, aes (x= celltype, y= endo_fetal)) + 
@@ -352,7 +352,7 @@ srt_fib = ModScoreCor (
         geneset_list = cnmf_spectra_unique_comb, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'Fms', outdir = paste0(projdir,'Plots/'))
+        listName = 'Fms', outdir = paste0('Plots/'))
 
 
 ### FIGURE S3E - pairwise CN correlations across sample and cells ####
@@ -552,7 +552,7 @@ srt_fetal_adult_mpm = ModScoreCor (
         geneset_list = motifs_table_flt, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'fetal', outdir = paste0(projdir,'Plots/'))
+        listName = 'fetal', outdir = paste0('Plots/'))
 
 
 ccomp = srt_fetal_adult_mpm@meta.data

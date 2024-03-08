@@ -10,6 +10,7 @@ options(warn = 1)
 projdir = 'scRNA/tnk/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
+
 source ('../../PM_scRNA_atlas/scripts/R_libraries.R')
 source ('../../PM_scRNA_atlas/scripts/R_utils.R')
 source ('../../PM_scRNA_atlas/scripts/palettes.R')
@@ -117,7 +118,7 @@ srt = ModScoreCor (
         geneset_list = cnmf_spectra_unique_comb, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'Tms', outdir = paste0(projdir,'Plots/'))
+        listName = 'Tms', outdir = paste0('Plots/'))
 
 # Subset seurat object only for T cells populations
 srt_t = srt[, srt$celltype %in% c('CD4','Tregs','TFH','CD8')]
@@ -765,7 +766,7 @@ clonalOverlap(combinedTCR,
 dev.off()
 
 # Compare clonotypes
-pdf (paste0(projdir,'Plots/FIGURE_S6C_shared_clones.pdf'),width=4.5,3)
+pdf (paste0('Plots/FIGURE_S6C_shared_clones.pdf'),width=4.5,3)
 cs1 = clonalScatter(combinedTCR, 
               cloneCall ="strict", 
               x.axis = "P7_pbmc", 
@@ -808,7 +809,7 @@ srt_merged = ModScoreCor (
         geneset_list = cnmf_spectra_unique_comb, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'Tms', outdir = paste0(projdir,'Plots/'))
+        listName = 'Tms', outdir = paste0('Plots/'))
 
 
 ### Find celltypes of shared clones and their exhaustion score ####
@@ -942,7 +943,7 @@ scale_fill_manual (values = col_pal) + NoLegend() +
 gtheme
 
 
-png (paste0(projdir, 'Plots/KLRC1_positive.png'), width=900,height=700, res=300)
+png (paste0('Plots/KLRC1_positive.png'), width=900,height=700, res=300)
 bp
 dev.off()
 
