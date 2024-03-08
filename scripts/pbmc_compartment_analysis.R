@@ -181,11 +181,11 @@ p[[1]]$layers[[1]]$aes_params$alpha =  .8
 p2 = DimPlot (srt, group.by= 'sampleID', cols = palette_sample) + theme_void() + scale_fill_manual(values = palette_sample)
 p[[1]]$layers[[1]]$aes_params$alpha =  .8
 
-png (paste0(projdir, 'Plots/FIGURE_5L_celltypes_umap.png'), width = 1400, height=1000, res = 300)
+png (paste0('Plots/FIGURE_5L_celltypes_umap.png'), width = 1400, height=1000, res = 300)
 p
 dev.off()
 
-png (paste0(projdir, 'Plots/FIGURE_S5F_sample_umap.png'), width = 1400, height=1000, res = 300)
+png (paste0('Plots/FIGURE_S5F_sample_umap.png'), width = 1400, height=1000, res = 300)
 p2
 dev.off()
 
@@ -199,7 +199,7 @@ markers_adt = paste0('AC-',c('CD3','CD4','CD8','CD25','CD56','CD127','CD161'))
 fp2 = FeaturePlot(srt, features = markers_adt,  reduction = reductionName, cols = palette_feature_protein, ncol = length(markers_adt)) & 
 theme(plot.title = element_text(size = 10)) & NoLegend() & NoAxes()
 
-png (paste0(projdir, 'Plots/FIGURE_5M_markers_featureplots.png'), height=1300, width=2900, res=300)
+png (paste0('Plots/FIGURE_5M_markers_featureplots.png'), height=1300, width=2900, res=300)
 wrap_plots (fp, fp2, nrow=2)
 #pc / pc2
 dev.off()
@@ -388,7 +388,7 @@ srt_tcr_cd8 = ModScoreCor (
         geneset_list = cnmf_t, 
         cor_threshold = NULL, 
         pos_threshold = NULL, # threshold for fetal_pval2
-        listName = 'Tms_', outdir = paste0(projdir,'Plots/'))
+        listName = 'Tms_', outdir = paste0('Plots/'))
 
 # FIGURE 6E - Show expanded clonotypes have higher exhaustion ####  
 ccomp_df = as.data.frame (srt_tcr_cd8@meta.data)
