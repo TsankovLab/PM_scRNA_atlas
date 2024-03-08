@@ -1,3 +1,4 @@
 .RData
 .RHistory
 .DS_Store
+__pycache__/*
