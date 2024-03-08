@@ -223,7 +223,7 @@ ptable_factor = 1,
 prop=T) +
 gtheme
 cp$data$Cm_r_max = factor (cp$data$Cm_r_max, levels = names (cnmf_spectra_unique_comb[row_order(hm)])) 
-pdf (paste0(projdir, 'Plots/FIGURE_2C_sample_abundance_cNMF_stacked_barplot.pdf'))
+pdf (paste0('Plots/FIGURE_2C_sample_abundance_cNMF_stacked_barplot.pdf'))
 print (cp)
 dev.off()
 
