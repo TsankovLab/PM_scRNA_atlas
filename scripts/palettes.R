@@ -63,7 +63,7 @@ palette_bulk = setNames (as.character(paletteer::paletteer_d("rcartocolor::ArmyR
 palette_t_cells = setNames (as.character (paletteer::paletteer_d("fishualize::Bodianus_rufus",4)), c('CD8','CD4','Tregs','TFH'))
 palette_nk_cells = setNames (c("#D3E3CAFF", "#92A587FF", "#2F3525FF"), c('FGFBP2_NK','KLRC1_NK','NKlike_Tcells'))
 palette_tnk_cells = c(palette_t_cells, palette_nk_cells)
-
+palette_myeloid = rev(as.character(paletteer::paletteer_d("khroma::lapaz", 256)[c(1,40,80,120,150,190,210,230)]))
 palette_protein_expression = c(low="darkblue",mid= "white",high= "darkgreen") 
 palette_feature_RNA = c('lightgrey',"#5F1415FF")
 palette_feature_protein = c("lightgrey", "darkgreen")
