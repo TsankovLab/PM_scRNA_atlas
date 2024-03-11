@@ -636,7 +636,7 @@ for (study in names(blk_meta))
 
 for (study in studies)
     {
-    pdf (paste0('Plots/FIGURE_2F_Kaplan_Mayer_survival_curves_',study,'subset_',subset_hist[[study]],'.pdf'), 3,4)
+    pdf (paste0('Plots/FIGURE_S2I_6A_Kaplan_Mayer_survival_curves_',study,'subset_',subset_hist[[study]],'.pdf'), 3,4)
     print (km_p_study[[study]])
     dev.off()
     }
@@ -775,6 +775,6 @@ bp_l = ggplot(bueno_fish, aes_string (x= 'FISH.chrom22', y= module)) +
           label = "p.adj.signif")
 
 pdf (paste0('Plots/FIGURE_2G_bueno_chr22_deletion_',module,'_covar_FISH_chrom22_boxplot.pdf'), width = 2.3,2.7)
-bp_l
+print (bp_l)
 dev.off()
 
