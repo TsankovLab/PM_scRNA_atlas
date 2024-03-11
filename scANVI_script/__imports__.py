@@ -6,7 +6,7 @@
 
 * Creation Date : 02-20-2024
 
-* Last Modified : Fri 08 Mar 2024 11:13:57 AM EST
+* Last Modified : Fri 08 Mar 2024 03:53:24 PM EST
 
 * Created By : Atharva Bhagwat
 
@@ -28,4 +28,5 @@ from scanpy._settings import ScanpyConfig
 plt.rcParams['figure.dpi'] = 300
 scvi.settings.seed = 42
 
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+USE_GPU = True if torch.cuda.is_available() else False
+DEVICE = torch.device("cuda:0" if USE_GPU else "cpu")

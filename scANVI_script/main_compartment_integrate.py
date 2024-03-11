@@ -6,7 +6,7 @@
 
 * Creation Date : 02-20-2024
 
-* Last Modified : Fri 08 Mar 2024 02:23:46 PM EST
+* Last Modified : Mon 11 Mar 2024 11:11:07 AM EDT
 
 * Created By : Atharva Bhagwat
 
@@ -29,7 +29,7 @@ CELLTYPE_COL = 'celltype_simplified2'
 main_root = os.path.join('scRNA', 'main')
 ScanpyConfig.figdir = Path(os.path.join(main_root, 'Plots'))
 
-scanvi_model_path = os.path.join(main_root, f'scanvi_model')
+scanvi_model_path = os.path.join('PM_scRNA_atlas', 'data', 'scanvi_models', 'main_model')
 
 # read obj.h5ad
 odata = ad.read_h5ad(os.path.join('scRNA', 'adata_tumor.h5ad'))
@@ -47,15 +47,9 @@ sc.pp.highly_variable_genes(
         subset=True,
     )
 
-# setup SCANVI and train
-scvi.model.SCANVI.setup_anndata(adata, layer='counts', labels_key=CELLTYPE_COL, unlabeled_category='Unknown', batch_key=batch)
-
-scanvi_model = scvi.model.SCANVI(adata, n_layers=3, n_latent=32)
+# load SCANVI model
+scanvi_model = scvi.model.SCANVI.load(scanvi_model_path, adata=adata, use_gpu=USE_GPU)
 scanvi_model.to_device(DEVICE)
-
-scanvi_model.train()
-
-scanvi_model.save(scanvi_model_path, overwrite=True)
 
 SCANVI_LATENT_KEY = "X_scANVI"
 adata.obsm[SCANVI_LATENT_KEY] = scanvi_model.get_latent_representation(adata)
