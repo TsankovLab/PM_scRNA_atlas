@@ -170,7 +170,7 @@ Heatmap (
   cluster_rows=F,
   row_names_side = 'left',
   cluster_columns=F, 
-  col = palette_gene_expression_fun,
+  col = palette_gene_expression_fun(cluster.averages),
   column_names_rot = 45,
   row_names_gp = gpar (fontsize = 6),
   column_names_gp = gpar (fontsize = 6))

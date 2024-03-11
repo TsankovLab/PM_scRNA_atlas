@@ -89,7 +89,6 @@ Heatmap (
   column_names_rot = 45,
   row_names_gp = gpar(fontface = "italic",fontsize = 6),
   column_names_gp = gpar (fontsize = 6))
-
 dev.off()
 
 # FIGURE S1C Composition plots by sampling ####

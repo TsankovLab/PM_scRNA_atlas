@@ -75,7 +75,8 @@ palette_clonotype = setNames (c(as.character (paletteer::paletteer_d("beyonce::X
 
 pallette_pbmc_celltype = setNames (rev(as.character(paletteer::paletteer_d("khroma::smoothrainbow")[c(1,3,5,7,9,11,13,15)])), c('CD4','CD8','ILC','MAIT','NK','NK Proliferating','NK_CD56bright','Treg'))
 
-
+palette_stroma = setNames(as.character(paletteer::paletteer_d("colRoz::shark_bay", 6)), levels(srt$celltype))
+palette_stroma[c('LEC','Fibroblasts','SmoothMuscle')] = as.character(c('lightblue4','olivedrab3','slateblue2'))
 palette_endothelial = setNames(as.character(paletteer::paletteer_d("colRoz::shark_bay", 3)), c('Artery','PLVAP+EC','Vein'))
 pallette_fetal_vs_adult = setNames (c('#DB3EB1FF', 'grey','purple'), c('fetal_lung','adult_lung','PM'))
 palette_scenic = rev(colorRampPalette(brewer.pal(10,'RdYlBu'))(50))
