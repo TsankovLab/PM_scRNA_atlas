@@ -99,7 +99,7 @@ dev.off()
 
 ### subset endothelial ####
 srt_endo = srt[,srt$celltype %in% c('Artery','PLVAP','Vein')]
-cnmf_spectra_unique_comb = as.list (read_excel( "../../data/cnmf_per_compartment.xlsx", sheet = "Ems_20"))
+cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Ems_20"))
 
 srt_endo = ModScoreCor (
         seurat_obj = srt_endo, 
