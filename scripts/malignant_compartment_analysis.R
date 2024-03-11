@@ -19,6 +19,7 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 # Import seurat object
 srt_tumor = readRDS ('../srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype == 'Malignant']
+srt$sampleID = factor (srt$sampleID, levels = levels (srt$sampleID)[1:12])
 
 #### Import bulk RNA subtype signatures to define malignant score ####
 
