@@ -34,7 +34,7 @@ corr_res = ggscatter (
   
 corr_res = ggMarginal(corr_res, type = "density", groupColour = TRUE, groupFill = TRUE)
 
-pdf (paste0(projdir,'Plots/FIGURE_5I_TLS_correlation_bueno.pdf'))
+pdf (paste0('Plots/FIGURE_5I_TLS_correlation_bueno.pdf'))
 corr_res
 dev.off()
 
@@ -236,7 +236,7 @@ corr_res = lapply (c('CXCL9','CXCL10','CXCL11'), function(x) ggscatter (
 corr_res = lapply (corr_res, function(x) ggMarginal(x, type = "density", groupColour = TRUE, groupFill = TRUE))
   
 
-pdf (paste0(projdir,'Plots/FIGURE_4G_CXCLs_correlation_bueno.pdf'), width = 11, height = 5)
+pdf (paste0('Plots/FIGURE_4G_CXCLs_correlation_bueno.pdf'), width = 11, height = 5)
 wrap_plots (corr_res)
 dev.off()
 
@@ -276,7 +276,7 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     })
     
 #stat_testL2[[mod_name]] = stat_testL
-png (paste0 (projdir,'Plots/FIGURE_5E_bueno_tcga_T_modules_boxplots.png'), width = 2200,height=800, res=300)
+png (paste0 ('Plots/FIGURE_5E_bueno_tcga_T_modules_boxplots.png'), width = 2200,height=800, res=300)
 wrap_plots (bp_l[[1]],bp_l[[2]])
 dev.off ()
     
@@ -319,7 +319,7 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     #stat_testL[[blk]] = data.frame (stat.test, dataset = blk)
     
 #stat_testL2[[mod_name]] = stat_testL
-png (paste0 (projdir,'Plots/FIGURE_3H_bueno_tcga_PLVAP_boxplots.png'), width = 1400,height=1000, res=300)
+png (paste0 ('Plots/FIGURE_3H_bueno_tcga_PLVAP_boxplots.png'), width = 1400,height=1000, res=300)
 wrap_plots (bp_l[[1]],bp_l[[2]])
 dev.off ()
     
@@ -636,7 +636,7 @@ for (study in names(blk_meta))
 
 for (study in studies)
     {
-    pdf (paste0(projdir,'Plots/FIGURE_2F_Kaplan_Mayer_survival_curves_',study,'subset_',subset_hist[[study]],'.pdf'), 3,4)
+    pdf (paste0('Plots/FIGURE_2F_Kaplan_Mayer_survival_curves_',study,'subset_',subset_hist[[study]],'.pdf'), 3,4)
     print (km_p_study[[study]])
     dev.off()
     }
