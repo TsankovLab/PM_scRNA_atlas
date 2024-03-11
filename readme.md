@@ -12,6 +12,8 @@ git clone https://github.com/TsankovLab/PM_scRNA_atlas.git
 ```
 and download the seurat objects srt_tumor.rds and srt_pbmc.rds available at GSE190597 in same folder
 
+### Installing R packages
+
 These are the R packages required to reproduce the scRNA and bulkRNA analyses. 
 System Requirements:
 
@@ -90,6 +92,11 @@ install.packages("pals")
 install.packages("ggthemes")
 ```
 
+### Installing python packages
+
+```bash
+conda env create -f 'PM_scRNA_atlas/scANVI_script/environment/scvi.yml'
+```
 
 ## Fetal endothelial analysis
 For comparison analysis of PLVAP+ EC with fetal and adult normal lungs please download data from:
