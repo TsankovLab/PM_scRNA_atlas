@@ -2,7 +2,7 @@
 
 set.seed(1234)
 
-projdir = '/ahg/regevdata/projects/ICA_Lung/Bruno/mesothelioma/reproduction2/bulkRNA/'
+projdir = 'bulkRNA/'
 system (paste('mkdir -p',paste0(projdir,'Plots/')))
 setwd (projdir)
 
@@ -355,7 +355,6 @@ for (i in mod)
   }
 
 
-
 ### Survival Analysis ####
 
 # FIGURE S2G-H - Run Cox hazard ratio regression survival analysis on nmf modules ####
@@ -642,8 +641,6 @@ for (study in studies)
     dev.off()
     }
 
-
-
 ### FIGURE S6B - Run Cox regression model on BayesPrism predictions ####
 celltype_names = c('B_cells','T_cells','Myeloid','NK','pDC','Malignant','Endothelial','Fibroblasts','Mesothelium','Plasma','SmoothMuscle','Alveolar','Glia')
 hist_column = c(bueno = 'ConsensusCluster', tcga = 'TUMOR_TYPE')
@@ -750,6 +747,9 @@ for (study in names (cfit_study))
 # FIGURE_2G - Check chr22 from bueno clinical var ####
 module = 'Cm17_cnv'
 blk = 'bueno'
+blk_meta[[blk]]$FISH.chrom22 = as.character (blk_meta[[blk]]$FISH.chrom22)
+blk_meta[[blk]]$FISH.chrom22[blk_meta[[blk]]$FISH.chrom22 == ''] = 'normal'
+blk_meta[[blk]]$FISH.chrom22 = factor (blk_meta[[blk]]$FISH.chrom22, levels = c('normal','del 22'))
 bueno_fish = blk_meta[[blk]][blk_meta[[blk]]$FISH.chrom22 %in% levels (blk_meta[[blk]]$FISH.chrom22),]
 
 bp_l = ggplot(bueno_fish, aes_string (x= 'FISH.chrom22', y= module)) + 
