@@ -1,17 +1,16 @@
 ### This repository contains custom code to reproduce main analyses in our manuscript, "Single-cell view of tumor microenvironment gradients in Pleural Mesothelioma"
+
 Scripts are organized by figure and bulkRNA / scRNA analysis:
-FIGURE_1_S1_main.R # Also including 3G, 4C, 4F, 6B 
-FIGURE_2_S2_malignant.R
-FIGURE_3_S3_stromal.R
-FIGURE_4_S4_myeloid.R
-FIGURE_5_S5_lymphoid.R
-FIGURE_5_S5_pbmc.R
-bulkRNA_analyses.R # including 1E, S1H-I, 2D-E/G, S2F-J, 3H, S3I-J, 4G, 5E/K, S5D, 6A, S6A-C
+FIGURE_1_S1_main.R # Also including 3G, 4C, 4F, 6B  
+FIGURE_2_S2_malignant.R  
+FIGURE_3_S3_stromal.R  
+FIGURE_4_S4_myeloid.R  
+FIGURE_5_S5_lymphoid.R  
+FIGURE_5_S5_pbmc.R  
+bulkRNA_analyses.R # including 1E, S1H-I, 2D-E/G, S2F-J, 3H, S3I-J, 4G, 5E/K, S5D, 6A, S6A-C  
+##
 
-
-
-
-To download Seurat object inclusive of all cell annotation and additional metadata, please download it from GEO GSE190597.
+To download Seurat objects inclusive of all cell annotation and additional metadata, please download it from GEO GSE190597.
 
 ## Installation
 
