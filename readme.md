@@ -1,6 +1,7 @@
 ### This repository contains custom code to reproduce main analyses in our manuscript, "Single-cell view of tumor microenvironment gradients in Pleural Mesothelioma"
 
-Scripts are organized by figure and bulkRNA / scRNA analysis:
+Scripts are organized by figure and bulkRNA / scRNA analysis: 
+## 
 FIGURE_1_S1_main.R # Also including 3G, 4C, 4F, 6B  
 FIGURE_2_S2_malignant.R  
 FIGURE_3_S3_stromal.R  
