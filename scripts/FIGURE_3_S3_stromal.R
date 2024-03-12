@@ -203,7 +203,7 @@ dev.off()
 ############################################################################
 
 # Load He dataset ####
-Convert("fetal_lung_endothelial_h5seurat")
+Convert('C3filtered.h5ad', dest="fetal_lung_endothelial.h5seurat", overwrite=TRUE)
 srt_fetal = LoadH5Seurat("fetal_lung_endothelial_h5seurat")
 srt_fetal$celltype = srt_fetal$new_celltype
 head (srt_fetal)
