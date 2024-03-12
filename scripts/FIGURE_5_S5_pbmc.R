@@ -20,7 +20,6 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-
 srt = readRDS ('../srt_pbmc.rds')
 
 # Normalize, scale and compute UMAP after correcting for sampleID batch with harmony
@@ -170,7 +169,7 @@ print (dp)
 dev.off()
 
 ### UMAP of cell types ####
-srt$celltype = srt$predicted.celltype.l2
+srt$celltype = as.character(srt$predicted.celltype.l2)
 srt$celltype[grep ('CD4', srt$celltype)] = 'CD4'
 srt$celltype[grep ('CD8', srt$celltype)] = 'CD8'
 srt$celltype[srt$celltype %in% c('B memory','B naive','CD14 Mono','Eryth','dnT','Platelet','gdT')] = NA
@@ -240,7 +239,7 @@ RunUMAP (reduction = reductionSave, dims = 1:15, reduction.name = reductionName,
 srt_tnk = FindNeighbors (object = srt_tnk, reduction = reductionSave, dims = 1:15, k.param = 30,
                               verbose = TRUE, force.recalc = T, graph.name=c(reductionGraphKnn,reductionGraphSnn))
 
-srt_tnk$celltype = srt_tnk$predicted.celltype.l2
+srt_tnk$celltype = as.character(srt_tnk$predicted.celltype.l2)
 srt_tnk$celltype[grep ('CD4', srt_tnk$celltype)] = 'CD4'
 srt_tnk$celltype[grep ('CD8', srt_tnk$celltype)] = 'CD8'
 srt_tnk$celltype[srt_tnk$celltype %in% c('B memory','B naive','CD14 Mono','Eryth','dnT','Platelet','gdT')] = NA
