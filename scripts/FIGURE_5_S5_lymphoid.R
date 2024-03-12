@@ -377,7 +377,6 @@ top_markers = c('CD79B','CD79A','CD19','CD37','RGS13','LRMP','MEF2B','LMO2','HMC
 
 dp = geneDot (
   seurat_obj = srt_b,
-  #gene = top_tfs2, 
   gene = factor (top_markers, levels = top_markers),
   x = 'celltype', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
   min_expression = 0,
@@ -416,7 +415,6 @@ pdf ('Plots/FIGURE_5H_top_markers_celltype_expression.pdf', height=2.7, width=4)
 dp
 dev.off()
 
-#ccc_bar1$data$sampleID4 = factor (ccc_bar1$data$sampleID4, levels = rev(levels(ccc_bar1$data$sampleID4)))
 pdf(paste0 ('Plots/FIGURE_5H_cell_composition_barplot.pdf'), width=2.5, height=4)
 ccc_bar1
 dev.off()
@@ -425,12 +423,7 @@ dev.off()
 pdf ('Plots/FIGURE_5I_celltypes_umap.pdf',width= 4,3)
 dp = DimPlot (srt_b, group.by = 'celltype', cols = palette_b_cells, 
   reduction=reductionName) + theme_void()
-#dp[[1]]$layers[[1]]$aes_params$alpha =  .5 
 dp
-# DimPlot (srt, group.by = 'celltype2', cols = palette_tnk_cells, 
-#   reduction=reductionName) + theme_void()
-# DimPlot (srt, group.by = 'celltype3', cols = palette_tnk_cells, 
-#   reduction=reductionName) + theme_void()
 dev.off()
 
 ### FIGURE 5I - cellcycle distribution ####
@@ -479,13 +472,13 @@ dev.off()
 ### TCR analysis ####
 #####################
 # Import TCR of tumors
-data.path_P7_tumor = 'patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
-data.path_P6_tumor = 'patient_7/count_matrices/TD005870_AlexanderTsankov/Tsankov-meso-prepolyic-01212022/outs/per_sample_outs/Tsankov-meso-prepolyic-01212022/vdj_t/filtered_contig_annotations.csv'
-data.path_P2_tumor = 'patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P9_tumor = 'patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P11_tumor = 'patient_11/230714/ZHAO8mesothelioma/cellranger_output/ALTS04_Zhao8scSeq_0_v1/per_sample_outs/ALTS04_Zhao8scSeq_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P12_tumor = 'patient_12/230718/cellranger_output/ALTS04_Zhao9scSeq_0_v1/per_sample_outs/ALTS04_Zhao9scSeq_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P13_tumor = 'patient_13/231101/ZHAO12mesothelioma/cellranger_output/ALTS04_Zhao12scSeq_0_v1/per_sample_outs/ALTS04_Zhao12scSeq_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P7_tumor = 'P7_all_contig_annotations.csv'
+data.path_P6_tumor = 'P6_all_contig_annotations.csv'
+data.path_P2_tumor = 'P2_all_contig_annotations.csv'
+data.path_P9_tumor = 'P9_all_contig_annotations.csv'
+data.path_P11_tumor = 'P11_all_contig_annotations.csv'
+data.path_P12_tumor = 'P12_all_contig_annotations.csv'
+data.path_P13_tumor = 'P13_all_contig_annotations.csv'
 
 
 vdj.dirs = c(
@@ -566,7 +559,6 @@ cc_box = cellComp (
   prop = FALSE,
   pal = palette_clonotype,
   subset_prop = 'Expanded',  
-  #pal = viridis::mako(,
   facet_ncol = 15
   ) + gtheme
 cc_box$data$celltype = factor (cc_box$data$celltype, levels = as.character(cc_box$data$celltype[order(-cc_box$data$Freq)]))
@@ -637,9 +629,7 @@ geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
 gtheme_no_text
 
-# box2$layers[[1]]$aes_params$alpha =  .7
-# box2$layers[[1]]$geom_params$linewdith =  .1
-# box2$layers[[1]]$aes_params$lwd =  .1
+
 pdf ('Plots/FIGURE_S5J_expanded_cytox.pdf',height = 3.3,width = 2)
 box2
 dev.off()
@@ -648,9 +638,7 @@ dev.off()
 
 
 # FIGURE S5 - proportion of CD8 expanded and exhausted in SE groups ####
-# metaGroupName = 'exhaustclones'
 metaGroupName = 'cloneSize'
-#srt_tcr_cd8_exp = srt_tcr_cd8[,srt_tcr_cd8$cloneSize == 'Expanded (1 < X <= Inf)']
 cc_box = cellComp (
   seurat_obj = srt_tcr, 
   metaGroups = c('sampleID',metaGroupName, 'SE_group'),
@@ -659,17 +647,13 @@ cc_box = cellComp (
   prop = T,
   pal = palette_SE_group,
   subset_prop = 'Expanded',
-  # subset_prop = 'Large (0.01 < X <= 0.1)',  
-#  subset_prop = 'Expanded (1 < X <= Inf)', 
   facet_ncol = 15
   ) + gtheme_no_text
 
 cc_box$data$SE_group = factor (cc_box$data$SE_group, levels = unique(cc_box$data$SE_group))
 cc_box$data$cloneSize = factor (cc_box$data$cloneSize, levels = rev (c('Expanded','NonExpanded','Single')))
 stat.test = cc_box$data %>%
-#group_by_at ('celltype_cc_deconvolved') %>%
 t_test(reformulate ('SE_group', 'Freq')) %>%
-#adjust_pvalue (method = "none") %>%
 add_significance ()
 stat.test = stat.test %>% add_xy_position (x = 'SE_group', step.increase=.4)
 cc_box = cc_box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
@@ -715,8 +699,8 @@ srt_merged = merge (srt_tumor, srt_pbmc)
 srt_merged$site = ifelse (grepl ('pbmc',colnames (srt_merged)), 'pbmc','tumor')
 
 # Import TCR_contigs of PBMCs ####
-data.path_pbmc1 = '2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
-data.path_pbmc2 = '2023-03-29-1-2/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv'
+data.path_pbmc1 = 'PBMC_P2_P7_P9_Processed_TCR_1-1_all_contig_annotations.csv'
+data.path_pbmc2 = 'PBMC_P2_P7_P9_Processed_TCR_1-2_all_contig_annotations.csv'
 vdj.dirs = c(data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####
@@ -744,9 +728,9 @@ tcrL_pbmc = tcrL_pbmc[sapply (tcrL_pbmc, nrow) > 1]
 names (tcrL_pbmc) = paste0(names(tcrL_pbmc) ,'_pbmc')
 
 # Import TCR of tumors ####
-data.path_P7_tumor = 'patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv'
-data.path_P2_tumor = 'patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv'
-data.path_P9_tumor = 'patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv'
+data.path_P7_tumor = 'P7_all_contig_annotations.csv'
+data.path_P2_tumor = 'P2_all_contig_annotations.csv'
+data.path_P9_tumor = 'P9_all_contig_annotations.csv'
 
 vdj.dirs = c (data.path_P7_tumor, data.path_P2_tumor, data.path_P9_tumor)
 tcrL_tumor = lapply (vdj.dirs, function(x) read.csv(x))
