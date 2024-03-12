@@ -2,7 +2,7 @@
 
 * File Name : integrate.py
 
-* Description : scANVI integration - tumor
+* Description : scANVI integration - main
 
 _._._._._._._._._._._._._._._._._._._._._. """
 
