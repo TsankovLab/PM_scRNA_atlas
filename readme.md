@@ -110,7 +110,7 @@ install.packages("ggthemes")
 conda env create -f 'PM_scRNA_atlas/scANVI_script/environment/scvi.yml'
 ```
 
-Run `Rscript convert_to_anndata.R` before running python scripts to convert `srt_tumor.rds` and `srt_pbmc.rds` to `.h5ad`
+Run `Rscript convert_to_anndata.R` to convert `srt_tumor.rds` and `srt_pbmc.rds` to `.h5ad` before running python scripts to reproduce scANVI integration UMAP plots.
 
 ## Fetal endothelial analysis
 For comparison analysis of PLVAP+ EC with fetal and adult normal lungs please download data from:
