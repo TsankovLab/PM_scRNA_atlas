@@ -556,7 +556,7 @@ cc_box = cellComp (
   plot_as = 'bar',
   prop = FALSE,
   pal = palette_clonotype,
-  subset_prop = 'Expanded',  
+  subset_prop = 'Large',  
   facet_ncol = 15
   ) + gtheme
 cc_box$data$celltype = factor (cc_box$data$celltype, levels = as.character(cc_box$data$celltype[order(-cc_box$data$Freq)]))
@@ -574,11 +574,11 @@ ccomp_df = as.data.frame (srt_tcr@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
 ccomp_df = aggregate (ccomp_df$Tm5, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
 
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('Single','NonExpanded','Expanded'))
+ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
 box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
          fill = 'white', color='white', line.color = "gray", line.size = 0.3,
          palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Expanded','Single')),
+box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
     tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme + NoLegend()
 box2 = box2 + 
 geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
@@ -595,11 +595,11 @@ ccomp_df = as.data.frame (srt_tcr@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
 ccomp_df = aggregate (ccomp_df$Tm4, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
 
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('Single','NonExpanded','Expanded'))
+ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
 box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
          fill = 'white', color='white', line.color = "gray", line.size = 0.3,
          palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Expanded','Single')),
+box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
     tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme + NoLegend()
 box2 = box2 + 
 geom_point (position='identity', alpha=.7, color="grey44", size=1.2) +
@@ -616,11 +616,11 @@ ccomp_df = as.data.frame (srt_tcr@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
 ccomp_df = aggregate (ccomp_df$Tm2, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
 
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('Single','NonExpanded','Expanded'))
+ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
 box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
          fill = 'white', color='white', line.color = "gray", line.size = 0.3,
          palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Expanded','Single')),
+box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
     tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme + NoLegend()
 box2 = box2 + 
 geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
@@ -644,12 +644,12 @@ cc_box = cellComp (
   ptable_factor = c(1),
   prop = T,
   pal = palette_SE_group,
-  subset_prop = 'Expanded',
+  subset_prop = 'Large',
   facet_ncol = 15
   ) + gtheme_no_text
 
 cc_box$data$SE_group = factor (cc_box$data$SE_group, levels = unique(cc_box$data$SE_group))
-cc_box$data$cloneSize = factor (cc_box$data$cloneSize, levels = rev (c('Expanded','NonExpanded','Single')))
+cc_box$data$cloneSize = factor (cc_box$data$cloneSize, levels = rev (c('Large','Small','NonExpanded')))
 stat.test = cc_box$data %>%
 t_test(reformulate ('SE_group', 'Freq')) %>%
 add_significance ()
