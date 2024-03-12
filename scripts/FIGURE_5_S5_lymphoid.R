@@ -472,13 +472,13 @@ dev.off()
 ### TCR analysis ####
 #####################
 # Import TCR of tumors
-data.path_P7_tumor = 'P7_all_contig_annotations.csv'
-data.path_P6_tumor = 'P6_all_contig_annotations.csv'
-data.path_P2_tumor = 'P2_all_contig_annotations.csv'
-data.path_P9_tumor = 'P9_all_contig_annotations.csv'
-data.path_P11_tumor = 'P11_all_contig_annotations.csv'
-data.path_P12_tumor = 'P12_all_contig_annotations.csv'
-data.path_P13_tumor = 'P13_all_contig_annotations.csv'
+data.path_P7_tumor = '../../PM_scRNA_atlas/data/P7_all_contig_annotations.csv'
+data.path_P6_tumor = '../../PM_scRNA_atlas/data/P6_all_contig_annotations.csv'
+data.path_P2_tumor = '../../PM_scRNA_atlas/data/P2_all_contig_annotations.csv'
+data.path_P9_tumor = '../../PM_scRNA_atlas/data/P9_all_contig_annotations.csv'
+data.path_P11_tumor = '../../PM_scRNA_atlas/data/P11_all_contig_annotations.csv'
+data.path_P12_tumor = '../../PM_scRNA_atlas/data/P12_all_contig_annotations.csv'
+data.path_P13_tumor = '../../PM_scRNA_atlas/data/P13_all_contig_annotations.csv'
 
 
 vdj.dirs = c(
@@ -699,8 +699,8 @@ srt_merged = merge (srt_tumor, srt_pbmc)
 srt_merged$site = ifelse (grepl ('pbmc',colnames (srt_merged)), 'pbmc','tumor')
 
 # Import TCR_contigs of PBMCs ####
-data.path_pbmc1 = 'PBMC_P2_P7_P9_Processed_TCR_1-1_all_contig_annotations.csv'
-data.path_pbmc2 = 'PBMC_P2_P7_P9_Processed_TCR_1-2_all_contig_annotations.csv'
+data.path_pbmc1 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-1_all_contig_annotations.csv'
+data.path_pbmc2 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-2_all_contig_annotations.csv'
 vdj.dirs = c(data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####
@@ -728,9 +728,9 @@ tcrL_pbmc = tcrL_pbmc[sapply (tcrL_pbmc, nrow) > 1]
 names (tcrL_pbmc) = paste0(names(tcrL_pbmc) ,'_pbmc')
 
 # Import TCR of tumors ####
-data.path_P7_tumor = 'P7_all_contig_annotations.csv'
-data.path_P2_tumor = 'P2_all_contig_annotations.csv'
-data.path_P9_tumor = 'P9_all_contig_annotations.csv'
+data.path_P7_tumor = '../../PM_scRNA_atlas/data/P7_all_contig_annotations.csv'
+data.path_P2_tumor = '../../PM_scRNA_atlas/data/P2_all_contig_annotations.csv'
+data.path_P9_tumor = '../../PM_scRNA_atlas/data/P9_all_contig_annotations.csv'
 
 vdj.dirs = c (data.path_P7_tumor, data.path_P2_tumor, data.path_P9_tumor)
 tcrL_tumor = lapply (vdj.dirs, function(x) read.csv(x))

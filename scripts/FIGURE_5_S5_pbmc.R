@@ -265,8 +265,8 @@ meta_pbmc = srt@meta.data[srt$batch == 'batch2',]
 meta_pbmc$sampleID = as.character (meta_pbmc$sampleID)
 
 # Unzip TCR contig files before this
-data.path_pbmc1 = 'PBMC_P2_P7_P9_Processed_TCR_1-1_all_contig_annotations.csv'
-data.path_pbmc2 = 'PBMC_P2_P7_P9_Processed_TCR_1-2_all_contig_annotations.csv'
+data.path_pbmc1 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-1_all_contig_annotations.csv'
+data.path_pbmc2 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-2_all_contig_annotations.csv'
 vdj.dirs = c(data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####
@@ -289,8 +289,8 @@ tcrL_pbmc = split (tcrL_pbmc, tcrL_pbmc$sampleID)
 names (tcrL_pbmc) = paste0(names(tcrL_pbmc) ,'_pbmc')
 
 # Load PBMC TCR-sequencing from resection samples ####
-data.path1 = 'PBMC_Processed_TCR-2-1_TCR_all_contig_annotations.csv'
-data.path2 = 'PBMC_Processed_TCR-2-2_TCR_all_contig_annotations.csv'
+data.path1 = '../../PM_scRNA_atlas/data/PBMC_Processed_TCR-2-1_TCR_all_contig_annotations.csv'
+data.path2 = '../../PM_scRNA_atlas/data/PBMC_Processed_TCR-2-2_TCR_all_contig_annotations.csv'
 vdj.dirs = c(data.path1, data.path2)
 meta_pbmc_batch1 = srt@meta.data[srt$batch == 'batch1',]
 meta_pbmc_batch1$sampleID = as.character (meta_pbmc_batch1$sampleID)
