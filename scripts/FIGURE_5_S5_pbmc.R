@@ -20,7 +20,6 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-
 srt = readRDS ('../srt_pbmc.rds')
 
 # Normalize, scale and compute UMAP after correcting for sampleID batch with harmony
@@ -64,7 +63,7 @@ pq2 = DimPlot(srt, reduction = reductionName, group.by = "sampleID", label = F, 
 scale_color_manual(values = palette_sample)
 
 png (paste0("Plots/FIGURE_1C_celltypes_samples_umap.png"), width = 2800, height = 1000, res=300)
-pq1 + pq2
+print (pq1 + pq2)
 dev.off()
 
 ### FIGURE S1A ####
@@ -86,7 +85,7 @@ fp = FeaturePlot(srt, features = RNA.markers,  reduction = reductionName, cols =
 theme(plot.title = element_text(size = 10, face='italic')) & NoLegend() & NoAxes()
 
 png (paste0("Plots/FIGURE_S1D_feature_plots_RNA.png"), width = 1800, height = 1000, res=300)
-fp
+print (fp)
 dev.off()
 
 RNA.markers=c('CD3D','CD3E','CD8A','CD8B','CCL5','ITGB1','IL7R',
@@ -124,7 +123,7 @@ dp = geneDot (
   gtheme
   
 png(paste0("Plots/FIGURE_S1E_DotPlot_topRNAmarkers_predicted.celltype.l2.png"), width = 4500, height = 2200, res = 300)
-dp 
+print (dp)
 dev.off()
 
 ### FIGURE S1F ####
@@ -166,11 +165,11 @@ dp = geneDot (
   gtheme
   
 png(paste0("Plots/FIGURE_S1G_DotPlot_topADTmarkers_predicted.celltype.l2.png"), width = 3500, height = 2200, res = 300)
-dp 
+print (dp)
 dev.off()
 
 ### UMAP of cell types ####
-srt$celltype = srt$predicted.celltype.l2
+srt$celltype = as.character(srt$predicted.celltype.l2)
 srt$celltype[grep ('CD4', srt$celltype)] = 'CD4'
 srt$celltype[grep ('CD8', srt$celltype)] = 'CD8'
 srt$celltype[srt$celltype %in% c('B memory','B naive','CD14 Mono','Eryth','dnT','Platelet','gdT')] = NA
@@ -182,11 +181,11 @@ p2 = DimPlot (srt, group.by= 'sampleID', cols = palette_sample) + theme_void() +
 p[[1]]$layers[[1]]$aes_params$alpha =  .8
 
 png (paste0('Plots/FIGURE_5L_celltypes_umap.png'), width = 1400, height=1000, res = 300)
-p
+print (p)
 dev.off()
 
 png (paste0('Plots/FIGURE_S5F_sample_umap.png'), width = 1400, height=1000, res = 300)
-p2
+print (p2)
 dev.off()
 
 DefaultAssay (srt) = 'RNA'
@@ -200,8 +199,7 @@ fp2 = FeaturePlot(srt, features = markers_adt,  reduction = reductionName, cols 
 theme(plot.title = element_text(size = 10)) & NoLegend() & NoAxes()
 
 png (paste0('Plots/FIGURE_5M_markers_featureplots.png'), height=1300, width=2900, res=300)
-wrap_plots (fp, fp2, nrow=2)
-#pc / pc2
+print (wrap_plots (fp, fp2, nrow=2))
 dev.off()
   
 ### Subset to T-NK cells
@@ -241,7 +239,7 @@ RunUMAP (reduction = reductionSave, dims = 1:15, reduction.name = reductionName,
 srt_tnk = FindNeighbors (object = srt_tnk, reduction = reductionSave, dims = 1:15, k.param = 30,
                               verbose = TRUE, force.recalc = T, graph.name=c(reductionGraphKnn,reductionGraphSnn))
 
-srt_tnk$celltype = srt_tnk$predicted.celltype.l2
+srt_tnk$celltype = as.character(srt_tnk$predicted.celltype.l2)
 srt_tnk$celltype[grep ('CD4', srt_tnk$celltype)] = 'CD4'
 srt_tnk$celltype[grep ('CD8', srt_tnk$celltype)] = 'CD8'
 srt_tnk$celltype[srt_tnk$celltype %in% c('B memory','B naive','CD14 Mono','Eryth','dnT','Platelet','gdT')] = NA
@@ -253,7 +251,7 @@ pq2 = DimPlot(srt_tnk, reduction = reductionName, group.by = "sampleID", label =
 scale_color_manual(values = palette_sample)
 
 png (paste0("Plots/FIGURE_5L_celltypes_samples_umap.png"), width = 2800, height = 1000, res=300)
-pq1 + pq2
+print (pq1 + pq2)
 dev.off()
 
 
@@ -327,9 +325,9 @@ combinedTCR = combineTCR (contig_list,
                            filterMulti = FALSE)
 
 pdf ('Plots/clonotype_overlap.pdf',width=5,3.5)
-clonalOverlap(combinedTCR, 
+print (clonalOverlap(combinedTCR, 
               cloneCall = "strict", 
-              method = "morisita")
+              method = "morisita"))
 dev.off()
 
 # Check redundancy contig list
@@ -372,7 +370,7 @@ cc_box = cellComp (
 cc_box$data$predicted.celltype.l2 = factor (cc_box$data$predicted.celltype.l2, levels = as.character(cc_box$data$predicted.celltype.l2[order(-cc_box$data$Freq)]))
 
 png(paste0('Plots/FIGURE_S5H_Expanded_vs_nonExpanded_barplot.png'),width=1200,height=800, res=300)
-cc_box
+print (cc_box)
 dev.off()
 
 ### Subset to CD8 ####
@@ -406,7 +404,7 @@ geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA)
 
 png ('Plots/FIGURE_6N_expanded_exhaustion.png',height = 1000,width = 600, res=300)
-box2
+print (box2)
 dev.off()
 
 ### Check with MHC II module ####
@@ -425,7 +423,7 @@ geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA)
 
 png ('Plots/FIGURE_S6J_expanded_MHCII.png',height = 1000,width = 600, res=300)
-box2
+print (box2)
 dev.off()
 
 
@@ -445,7 +443,7 @@ geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
 geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA)
 
 png ('Plots/FIGURE_S6J_expanded_cytotoxic.png',height = 1000,width = 600, res=300)
-box2
+print (box2)
 dev.off()
 
 

@@ -66,8 +66,8 @@ dp1 = DimPlot (srt, group.by = 'sampleID',
   reduction=reductionName) + theme_void() + scale_color_manual (values = palette_sample)
 
 pdf ('Plots/FIGURE_5A_S5A_celltypes_umap.pdf',5,3)
-dp
-dp1
+print (dp)
+print (dp1)
 dev.off()
 
 
@@ -93,7 +93,7 @@ dp = geneDot (
 
 
 pdf ('Plots/FIGURE_5B_top_markers_celltype_expression.pdf', height=2.8, width=5.5)
-dp
+print (dp)
 dev.off()  
 
 ### FIGURE 5B - Make stacked barplot of sample abundance per celltype ####
@@ -107,7 +107,7 @@ prop=T) +
 theme_minimal()
 #cp$data$cNMF__r_max = factor (cp$data$cNMF__r_max, levels = names (cnmf_spectra_filtered[row_order(hm)])) 
 pdf (paste0('Plots/FIGURE_5B_sample_abundance_celltype_stacked_barplot.pdf'))
-cp
+print (cp)
 dev.off()
 
 # Import cNMF modules from T cells and compute scores across TNK cells for each 
@@ -140,7 +140,7 @@ hm = draw (Heatmap (cor_mat,
             grid.rect(x, y, w, h, gp = gpar(fill = fill, col = fill))
         }}))
 pdf (paste0('Plots/FIGURE_S5C_cnmf_cor_heatmap_triangle_cells.pdf'),5.5,4.5)
-hm
+print (hm)
 dev.off()
 
 ### FIGURE S5B - Make dotplot of top markers for each nmf ####
@@ -163,7 +163,7 @@ y_name = 'celltype',
 plotcol = palette_gene_expression2) + gtheme_italic
 
 pdf ('Plots/FIGURE_S5B_cNMF_markers_expression.pdf', width=11, height=4)
-dotp
+print (dotp)
 dev.off()
 
 
@@ -199,7 +199,7 @@ hm = draw (Heatmap (cor_mat,
             grid.rect(x, y, w, h, gp = gpar(fill = fill, col = fill))
         }}))
 pdf (paste0('Plots/FIGURE_5C_modules_cnmf_cor_heatmap_triangle.pdf'),5.5,4.5)
-hm
+print (hm)
 dev.off()
 
 
@@ -232,7 +232,7 @@ bracket.nudge.y = -1.2, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
 pdf ('Plots/FIGURE_5E_exhaustion_markers.pdf',2.5,width = 2.8)
-box
+print (box)
 dev.off()
 
 # FIGURE S5E - Repeat per subtype ####
@@ -270,7 +270,7 @@ for (x in ext_markers)
   }
 
 pdf ('Plots/FIGURE_S5E_exhaustion_markers_per_celltype.pdf',width = 12, height=4)
-wrap_plots (boxl, ncol=5)
+print (wrap_plots (boxl, ncol=5))
 dev.off()
 
 # FIGURE 5F - Repeat per subtype across samples to generate heatmap ####
@@ -296,7 +296,7 @@ hm = draw (Heatmap (t(ext_avgs),
 #  right_annotation = ha,
   border=T))
 pdf ('Plots/FIGURE_5F_exhaustion_markers_per_celltype_heatmap.pdf',width = 4, height=2.8)
-hm
+print (hm)
 dev.off()
   
 # FIGURE 5E - Show distribution relevant Tms ####
@@ -304,7 +304,7 @@ ccomp_df = srt@meta.data
 dp = lapply (c('Tm2','Tm5','Tm7'), function(x) ggplot(ccomp_df, aes_string(x = x, group = 'SE_group')) +
   geom_density(aes(fill = SE_group),linewidth=.1, alpha = 0.6) + scale_fill_manual (values = palette_SE_group) + gtheme + NoLegend())
 pdf ('Plots/FIGURE_5E_cell_distributions_Tm2_Tm5_Tm7_density.pdf',width = 4, height=1.6)
-wrap_plots (dp)
+print (wrap_plots (dp))
 dev.off()
 
 
@@ -335,9 +335,10 @@ bracket.nudge.y = -1, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
 pdf ('Plots/FIGURE_5G_MHCII_markers.pdf',2.5,width = 2.8)
-box
+print (box)
 dev.off()
 
+# Subset to B-cells and recompute UMAP
 srt_b = srt_tumor[, srt_tumor$celltype_simplified %in% c('B_cells','Plasma')]
 
 batch = 'sampleID'
@@ -408,22 +409,22 @@ ccc_bar1$layers[[1]]$aes_params$alpha =   1
 
 
 pdf ('Plots/FIGURE_5H_top_markers_celltype_expression_legend.pdf', height=4, width=7)
-dp
+print (dp)
 dev.off()
  
 pdf ('Plots/FIGURE_5H_top_markers_celltype_expression.pdf', height=2.7, width=4)
-dp
+print (dp)
 dev.off()
 
 pdf(paste0 ('Plots/FIGURE_5H_cell_composition_barplot.pdf'), width=2.5, height=4)
-ccc_bar1
+print (ccc_bar1)
 dev.off()
 
 ### FIGURE 5I - DimPlot ####
-pdf ('Plots/FIGURE_5I_celltypes_umap.pdf',width= 4,3)
 dp = DimPlot (srt_b, group.by = 'celltype', cols = palette_b_cells, 
   reduction=reductionName) + theme_void()
-dp
+pdf ('Plots/FIGURE_5I_celltypes_umap.pdf',width= 4,3)
+print (dp)
 dev.off()
 
 ### FIGURE 5I - cellcycle distribution ####
@@ -441,7 +442,7 @@ rp = ggplot(ccomp_df, aes_string(x = 'cc', y = 'celltype')) +
   gtheme
 
 pdf ('Plots/FIGURE_5I_cellcycle_GCBcells.pdf', height=2.5, width=3)
-wrap_plots (rp)
+print (wrap_plots (rp))
 dev.off()
 
 
@@ -462,7 +463,7 @@ y_name = 'celltype',
 plotcol = palette_gene_expression2) + gtheme_italic
 
 pdf (paste0 ('Plots/FIGURE_5H_gctfh_markers_TFH_dotplot.pdf'), height=3.5, width=2.7)
-dotp3
+print (dotp3)
 dev.off()
 
 
@@ -499,16 +500,16 @@ combinedTCR <- combineTCR (contig_list,
                            removeMulti = FALSE, 
                            filterMulti = FALSE)
 pdf (paste0('Plots/clonotype_overlap.pdf'),width=5,3.5)
-clonalOverlap(combinedTCR, 
+print (clonalOverlap(combinedTCR, 
               cloneCall = "strict", 
-              method = "morisita")
+              method = "morisita"))
 dev.off()
 
 pdf (paste0('Plots/occupied_repertoire.pdf'),width=4,height=4)
-clonalQuant(combinedTCR, 
+print (clonalQuant(combinedTCR, 
             cloneCall="strict", 
             chain = "both", 
-            scale = TRUE)
+            scale = TRUE))
 dev.off()
 
 
@@ -539,7 +540,7 @@ cc_bar_tumor = cellComp (
   ) + theme_classic() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 pdf ('Plots/clonotype_celltypes.pdf', 8,3)
-cc_bar_tumor
+print (cc_bar_tumor)
 dev.off()
 
 
@@ -548,7 +549,7 @@ dp = DimPlot (srt_tcr, reduction = reductionName, group.by='cloneSize') +
 scale_color_manual (values = palette_clonotype) + gtheme
 
 pdf(paste0('Plots/Expanded_vs_nonExpanded_umap.pdf'), height=3,width=5)
-dp
+print (dp)
 dev.off()
 
 metaGroupName = 'cloneSize'
@@ -564,7 +565,7 @@ cc_box = cellComp (
 cc_box$data$celltype = factor (cc_box$data$celltype, levels = as.character(cc_box$data$celltype[order(-cc_box$data$Freq)]))
 
 pdf(paste0('Plots/FIGURE_5A_Expanded_vs_nonExpanded_barplot.pdf'),4,3)
-cc_box
+print (cc_box)
 dev.off()
 
 
@@ -588,7 +589,7 @@ geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0
 gtheme_no_text
 
 pdf ('Plots/FIGURE_S5J_expanded_exhaustion.pdf', height = 3.3,width = 2)
-box2
+print (box2)
 dev.off()
 
 
@@ -609,7 +610,7 @@ geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0
 gtheme_no_text
 
 pdf ('Plots/FIGURE_S5J_expanded_MHCII.pdf',height = 3.3,width = 2)
-box2
+print (box2)
 dev.off()
 
 
@@ -631,7 +632,7 @@ gtheme_no_text
 
 
 pdf ('Plots/FIGURE_S5J_expanded_cytox.pdf',height = 3.3,width = 2)
-box2
+print (box2)
 dev.off()
 
 
@@ -661,7 +662,7 @@ bracket.nudge.y = 0, hide.ns = T,
 label = "p")
 
 pdf(paste0('Plots/FIGURE_S5K_Exhausted_Expanded_vs_nonExpanded_SE_group_boxplot2.pdf'),width=2.2,2.5)
-cc_box
+print (cc_box)
 dev.off()
 
 
@@ -744,9 +745,9 @@ combinedTCR <- combineTCR (contig_list,
                            removeMulti = FALSE, 
                            filterMulti = FALSE)
 pdf ('Plots/FIGURE_S6B_clonotype_overlap2.pdf',width=5,3.5)
-clonalOverlap(combinedTCR, 
+print (clonalOverlap(combinedTCR, 
               cloneCall = "strict", 
-              method = "morisita")
+              method = "morisita"))
 dev.off()
 
 # Compare clonotypes
@@ -769,9 +770,9 @@ cs3 = clonalScatter(combinedTCR,
               y.axis = "P9_tumor",
               dot.size = "total",
               graph = "proportion")
-cs1
-cs2
-cs3
+print (cs1)
+print (cs2)
+print (cs3)
 dev.off()
 
 srt_merged = combineExpression (combinedTCR, 
@@ -880,7 +881,7 @@ gtheme +
 paletteer::scale_color_paletteer_c("ggthemes::Red") +
 
 pdf ('Plots/FIGURE_5O_exhausted_shared_clonotypes2.pdf', height = 2.6,3.5)
-sp
+print (sp)
 dev.off()
 
 
@@ -908,9 +909,8 @@ srt$subtype[is.na(srt$subtype)] = 'PM'
 
 gd = geneDot (
 srt,
-#gene = top_tfs2, 
 gene = 'KLRC1',
-x = 'subtype', # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
+x = 'subtype', # 
 min_expression = 0,
 facet_ncol = 5,
 lim_expression = NULL,
@@ -928,6 +928,6 @@ gtheme
 
 
 png (paste0('Plots/KLRC1_positive.png'), width=900,height=700, res=300)
-bp
+print (bp)
 dev.off()
 
