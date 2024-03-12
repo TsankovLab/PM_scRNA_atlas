@@ -239,7 +239,7 @@ ext_avg$group = rownames (ext_avg)
 ext_avg = gather (ext_avg, gene, avg_expression, 1:(ncol(ext_avg)-1))
 ext_avg$sample = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[1])
 ext_avg$celltype = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[2])
-ext_avg$SE_group = setNames(srt_t$SE_group, srt_t$sampleID2)[ext_avg$sample]
+ext_avg$SE_group = setNames(srt_t$SE_group, srt_t$sampleID)[ext_avg$sample]
 ext_avg$SE_group = factor (ext_avg$SE_group, levels = c('S-High','E-High'))
 
 boxl = list()
@@ -518,11 +518,11 @@ srt = RenameCells(
 srt = combineExpression (combinedTCR, srt,
   proportion = F,
 #  cloneSizes = c(Rare = 1e-04, Small = 0.001, Medium = 0.01, Large = 0.1, Hyperexpanded = Inf))
-  cloneSize = c(Single = 1, NonExpanded = 5, Expanded = Inf))
+  cloneSize = c(NonExpanded = 1, Small = 5, Large = Inf))
   #)
 srt_tcr = srt[,srt$sampleID %in% c('P7','P6','P9','P11','P12','P13')]
 srt_tcr = srt_tcr[, !is.na (srt_tcr$cloneSize)]
-clonesize_name = setNames (c('Single','NonExpanded','Expanded','None'), c('Single (0 < X <= 1)','NonExpanded (1 < X <= 5)','Expanded (5 < X <= Inf)', 'None ( < X <= 0)'))
+clonesize_name = setNames (c('NonExpanded','Small','Large','None'), c('NonExpanded (0 < X <= 1)','Small (1 < X <= 5)','Large (5 < X <= Inf)', 'None ( < X <= 0)'))
 srt_tcr$cloneSize = unname(clonesize_name[as.character(srt_tcr$cloneSize)])
 
 ### Find which cell type have clonal expansion ####
@@ -845,17 +845,17 @@ table (ccomp_df$site)
 
 # Compute mean exhaustion for each clonotype ####
 exhaustion_module = 'Tm5' # define exhaustion module
-clones_l = split(srt_merged@meta.data[,exhaustion_module], paste0(srt_merged$CTstrict, srt_merged$sampleID4, srt_merged$site))
+clones_l = split(srt_merged@meta.data[,exhaustion_module], paste0(srt_merged$CTstrict, srt_merged$sampleID, srt_merged$site))
 
 clones = unlist (lapply (clones_l, function(x) mean (x)))
 ext_cut = summary (clones)['Mean']
 
-ccomp_df = split (ccomp_df, paste0(ccomp_df$CTstrict, ccomp_df$sampleID4, ccomp_df$site))
+ccomp_df = split (ccomp_df, paste0(ccomp_df$CTstrict, ccomp_df$sampleID, ccomp_df$site))
 ccomp_df = do.call (rbind, unname(lapply (ccomp_df, function(x) data.frame (
   CTstrict = x$CTstrict[1],
   exhaustion = mean(x[,exhaustion_module]), 
   class = x$class[1], 
-  sampleID4 = x$sampleID4[1],
+  sampleID = x$sampleID[1],
   tumor_fraction = x$tumor_fraction[1],
   pbmc_fraction = x$pbmc_fraction[1],
   sum = x$sum[1],
