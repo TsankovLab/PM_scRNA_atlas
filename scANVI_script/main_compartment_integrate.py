@@ -4,8 +4,6 @@
 
 * Description : scANVI integration - tumor
 
-* Creation Date : 02-20-2024
-
 _._._._._._._._._._._._._._._._._._._._._. """
 
 from __imports__ import *
