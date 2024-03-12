@@ -479,16 +479,6 @@ data.path_P12_tumor = '../../PM_scRNA_atlas/data/P12_filtered_contig_annotations
 data.path_P13_tumor = '../../PM_scRNA_atlas/data/P13_filtered_contig_annotations.csv'
 
 
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_8/count_matrices/ZhaoMesothelioma1/cellranger_output/ALTS03_ZhaoS2pos_0_v1/per_sample_outs/ALTS03_ZhaoS2pos_0/vdj_t/filtered_contig_annotations.csv P2_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_7/count_matrices/TD005870_AlexanderTsankov/Tsankov-meso-prepolyic-01212022/outs/per_sample_outs/Tsankov-meso-prepolyic-01212022/vdj_t/filtered_contig_annotations.csv P6_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_4/count_matrices/TD005274/Biopsy-TCR/outs/per_sample_outs/Biopsy-TCR/vdj_t/filtered_contig_annotations.csv P7_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_9/count_matrices/ZhaoMesothelioma4/cellranger_output/ALTS03_ZhaoMelanoma4_0_v1/per_sample_outs/ALTS03_ZhaoMelanoma4_0/vdj_t/filtered_contig_annotations.csv P9_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_11/230714/ZHAO8mesothelioma/cellranger_output/ALTS04_Zhao8scSeq_0_v1/per_sample_outs/ALTS04_Zhao8scSeq_0/vdj_t/filtered_contig_annotations.csv P11_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_12/230718/cellranger_output/ALTS04_Zhao9scSeq_0_v1/per_sample_outs/ALTS04_Zhao9scSeq_0/vdj_t/filtered_contig_annotations.csv P12_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/MPM_polyICLC/patient_13/231101/ZHAO12mesothelioma/cellranger_output/ALTS04_Zhao12scSeq_0_v1/per_sample_outs/ALTS04_Zhao12scSeq_0/vdj_t/filtered_contig_annotations.csv P13_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-1/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv PBMC_P2_P7_P9_Processed_TCR_1-1_filtered_contig_annotations.csv
-# rsync -avh -e ssh bgiotti@login04.broadinstitute.org:/ahg/regevdata/projects/lungCancerBueno/10x/prj203-mtsinai-tsankov-pbmcs/20230511/processed/2023-03-29-1-2/version=1/per_sample_outs/cellranger_multi_run/vdj_t/filtered_contig_annotations.csv PBMC_P2_P7_P9_Processed_TCR_1-2_filtered_contig_annotations.csv
-
 vdj.dirs = c(
   data.path_P7_tumor, 
   data.path_P6_tumor, 
