@@ -4,12 +4,6 @@
 
 * Description : scANVI integration - pbmc
 
-* Creation Date : 02-20-2024
-
-* Last Modified : Fri 08 Mar 2024 03:57:16 PM EST
-
-* Created By : Atharva Bhagwat
-
 _._._._._._._._._._._._._._._._._._._._._. """
 
 from __imports__ import *

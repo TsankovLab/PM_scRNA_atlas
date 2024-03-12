@@ -2,13 +2,7 @@
 
 * File Name : integrate.py
 
-* Description : scANVI integration - tumor
-
-* Creation Date : 02-20-2024
-
-* Last Modified : Mon 11 Mar 2024 11:11:07 AM EDT
-
-* Created By : Atharva Bhagwat
+* Description : scANVI integration - main
 
 _._._._._._._._._._._._._._._._._._._._._. """
 

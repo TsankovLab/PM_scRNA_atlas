@@ -1,17 +1,3 @@
-""" -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
-
-* File Name : __config__.py
-
-* Description :
-
-* Creation Date : 03-08-2024
-
-* Last Modified : Fri 08 Mar 2024 02:18:43 PM EST
-
-* Created By : Atharva Bhagwat
-
-_._._._._._._._._._._._._._._._._._._._._. """
-
 # COLOR PALETTES
 PATIENT_PALETTE = {
             'P1': '#340D35FF',
