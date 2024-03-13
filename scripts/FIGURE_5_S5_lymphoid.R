@@ -907,10 +907,10 @@ srt_nk = srt[, srt$celltype %in% c('FGFBP2_NK','KLRC1_NK')]
 srt_nk_merged = merge (gcdata_TIC_nk, srt_nk)
 srt_nk_merged = NormalizeData (object = srt_nk_merged, normalization.method = "LogNormalize", scale.factor = 10000)
 srt_nk_merged$source[is.na(srt_nk_merged$source)] = 'PM'
-srt$subtype[is.na(srt$subtype)] = 'PM'
+srt_nk_merged$subtype[is.na(srt_nk_merged$subtype)] = 'PM'
 
 gd = geneDot (
-srt,
+srt_nk_merged,
 gene = 'KLRC1',
 x = 'subtype', # 
 min_expression = 0,
