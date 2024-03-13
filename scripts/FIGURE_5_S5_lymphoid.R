@@ -826,6 +826,9 @@ cs3 = clonalScatter(combinedTCR,
               exportTable = T,
               dot.size = "total",
               graph = "proportion")
+if ("size" %in% colnames(cs3)){
+  cs3$size <- NULL
+}
 rownames (cs3) = cs3$Var1
 meta_P9 = srt_merged@meta.data[grep ('^P9', colnames(srt_merged)),]
 colnames (cs3) = c('CTstrict2','pbmc','tumor','class','sum','pbmc_fraction','tumor_fraction')
