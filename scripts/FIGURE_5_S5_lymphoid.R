@@ -826,10 +826,16 @@ cs3 = clonalScatter(combinedTCR,
               exportTable = T,
               dot.size = "total",
               graph = "proportion")
+if ("size" %in% colnames(cs3)){
+  cs3$size <- NULL
+}
 rownames (cs3) = cs3$Var1
 meta_P9 = srt_merged@meta.data[grep ('^P9', colnames(srt_merged)),]
 colnames (cs3) = c('CTstrict2','pbmc','tumor','class','sum','pbmc_fraction','tumor_fraction')
 meta_P9 = cbind (meta_P9, cs3[meta_P9$CTstrict,])
+
+meta_P7$'NA' <- NULL
+meta_P2$'NA' <- NULL
 
 ### Find expanded clones in both tumor and blood across samples ####
 cs_df = do.call (rbind, list (meta_P7, meta_P2, meta_P9))
