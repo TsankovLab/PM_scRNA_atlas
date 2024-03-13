@@ -833,6 +833,7 @@ meta_P9 = cbind (meta_P9, cs3[meta_P9$CTstrict,])
 
 ### Find expanded clones in both tumor and blood across samples ####
 cs_df = do.call (rbind, list (meta_P7, meta_P2, meta_P9))
+cs_df = cs_df[,!is.na(colnames(cs_df))]
 cs_df = cs_df[,colnames (cs3)]
 srt_merged@meta.data = cbind (srt_merged@meta.data, cs_df[match(colnames(srt_merged), rownames(cs_df)),])
 srt_merged$site = ifelse (grepl('tumor',colnames(srt_merged)), 'tumor','pbmc')
