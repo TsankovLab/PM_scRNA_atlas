@@ -263,8 +263,8 @@ meta_pbmc = srt@meta.data[srt$batch == 'batch2',]
 meta_pbmc$sampleID = as.character (meta_pbmc$sampleID)
 
 # Unzip TCR contig files before this
-data.path_pbmc1 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-1_all_contig_annotations.csv'
-data.path_pbmc2 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-2_all_contig_annotations.csv'
+data.path_pbmc1 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-1_filtered_contig_annotations.csv'
+data.path_pbmc2 = '../../PM_scRNA_atlas/data/PBMC_P2_P7_P9_Processed_TCR_1-2_filtered_contig_annotations.csv'
 vdj.dirs = c(data.path_pbmc1, data.path_pbmc2)
 
 # Add hashing pools to seurat metadata ####

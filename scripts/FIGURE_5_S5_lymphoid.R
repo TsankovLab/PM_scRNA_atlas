@@ -887,10 +887,8 @@ dev.off()
 ### FIGURE 6C ####
 gcdata_TIC = readRDS('TICAtlas.rds') # Please download from: https://zenodo.org/records/5186413#%20.YRqbJC1h2v6
 
-
 table(gcdata_TIC@meta.data$cell_type)
 table(gcdata_TIC@meta.data$source)
-
 
 # Subset for NK cells ####
 gcdata_TIC_nk = gcdata_TIC[,gcdata_TIC$cell_type == 'NK']
