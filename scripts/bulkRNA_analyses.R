@@ -35,7 +35,7 @@ corr_res = ggscatter (
 corr_res = ggMarginal(corr_res, type = "density", groupColour = TRUE, groupFill = TRUE)
 
 pdf (paste0('Plots/FIGURE_5I_TLS_correlation_bueno.pdf'))
-corr_res
+print (corr_res)
 dev.off()
 
 
@@ -90,10 +90,10 @@ y_max = do.call (rbind, lapply(theta_sp1, function(x)
 pvals$y.position = y_max$y.position
 
 pdf (paste0('Plots/FIGURE_1E_S1H_bayesPrism_celltype_bueno_fractions.pdf'),width=10, height=4)
-bk_fractions + stat_pvalue_manual(
+print (bk_fractions + stat_pvalue_manual(
     pvals, step.increase = 0.001,
     label = "p_sig", hide.ns=T
-    )
+    ))
 dev.off()
 
 # Hmeljak data
@@ -144,10 +144,10 @@ y_max = do.call (rbind, lapply(theta_sp1, function(x)
 pvals$y.position = y_max$y.position  
 
 pdf (paste0('Plots/FIGURE_S1I_bayesPrism_celltype_hmeljak_fractions.pdf'),width=10, height=4)
-bk_fractions + stat_pvalue_manual(
+print (bk_fractions + stat_pvalue_manual(
     pvals, step.increase = 0.001,
     label = "p_sig", hide.ns=T
-    )
+    ))
 dev.off()
 
 
@@ -208,8 +208,8 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     })
     
 pdf ('Plots/Cm_bulk_data.pdf', 8,8)
-wrap_plots (bp_l[[1]])
-wrap_plots (bp_l[[2]])
+print (wrap_plots (bp_l[[1]]))
+print (wrap_plots (bp_l[[2]]))
 dev.off()
 
 ### FIGURE 4G ####
@@ -237,7 +237,7 @@ corr_res = lapply (corr_res, function(x) ggMarginal(x, type = "density", groupCo
   
 
 pdf (paste0('Plots/FIGURE_4G_CXCLs_correlation_bueno.pdf'), width = 11, height = 5)
-wrap_plots (corr_res)
+print (wrap_plots (corr_res))
 dev.off()
 
 
@@ -277,7 +277,7 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     
 #stat_testL2[[mod_name]] = stat_testL
 png (paste0 ('Plots/FIGURE_5E_bueno_tcga_T_modules_boxplots.png'), width = 2200,height=800, res=300)
-wrap_plots (bp_l[[1]],bp_l[[2]])
+print (wrap_plots (bp_l[[1]],bp_l[[2]]))
 dev.off ()
     
 
@@ -320,7 +320,7 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     
 #stat_testL2[[mod_name]] = stat_testL
 png (paste0 ('Plots/FIGURE_3H_bueno_tcga_PLVAP_boxplots.png'), width = 1400,height=1000, res=300)
-wrap_plots (bp_l[[1]],bp_l[[2]])
+print (wrap_plots (bp_l[[1]],bp_l[[2]]))
 dev.off ()
     
     
@@ -563,20 +563,12 @@ cfit_study$Index = c('Bueno','Hmeljak')
 
 # Run Kaplan Mayer survival curves ####
 studies = c('bueno','tcga')
-#hist_column = c(bueno = 'ConsensusCluster', mesomics = 'Type', tcga = 'TUMOR_TYPE')
-#hist_column = c(bueno = 'Consensus_simplified', mesomics = 'Type', tcga = 'TUMOR_TYPE',bueno_tumor = 'Consensus_simplified')
-#hist_column = c(bueno = 'HistologyReduced', mesomics = 'Type', tcga = 'TUMOR_TYPE', bueno_tumor = 'HistologyReduced')
 hist_column = c(bueno = 'ConsensusCluster',  tcga = 'TUMOR_TYPE')
-subset_hist = c(bueno = 'Sarcomatoid',tcga = 'Sarcomatoid Mesothelioma')
 subset_hist = c(bueno = 'Epithelioid',tcga = 'Epithelioid Mesothelioma')
 low='1st Qu.'
 high='3rd Qu.'  
 
-# quant = FALSE
-# higher_quant = .9
-# lower_quant = 0.2
 modules = c('Cm5','Cm12','NK')
-#modules = 'fetal_endo'
 km_p_study = list()
 for (study in names(blk_meta))
     {
@@ -594,27 +586,23 @@ for (study in names(blk_meta))
         classified.vec[raw.vec > highExpr]='High'
         classified.vec[is.na (classified.vec)] = 'Med'
         
-        #legend_labs = unique (classified.vec)
+        
         meta_surv$classified.vec = factor (classified.vec, levels = c('Low','Med','High'))
         meta_surv = meta_surv[!is.na(meta_surv[,event_column[[study]]]),]
-        #meta_surv$binary_histo = ifelse (meta_surv[,hist_column[[study]]] == hist1[[study]], 'E','nE')
-        meta_surv$binary_histo = meta_surv[,hist_column[[study]]]# == hist1[[study]], 'E','nE')
+        
+        meta_surv$binary_histo = meta_surv[,hist_column[[study]]]
 
         meta_surv$DEATH_EVENT = meta_surv[,death_column[[study]]]            
         meta_surv$OS_MONTHS = meta_surv[,event_column[[study]]]
-        #meta_surv$classified.vec =  meta_surv[,hist_column[[study]]]
+        
         model_fit = survfit(Surv(OS_MONTHS, DEATH_EVENT) ~ classified.vec, data = meta_surv)
         model_diff = survdiff(Surv(OS_MONTHS, DEATH_EVENT) ~ classified.vec, data = meta_surv)
-        # s = survfit(Surv(as.numeric(as.character(tmp.2$os_to_death_collapsed)),
-        #             tmp.2$DEATH_EVENT)~classified.vec)
-        # s1 = tryCatch(survdiff(Surv(as.numeric(as.character(tmp.2$os_to_death_collapsed)),
-        #                        tmp.2$DEATH_EVENT)~classified.vec), error = function(e) return(NA))
+        
         km_p[[mod]] = ggsurvplot(
         model_fit,
         data = meta_surv,
-        #surv.median.line = 'hv',
         size = 1,                 # change line size
-        palette ="lancet",# custom color palettes
+        palette ="lancet",        # custom color palettes
         conf.int = FALSE,          # Add confidence interval
         pval = FALSE,              # Add p-value
         risk.table = FALSE,        # Add risk table
@@ -627,8 +615,69 @@ for (study in names(blk_meta))
         title = mod,
         subtitle = paste('pval',round(model_diff$pvalue,2)),
         caption = paste("n = ", nrow(meta_surv))
-        #ylim(0,1),
-        #geom_hline(yintercept = 0.5,c(0.5,0.5),col='grey')     # Change ggplot2 theme       
+        )
+        }
+    km_p_study[[study]] = km_p
+    }    
+
+for (study in studies)
+    {
+    pdf (paste0('Plots/FIGURE_S2I_6A_Kaplan_Mayer_survival_curves_',study,'subset_',subset_hist[[study]],'.pdf'), 3,4)
+    print (km_p_study[[study]])
+    dev.off()
+    }
+
+# Re-run only in Sarcomatoid
+subset_hist = c(bueno = 'Sarcomatoid')
+low='1st Qu.'
+high='3rd Qu.'  
+modules = c('Cm5','Cm12','NK')
+km_p_study = list()
+for (study in names(blk_meta)[1])
+    {
+    km_p = list()
+    for (mod in modules)
+        {
+        if (!is.null(subset_hist[[study]])) meta_surv = blk_meta[[study]][blk_meta[[study]][,hist_column[[study]]] %in% subset_hist[[study]],] else
+        meta_surv = blk_meta[[study]]
+        raw.vec=meta_surv[,mod]
+
+        classified.vec=NA
+        lowExpr = as.numeric(summary(raw.vec)[low])
+        classified.vec[raw.vec < lowExpr]='Low'
+        highExpr = as.numeric(summary(raw.vec)[high])
+        classified.vec[raw.vec > highExpr]='High'
+        classified.vec[is.na (classified.vec)] = 'Med'
+        
+        
+        meta_surv$classified.vec = factor (classified.vec, levels = c('Low','Med','High'))
+        meta_surv = meta_surv[!is.na(meta_surv[,event_column[[study]]]),]
+        
+        meta_surv$binary_histo = meta_surv[,hist_column[[study]]]
+
+        meta_surv$DEATH_EVENT = meta_surv[,death_column[[study]]]            
+        meta_surv$OS_MONTHS = meta_surv[,event_column[[study]]]
+        
+        model_fit = survfit(Surv(OS_MONTHS, DEATH_EVENT) ~ classified.vec, data = meta_surv)
+        model_diff = survdiff(Surv(OS_MONTHS, DEATH_EVENT) ~ classified.vec, data = meta_surv)
+        
+        km_p[[mod]] = ggsurvplot(
+        model_fit,
+        data = meta_surv,
+        size = 1,                 # change line size
+        palette ="lancet",        # custom color palettes
+        conf.int = FALSE,          # Add confidence interval
+        pval = FALSE,              # Add p-value
+        risk.table = FALSE,        # Add risk table
+        risk.table.col = "strata",# Risk table color by groups
+        legend.labs =levels (meta_surv$classified.vec),    # Change legend labels
+        risk.table.height = 0.25, # Useful to change when you have multiple groups
+        ylab = 'Survival rate',
+        #ggtheme = theme_survminer()
+        ggtheme = theme_classic(),#,
+        title = mod,
+        subtitle = paste('pval',round(model_diff$pvalue,2)),
+        caption = paste("n = ", nrow(meta_surv))
         )
         }
     km_p_study[[study]] = km_p

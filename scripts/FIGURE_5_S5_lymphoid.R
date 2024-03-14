@@ -241,6 +241,7 @@ ext_avg$sample = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[1])
 ext_avg$celltype = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[2])
 ext_avg$SE_group = setNames(srt_t$SE_group, srt_t$sampleID)[ext_avg$sample]
 ext_avg$SE_group = factor (ext_avg$SE_group, levels = c('S-High','E-High'))
+ext_avg = ext_avg[!is.na(ext_avg$SE_group),]
 
 boxl = list()
 for (x in ext_markers)
@@ -252,7 +253,6 @@ for (x in ext_markers)
   gtheme_no_text +
   ggtitle (x) +
   scale_fill_manual (values = palette_SE_group) +
-  theme (axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap (~celltype, drop=TRUE, scales = 'free_x', ncol=4)
   
   stat.test = box$data %>% 
@@ -524,22 +524,6 @@ srt_tcr = srt[,srt$sampleID %in% c('P7','P6','P9','P11','P12','P13')]
 srt_tcr = srt_tcr[, !is.na (srt_tcr$cloneSize)]
 clonesize_name = setNames (c('NonExpanded','Small','Large','None'), c('NonExpanded (0 < X <= 1)','Small (1 < X <= 5)','Large (5 < X <= Inf)', 'None ( < X <= 0)'))
 srt_tcr$cloneSize = unname(clonesize_name[as.character(srt_tcr$cloneSize)])
-
-### Find which cell type have clonal expansion ####
-cc_bar_tumor = cellComp (
-  seurat_obj = srt_tcr, 
-  ptable_factor = c(1,3),
-  metaGroups = c('sampleID','cloneSize','celltype'),
-  plot_as = 'bar',
-  prop = TRUE,
-  pal = palette_clonotype,
-  facet_ncol = 10
-  ) + theme_classic() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-pdf ('Plots/clonotype_celltypes.pdf', 8,3)
-print (cc_bar_tumor)
-dev.off()
-
 
 # FIGURE 5I - Show expanded clonotypes are found in CD8 cells ####  
 dp = DimPlot (srt_tcr, reduction = reductionName, group.by='cloneSize') + 
