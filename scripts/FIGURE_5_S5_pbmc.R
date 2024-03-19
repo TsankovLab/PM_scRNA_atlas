@@ -388,74 +388,38 @@ srt_tcr_cd8 = ModScoreCor (
         pos_threshold = NULL, # threshold for fetal_pval2
         listName = 'Tms_', outdir = paste0('Plots/'))
 
-# FIGURE 6E - Show expanded clonotypes have higher exhaustion ####  
+# FIGURE 5E - Show expanded clonotypes have higher score for Tm4, Tm2, Tm5 ####  
+# Compute stats for Tm04 - Tm02 - Tm05
 ccomp_df = as.data.frame (srt_tcr_cd8@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
-ccomp_df = aggregate (ccomp_df$Tm5, by=as.list(srt_tcr_cd8@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
-
+ccomp_df = aggregate (ccomp_df[,c('Tm4','Tm2','Tm5')], by=as.list(srt_tcr_cd8@meta.data[,c('cloneSize','sampleID','SE_group'),drop=F]), mean)
+ccomp_df = gather (ccomp_df, module, score, 4:6)
 ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
-box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
-         fill = 'white', color='white', line.color = "gray", line.size = 0.3,
-         palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
-    tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme_no_text + NoLegend()
-box2 = box2 + 
-geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
-geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA)
 
-png ('Plots/FIGURE_6N_expanded_exhaustion.png',height = 1000,width = 600, res=300)
-print (box2)
+stat.test = ccomp_df %>% 
+group_by (module) %>% 
+t_test (reformulate ('cloneSize', 'score'), paired=T, comparisons = list(c('NonExpanded','Large'))) %>%
+adjust_pvalue (method = "fdr") %>% 
+add_significance ()
+
+box = ggplot (ccomp_df, aes_string (x= 'cloneSize', y= 'score')) +
+geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
+geom_boxplot (aes_string(fill='cloneSize'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
+geom_point (data = ccomp_df, aes (x = cloneSize, y = score), position='identity', alpha=.7, color="grey44", size=1.2) +
+scale_fill_manual (values = palette_clonotype) + 
+scale_color_manual (values = palette_clonotype) +
+geom_line (data = ccomp_df, aes(x = cloneSize, y = score, group = sampleID), color='grey44',linewidth=.2, alpha=.7) +
+facet_wrap (~module, scales = 'free_y') + 
+gtheme_no_text #+
+
+stat.test = stat.test %>% add_xy_position (x = 'cloneSize', step.increase=0)
+box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
+bracket.nudge.y = 0, hide.ns = T,
+label = "p.adj.signif") + NoLegend()
+
+png ('Plots/FIGURE_5N_S5H.png',800,width = 1200, res=300)
+box
 dev.off()
-
-### Check with MHC II module ####
-ccomp_df = as.data.frame (srt_tcr_cd8@meta.data)
-ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
-ccomp_df = aggregate (ccomp_df$Tm4, by=as.list(srt_tcr_cd8@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
-
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
-box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
-         fill = 'white', color='white', line.color = "gray", line.size = 0.3,
-         palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
-    tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme_no_text + NoLegend()
-box2 = box2 + 
-geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
-geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA)
-
-png ('Plots/FIGURE_S6J_expanded_MHCII.png',height = 1000,width = 600, res=300)
-print (box2)
-dev.off()
-
-
-### Check with Cytotoxic module ####
-ccomp_df = as.data.frame (srt_tcr_cd8@meta.data)
-ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
-ccomp_df = aggregate (ccomp_df$Tm2, by=as.list(srt_tcr_cd8@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
-
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
-box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
-         fill = 'white', color='white', line.color = "gray", line.size = 0.3,
-         palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
-    tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme_no_text + NoLegend()
-box2 = box2 + 
-geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
-geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA)
-
-png ('Plots/FIGURE_S6J_expanded_cytotoxic.png',height = 1000,width = 600, res=300)
-print (box2)
-dev.off()
-
-
-
-
-
-
-
-
-
-
-
 
 
 

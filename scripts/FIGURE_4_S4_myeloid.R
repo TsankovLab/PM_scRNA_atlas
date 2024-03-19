@@ -58,10 +58,12 @@ srt = FindNeighbors (object = srt, reduction = reductionSave, dims = 1:15, k.par
 
 
 ### FIGURE 4A / S4A - celltype umap ####
+dp = DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palette_myeloid)
+dp1 = DimPlot (srt, group.by = 'sampleID', reduction = reductionName) + 
+    scale_color_manual (values=palette_sample)
 pdf ('Plots/FIGURE_4A_S4A_celltypes_umap.pdf', 5,width = 6)
-DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palette_myeloid)
-DimPlot (srt, group.by = 'sampleID', reduction = reductionName) + 
-scale_color_manual (values=palette_sample)
+print (dp)
+print (dp1)
 dev.off()
 
 
@@ -82,7 +84,7 @@ umap_df = cbind (umap_df, t(srt@assays$RNA@data[markers_found,]))
   theme_void() + NoLegend())
 
 png ('Plots/FIGURE_4B_celltypes_markers_fplots2.png',width = 2000,1600,res=300)
-wrap_plots (umap_p1)
+print (wrap_plots (umap_p1))
 dev.off()
 
 
@@ -106,7 +108,7 @@ dp = geneDot (
     
 
 pdf ('Plots/FIGURE S4B_top_markers_celltype_expression.pdf', height=2.8, width=8.5)
-dp
+print (dp)
 dev.off()  
 
 
@@ -122,7 +124,7 @@ p = cellComp (
   ) + theme_classic() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
 png ('Plots/FIGURE_S4B_composition_celltype_barplot.png',1200,900, res=300)
-p
+print (p)
 dev.off()
 
 # Run SCENIC plots #### 
@@ -148,7 +150,7 @@ hm = Heatmap (scale (auc_mtx_avg[,filter_TF]),
  column_names_gp = gpar(fontsize = 5),
  row_names_gp = gpar(fontsize = 8))
 pdf (paste0('Plots/FIGURE_S4F_auc_scores_celltypes_heatmap.pdf'), width=7, height=2.2)
-hm
+print (hm)
 dev.off()
   
 
@@ -164,8 +166,8 @@ degClusters_flt = degClusters %>% group_by (cluster) %>% slice_head(n=2)
 cluster.averages = AverageExpression(object = srt[degClusters_flt$gene,], group.by = 'celltype', return.seurat = F)
 cluster.averages = as.data.frame (cluster.averages[[1]])
 cluster.averages = cluster.averages[, celltype_order]
-pdf(paste0("Plots/FIGURE_S4C_TF_celltype_heatmap.pdf"),width =2.2,height=2, useDingbats=T)
-Heatmap (
+
+hm = Heatmap (
   t(scale (t(cluster.averages))), 
   cluster_rows=F,
   row_names_side = 'left',
@@ -174,7 +176,8 @@ Heatmap (
   column_names_rot = 45,
   row_names_gp = gpar (fontsize = 6),
   column_names_gp = gpar (fontsize = 6))
-#ggsave(paste0(figures.dir, "HM_celltype_cpdb_2.Avg.topTF.labelwilcox_S1B.png"), width = 8, height = 8, dpi = 500, type="cairo")    
+pdf(paste0("Plots/FIGURE_S4C_TF_celltype_heatmap.pdf"),width =2.2,height=2, useDingbats=T)
+hm
 dev.off()
 
 
@@ -217,7 +220,7 @@ hm = draw (Heatmap (cor_mat,
             grid.rect(x, y, w, h, gp = gpar(fill = fill, col = fill))
         }}))
 pdf (paste0('Plots/FIGURE_S4C_cnmf_cor_heatmap_triangle_cells.pdf'),5.5,4.5)
-hm
+print (hm)
 dev.off()
 
 
@@ -240,7 +243,7 @@ y_name = 'celltype',
 plotcol = palette_gene_expression2) + gtheme_italic
 
 pdf ('Plots/FIGURE_S4D_cNMF_markers_expression.pdf', width=11, height=4)
-dotp
+print (dotp)
 dev.off()
 
 
@@ -277,7 +280,7 @@ hm = draw (Heatmap (cor_mat,
             grid.rect(x, y, w, h, gp = gpar(fill = fill, col = fill))
         }}))
 pdf (paste0('Plots/FIGURE_4C_modules_cnmf_cor_heatmap_triangle.pdf'),5.5,4.5)
-hm
+print (hm)
 dev.off()
 
 
@@ -308,7 +311,7 @@ bracket.nudge.y = 0, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
 pdf ('Plots/FIGURE_4E_CXCLs_markers.pdf',2.5,width = 3)
-box
+print (box)
 dev.off()
 
 # Run SCENIC plots #### 
@@ -334,6 +337,80 @@ hm = Heatmap (scale (auc_mtx_avg[,filter_TF]),
  column_names_gp = gpar(fontsize = 5),
  row_names_gp = gpar(fontsize = 8))
 pdf (paste0('Plots/FIGURE_4F_auc_scores_Mms_heatmap.pdf'), width=7, height=2.2)
-hm
+print (hm)
+dev.off()
+
+
+
+### FIGURE 4F - dotplot CXCLs and receptor across celltypes ####
+srt_tumor$celltype_simplified3 = as.character(srt_tumor$celltype_simplified)
+srt_tumor$celltype_simplified3[srt_tumor$celltype %in% c('Mono_CD16','Mono_CD14','TAMs')] = srt_tumor$celltype[srt_tumor$celltype %in% c('Mono_CD16','Mono_CD14','TAMs')]
+#srt$celltype_simplified3[srt$celltype %in% c('pDC')] = 'DCs'
+srt_tumor$celltype_simplified3[srt_tumor$celltype_simplified3 %in% c('T_cells')] = srt_tumor$celltype[srt_tumor$celltype_simplified3 %in% c('T_cells')]
+srt_tumor$celltype_simplified3 = factor (srt_tumor$celltype_simplified3, levels = rev(c('Malignant','Mesothelium','Glia','Alveolar','Fibroblasts','Endothelial','SmoothMuscle','Mono_CD16','Mono_CD14','TAMs','Mast','DCs','CD8','CD4','TFH','Tregs','NK','B_cells','Plasma','pDCs')))
+cxcl_markers = c('CXCL9','CXCL10','CXCL11','CXCR3')
+
+dp = geneDot (
+  seurat_obj = srt_tumor,
+  gene = cxcl_markers,
+  x = 'celltype_simplified3',
+  y = 'SE_group',
+  min_expression = 0,
+  facet_ncol = 5,
+  lim_expression = NULL,
+  scale.data=TRUE,
+  swap_axes = T,
+  x_name ='samples',
+  y_name = 'celltype',
+  plotcol = palette_gene_expression2) + gtheme_italic
+
+pdf ('Plots/FIGURE_4F_cxcls_and_receptor_expression2.pdf', height=4.5, width=4)
+print (dp)
+dev.off()  
+
+### FIGURE 4C - VISTA expression ####
+ext_markers='VSIR'
+low_celltypes = c('Alveolar','LEC','Mesothelium','Glia')
+srt_tumor2 = srt_tumor[,!srt_tumor$celltype %in% low_celltypes]
+srt_tumor2 = srt_tumor2[,srt_tumor2$sampleID != 'P10']
+srt_tumor2$celltype = gsub ('_','',srt_tumor2$celltype)
+ext_avg = AverageExpression (srt_tumor2, features = ext_markers, group.by = c('sampleID','celltype'))[[1]]
+rownames (ext_avg) = ext_markers
+ext_avg = log2(as.data.frame (t(ext_avg))+1)
+ext_avg$group = rownames (ext_avg)
+
+ext_avg = gather (ext_avg, gene, avg_expression, 1:(ncol(ext_avg)-1))
+ext_avg$sample = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[1])
+ext_avg$celltype = sapply (ext_avg$group, function(x) unlist(strsplit(x, '_'))[2])
+ext_avg$SE_group = setNames(srt_tumor2$SE_group, srt_tumor2$sampleID)[ext_avg$sample]
+ext_avg$SE_group = factor (ext_avg$SE_group, levels = c('S-High','E-High'))
+celltype_order = ext_avg
+celltype_order =  do.call (rbind,lapply (split (celltype_order, celltype_order$celltype), function(x) data.frame(mean(x$avg_expression), x$celltype[1])))
+celltype_order = celltype_order[,2][order (-celltype_order[,1])]
+ext_avg$celltype = factor (ext_avg$celltype, levels = celltype_order)
+boxl = list()
+for (x in ext_markers)
+  {
+  ext_avg_sub = ext_avg[ext_avg$gene == x,]
+  box = ggplot (ext_avg_sub, aes_string (x= 'celltype', y= 'avg_expression')) +
+  geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
+  geom_boxplot (aes_string(fill='SE_group'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
+  ggtitle (x) +
+  scale_fill_manual (values = palette_SE_group) +
+  gtheme
+  
+  stat.test = box$data %>% 
+  group_by (celltype) %>%
+  t_test (reformulate ('SE_group', 'avg_expression')) %>%
+  adjust_pvalue (method = "fdr") %>%
+  add_significance ()
+  stat.test = stat.test %>% add_xy_position (x = 'celltype', step.increase=.01)
+  boxl[[x]] = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
+  bracket.nudge.y = 0, hide.ns = T,
+  label = "p.adj.signif") + NoLegend()
+  }
+
+pdf ('Plots/FIGURE_4C_VSIR_per_celltype.pdf',width = 5, height=4)
+print (boxl)
 dev.off()
 

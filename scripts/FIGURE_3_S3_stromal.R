@@ -57,10 +57,12 @@ srt = FindNeighbors (object = srt, reduction = reductionSave, dims = 1:15, k.par
 
 
 ### FIGURE 3A / S3A - celltype umap ####
+dp = DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palette_stroma)
+dp1 = DimPlot (srt, group.by = 'sampleID2', reduction = reductionName) + 
+    scale_color_manual (values=palette_sample)
 pdf ('Plots/celltypes_umap.pdf', 5,width = 6)
-DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palette_stroma)
-DimPlot (srt, group.by = 'sampleID2', reduction = reductionName) + 
-scale_color_manual (values=palette_sample)
+print (pd)
+print (dp1)
 dev.off()
 
 ### Make stacked barplot of sample usage of cNMF to put aside of heatmap ####
@@ -74,7 +76,7 @@ prop=T) +
 theme_minimal()
 #cp$data$cNMF__r_max = factor (cp$data$cNMF__r_max, levels = names (cnmf_spectra_filtered[row_order(hm)])) 
 pdf (paste0('Plots/FIGURE_3B_sample_abundance_celltype_stacked_barplot.pdf'))
-cp
+print (cp)
 dev.off()
 
 ### FIGURE 3B - celltype dotplot ####
@@ -94,7 +96,7 @@ dp = geneDot (
   y_name = 'celltype',
   plotcol = palette_gene_expression2) + gtheme_italic
 pdf ('Plots/FIGURE_3B_top_markers_celltype_expression.pdf', height=2.8, width=6.5)
-dp
+print (dp)
 dev.off()  
 
 ### subset endothelial ####
@@ -148,7 +150,7 @@ hm_combined = draw (Heatmap (cor_mat_combined,
 
   ))
 pdf (paste0('Plots/FIGURE_S3C_CN_pairwise_across_cells_and_samples_heatmap.pdf'),5.5,4.5)
-hm_combined
+print (hm_combined)
 dev.off()
 
 
@@ -171,7 +173,7 @@ swap_axes=T,
 plotcol = palette_gene_expression2) + gtheme_italic
 
 pdf ('Plots/FIGURE_S3B_cNMF_markers_expression.pdf', width=8, height =3)
-dotp
+print (dotp)
 dev.off()
 
 srt_endo$celltype = factor (srt_endo$celltype, levels  = c('Artery','PLVAP','Vein'))
@@ -193,7 +195,7 @@ swap_axes=T,
 plotcol = palette_gene_expression2) + gtheme_italic
 
 pdf ('Plots/FIGURE_4H_VEGFA_receptors.pdf', width=2.5, height =2)
-dotp
+print (dotp)
 dev.off()
 
 
@@ -206,7 +208,6 @@ dev.off()
 Convert('../../C3filtered.h5ad', dest="fetal_lung_endothelial.h5seurat", overwrite=TRUE)
 srt_fetal = LoadH5Seurat("fetal_lung_endothelial.h5seurat")
 srt_fetal$celltype = srt_fetal$new_celltype
-head (srt_fetal)
 
 # Load Travaglini dataset ####
 srt_adult = readRDS("travaglini_lung_atlas.rds")
@@ -262,7 +263,7 @@ fetal_score = box$data %>% group_by (celltype) %>% summarise_at(vars(endo_fetal)
 box$data$celltype = factor (box$data$celltype, levels = arrange (fetal_score, -endo_fetal)$celltype)  
 
 pdf ('Plots/FIGURE_3E_fetal_marker_genes_score_fetal_vs_krasnow_vlnplot.pdf', height=3.6, width=5.5)
-box
+print (box)
 dev.off()
 
 #### FIGURE 3C - correlation heatmap with Travaglini ####
@@ -303,7 +304,6 @@ srt_adult_PM_distal = IntegrateData (anchorset = anchors, k.weight=k.weight)
 # original unmodified data still resides in the 'RNA' assay
 DefaultAssay(srt_adult_PM_distal) = "RNA"
 
-library (scran)
 sce = SingleCellExperiment (list(counts=srt_adult_PM_distal@assays$RNA@counts, logcounts = srt_adult_PM_distal@assays$RNA@data),
 rowData=rownames(srt_adult_PM_distal)) 
 sce = modelGeneVar(sce)
@@ -320,7 +320,6 @@ gcdata.avg <- ScaleData(gcdata.avg)
 #gcdata.avg = gcdata.avg[,rownames(gcdata.avg@meta.data) != 'VascularSmoothMuscle']
 
 mtx = as.matrix (GetAssayData(gcdata.avg, assay = 'integrated', slot='scale.data'))
-library (circlize)
 
 corr = cor(mtx,method = 'spearman')
 
@@ -331,19 +330,18 @@ rownames (corr) = gsub ('_',' ', rownames(corr))
 rownames (corr) = gsub ('PLVAP','PLVAP+ EC', rownames(corr))
 colnames (corr) = gsub ('_',' ', colnames(corr))
 colnames (corr) = gsub ('PLVAP','PLVAP+ EC', colnames(corr))
-pdf ('Plots/FIGURE_3C_cor_mat_travaglini_heatmap_top20.pdf',width = 7,4.6)
-Heatmap(corr, top_annotation = ha,
+
+hm = Heatmap(corr, top_annotation = ha,
   col = palette_module_correlation_fun, right_annotation = ha2,
   column_names_rot = 70,
   border=T)
+pdf ('Plots/FIGURE_3C_cor_mat_travaglini_heatmap_top20.pdf',width = 7,4.6)
+hm
 dev.off()
 
 
 
 ### subset fibroblasts ####
-library (readxl)
-library (circlize)
-
 srt_fib = srt[,srt$celltype %in% c('Fibroblasts')]
 cnmf_spectra_unique_comb = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Fms_20"))
 
@@ -396,7 +394,7 @@ hm_combined = draw (Heatmap (cor_mat_combined,
   border=T))
 
 pdf (paste0('Plots/FIGURE_S3E_Fms_pairwise_across_cells_and_samples_heatmap.pdf'),5.5,4.5)
-hm_combined
+print (hm_combined)
 dev.off()
 
 
@@ -427,7 +425,7 @@ y_name = 'celltype',
 plotcol = gene_expression_palette)
 
 pdf ('Plots/FIGURE_S3D_cNMF_markers_expression.pdf', width=7, height = 3)
-dotp
+print (dotp)
 dev.off()
 
 
@@ -474,8 +472,6 @@ srt_merged_distal = IntegrateData (anchorset = anchors, k.weight=k.weight)
 # original unmodified data still resides in the 'RNA' assay
 DefaultAssay(srt_merged_distal) = "RNA"
 
-library (scran)
-set.seed(1234)
 sce = SingleCellExperiment (list(counts=srt_merged_distal@assays$RNA@counts, logcounts = srt_merged_distal@assays$RNA@data),
 rowData=rownames(srt_merged_distal)) 
 sce = modelGeneVar(sce)
@@ -494,7 +490,7 @@ mtx<-as.matrix(GetAssayData(gcdata.avg, assay = 'integrated', slot='scale.data')
 corr<-cor(mtx,method = 'spearman')
 col_fun = colorRamp2(c(-1, 0, 1), c(palette_module_correlation[1], palette_module_correlation[length(palette_module_correlation)/2], palette_module_correlation[length(palette_module_correlation)]))
 pdf ('Plots/FIGURE_S3F_cor_mat_travaglini_fibroblasts_heatmap_top20.pdf')
-Heatmap(corr,col = col_fun)
+print (Heatmap(corr,col = col_fun))
 dev.off()
 
 
@@ -530,7 +526,7 @@ hm = Heatmap (scale(auc_mtx_avg),
  column_names_gp = gpar(fontsize = 7),
  row_names_gp = gpar(fontsize = 8))
 pdf ('Plots/FIGURE_S3G_auc_scores_celltypes_heatmap.pdf', width=7, height=2)
-hm
+print (hm)
 dev.off()
 
 # Make module score of ETS1 and MEF2C regulons ####
@@ -581,5 +577,174 @@ box = lapply (seq_along (tfs), function(x)
 
 
 pdf ('Plots/FIGURE_3F_SCENIC_ETS1_MEF2C_regulons_modulescores_vlnplots.pdf',5,4)
-box
+print (box)
 dev.off()
+
+
+#### FIGURE 3G - Nichenet analysis in PLVAP+ endothelial vs rest ####
+receiver_cells = 'PLVAP+_EC' 
+srt_tumor$celltype_nichenet = as.character (srt_tumor$celltype_simplified)
+srt_tumor$celltype_nichenet[srt_tumor$celltype == 'PLVAP'] = 'PLVAP+_EC'
+
+sender_cells = unique(srt_tumor$celltype_nichenet)[!unique(srt_tumor$celltype_nichenet) %in% receiver_cells]
+
+lr_network = readRDS(url("https://zenodo.org/record/7074291/files/lr_network_human_21122021.rds"))
+ligand_target_matrix = readRDS(url("https://zenodo.org/record/7074291/files/ligand_target_matrix_nsga2r_final.rds"))
+weighted_networks = readRDS(url("https://zenodo.org/record/7074291/files/weighted_networks_nsga2r_final.rds"))
+
+Idents(srt_tumor) = srt_tumor$celltype_nichenet
+DE_table_receiver = FindMarkers (object = srt_tumor, ident.1 = 'PLVAP+_EC', ident.2 = 'Endothelial', min.pct = 0.10) %>% rownames_to_column("gene")
+
+## receiver
+receiver = "PLVAP+_EC"
+Idents(srt_tumor) = srt_tumor$celltype_nichenet
+expressed_genes_receiver = get_expressed_genes (receiver, srt_tumor, pct = 0.10)
+
+background_expressed_genes = expressed_genes_receiver %>% .[. %in% rownames(ligand_target_matrix)]
+
+## sender
+list_expressed_genes_sender = sender_cells %>% unique() %>% lapply(get_expressed_genes, srt_tumor, 0.10) # lapply to get the expressed genes of every sender cell type separately here
+expressed_genes_sender = list_expressed_genes_sender %>% unlist() %>% unique()
+
+DE_table_receiver = FindMarkers (object = srt_tumor, ident.1 = 'PLVAP+_EC', ident.2 = 'Endothelial', min.pct = 0.10) %>% rownames_to_column("gene")
+
+geneset_oi = DE_table_receiver %>% filter(p_val_adj <= 1e-10 & abs(avg_log2FC) >= 0.5) %>% pull(gene)
+geneset_oi = geneset_oi %>% .[. %in% rownames(ligand_target_matrix)]
+
+ligands = lr_network %>% pull(from) %>% unique()
+receptors = lr_network %>% pull(to) %>% unique()
+
+expressed_ligands = intersect(ligands,expressed_genes_sender)
+expressed_receptors = intersect(receptors,expressed_genes_receiver)
+
+potential_ligands = lr_network %>% filter(from %in% expressed_ligands & to %in% expressed_receptors) %>% pull(from) %>% unique()
+
+ligand_activities = predict_ligand_activities (geneset = geneset_oi, background_expressed_genes = background_expressed_genes, ligand_target_matrix = ligand_target_matrix, potential_ligands = potential_ligands)
+
+ligand_activities = ligand_activities %>% arrange(-aupr_corrected) %>% mutate(rank = rank(desc(aupr_corrected)))
+
+best_upstream_ligands = ligand_activities %>% top_n(10, aupr_corrected) %>% arrange(-aupr_corrected) %>% pull(test_ligand) %>% unique()
+
+#srt$celltype_simplified
+gd2 = geneDot (
+  seurat_obj = srt_tumor,
+  gene = factor (rev(best_upstream_ligands), levels = best_upstream_ligands),
+  x = 'celltype_simplified2',
+  #z = srt@meta.data[,'patient'],
+  min_expression = 1,
+  facet_ncol = 9,
+  swap_axes = F,
+  scale.data=T,
+  plotcol = palette_gene_expression2) + gtheme_italic_y
+pdf ('Plots/FIGURE_3G_nichenet_ligands_sender_cells_dotplot2.pdf', height=3, width=4.5)
+print (gd2)
+dev.off()
+
+active_ligand_target_links_df = best_upstream_ligands %>% lapply(get_weighted_ligand_target_links, geneset = geneset_oi, ligand_target_matrix = ligand_target_matrix, n = 200) %>% bind_rows() %>% drop_na()
+active_ligand_target_links = prepare_ligand_target_visualization(ligand_target_df = active_ligand_target_links_df, ligand_target_matrix = ligand_target_matrix, cutoff = 0)
+
+order_ligands = intersect(best_upstream_ligands, colnames(active_ligand_target_links)) %>% rev() %>% make.names()
+order_targets = active_ligand_target_links_df$target %>% unique() %>% intersect(rownames(active_ligand_target_links)) %>% make.names()
+rownames(active_ligand_target_links) = rownames(active_ligand_target_links) %>% make.names() # make.names() for heatmap visualization of genes like H2-T23
+colnames(active_ligand_target_links) = colnames(active_ligand_target_links) %>% make.names() # make.names() for heatmap visualization of genes like H2-T23
+
+vis_ligand_target = active_ligand_target_links[order_targets,order_ligands] %>% t()
+vis_ligand_target = vis_ligand_target[, colnames(vis_ligand_target) %in% head (DE_table_receiver$gene,30)]
+p_ligand_target_network = vis_ligand_target %>% make_heatmap_ggplot( "Prioritized ligands","Predicted target genes", color = "purple",legend_position = "top", x_axis_position = "top",legend_title = "Regulatory potential")  + theme (axis.text.x = element_text (angle = 45, vjust = 1, hjust=1, face= 'italic')) + 
+scale_fill_gradient2(low = "whitesmoke",  high = "purple", breaks = c(0,0.0045,0.0090))
+
+
+pdf ('Plots/FIGURE_3G_nichenet_target_genes.pdf', width=5, height=4)
+print(p_ligand_target_network + theme (axis.text.x = element_text (angle = 45, vjust = 1, hjust=1, face = "italic"),axis.text.y = element_text(face = "italic")))
+dev.off()
+
+
+# ligand activity heatmap
+ligand_aupr_matrix = ligand_activities %>% select(aupr_corrected) %>% as.matrix() %>% magrittr::set_rownames(ligand_activities$test_ligand)
+
+rownames(ligand_aupr_matrix) = rownames(ligand_aupr_matrix) %>% make.names()
+colnames(ligand_aupr_matrix) = colnames(ligand_aupr_matrix) %>% make.names()
+
+vis_ligand_aupr = ligand_aupr_matrix[order_ligands, ] %>% as.matrix(ncol = 1) %>% magrittr::set_colnames("AUPR")
+p_ligand_aupr = vis_ligand_aupr %>% make_heatmap_ggplot("Prioritized ligands","Ligand activity", color = "darkorange",legend_position = "top", x_axis_position = "top", legend_title = "AUPR\n(target gene prediction ability)") 
+# ligand expression Seurat dotplot
+order_ligands_adapted = str_replace_all (order_ligands, "\\.", "-")
+rotated_dotplot = DotPlot(srt_tumor[,srt_tumor$celltype_nichenet %in% sender_cells] %>% subset(celltype_nichenet %in% sender_cells), features = order_ligands_adapted) + 
+coord_flip() + scale_color_gradient2 (palette_gene_expression2) + theme(
+      axis.text.x = element_text(angle = 90, vjust = 1, hjust=1, face='italic'),
+      axis.line =element_line(colour = 'black', size = .1),
+        axis.ticks = element_line(colour = "black", size = .1),
+      panel.background = element_blank()#,
+    #panel.border = element_blank(),
+    #panel.grid.major = element_blank(),
+    #panel.grid.minor = element_blank()
+  ) +
+theme(legend.text = element_text(size = 10), 
+  legend.title = element_text(size = 12)) 
+
+figures_without_legend = cowplot::plot_grid(
+  p_ligand_aupr + theme(legend.position = "none", axis.ticks = element_blank()) + theme(axis.title.x = element_text()),
+  rotated_dotplot + theme(legend.position = "none", axis.ticks = element_blank(), axis.title.x = element_text(size = 12), axis.text.y = element_text(face = "italic", size = 9), axis.text.x = element_text(size = 9,  angle = 45,hjust = 0)) + ylab("Expression in Sender") + xlab("") + scale_y_discrete(position = "right"),
+  #p_ligand_lfc + theme(legend.position = "none", axis.ticks = element_blank()) + theme(axis.title.x = element_text()) + ylab(""),
+  p_ligand_target_network + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, face='italic'), legend.position = "none", axis.ticks = element_blank()) + ylab(""),
+  align = "hv",
+  nrow = 1,
+  rel_widths = c(3, 10, 10))
+
+legends = cowplot::plot_grid(
+    ggpubr::as_ggplot(ggpubr::get_legend(p_ligand_aupr)),
+    ggpubr::as_ggplot(ggpubr::get_legend(rotated_dotplot)),
+    ggpubr::as_ggplot(ggpubr::get_legend(p_ligand_target_network)),
+    nrow = 3,
+    align = "h", rel_widths = c(1.5, 2, 1))
+
+combined_plot = cowplot::plot_grid(figures_without_legend, legends, rel_heights = c(10,10), nrow = 2, align = "hv")
+pdf ('Plots/FIGURE_3G_nichenet_combineplot.pdf', width=8, height=5)
+print (combined_plot)
+dev.off()
+
+
+
+#### FIGURE 3I - PLVAP IHC quantification data ####
+ihc = read.csv ('../../PM_scRNA_atlas/data/IHC_results_table.csv')
+ihc = ihc[-15,] # remove error in quantification
+colnames (ihc) = c('staining','histology')
+ihc$histology = factor (ihc$histology, levels = c('Sarcomatoid', 'Biphasic','Epithelioid','Lung Adj Normal'))
+# Load ggplot2
+library(ggplot2)
+ 
+# Most basic error bar
+my_sum <- ihc |>
+  group_by(histology) |>
+  summarise( 
+    n=n(),
+    mean=mean(staining),
+    sd=sd(staining)
+  ) |>
+  mutate(se=sd/sqrt(n)) |>
+  mutate(ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Standard Error
+bp = ggplot (my_sum) +
+  geom_errorbar ( aes(x=histology,ymin=mean, ymax=mean+se), width=0.2, colour="grey10", alpha=0.7, size=.2) +
+  geom_bar ( aes(x=histology, y=mean, fill=histology), stat="identity", alpha = 0.7, lwd=.2, color='black') +
+  scale_fill_manual (values = palette_bulk) + 
+  theme_minimal() +
+  ggtitle("IHC PLVAP+ with standard errors")
+
+stat.test = ihc %>%
+t_test (reformulate ('histology', 'staining'),p.adjust.method = 'fdr', comparisons= list(c('Lung Adj Normal','Epithelioid'),c('Lung Adj Normal','Sarcomatoid'),c('Lung Adj Normal','Biphasic'))) %>%
+add_significance ()
+stat.test = stat.test %>% add_xy_position (x = 'histology', step.increase=.8)
+bp = bp + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
+bracket.nudge.y = -50, hide.ns = T,label.size = 3,
+bracket.size = 0.2,
+bracket.shorten=0,
+label = "p.adj.signif") + NoLegend()
+ 
+pdf ('Plots/FIGURE_3I_IHC_quantification_barplot.pdf',2,height=3)
+print (bp)
+dev.off()
+
+
+

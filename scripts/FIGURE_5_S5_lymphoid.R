@@ -550,79 +550,61 @@ print (cc_box)
 dev.off()
 
 
-# FIGURE 6B - Show expanded clonotypes have higher exhaustion ####  
-# Add modulesscore of exhaustion markers
-# Add exhaustion modules
-srt_tcr = srt_tcr[,srt_tcr$celltype == 'CD8']
-ccomp_df = as.data.frame (srt_tcr@meta.data)
+# FIGURE S5J - Show expanded clonotypes have higher Tm2, Tm4, Tm5 in CD8 ####  
+srt_tcr_cd8 = srt_tcr[,srt_tcr$celltype == 'CD8']
+# Compute stats for Tm04 - Tm02 - Tm05
+ccomp_df = as.data.frame (srt_tcr_cd8@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
-ccomp_df = aggregate (ccomp_df$Tm5, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
+ccomp_df = aggregate (ccomp_df[,c('Tm4','Tm2','Tm5')], by=as.list(srt_tcr_cd8@meta.data[,c('cloneSize','sampleID','SE_group'),drop=F]), mean)
+ccomp_df = gather (ccomp_df, module, score, 4:6)
+ccomp_df = ccomp_df[ccomp_df$cloneSize != 'Small',]
+stat.test = ccomp_df %>% 
+group_by (module) %>% 
+t_test (reformulate ('cloneSize', 'score'), paired=T) %>%
+adjust_pvalue (method = "fdr") %>% 
+add_significance ()
+stat.test = stat.test %>% add_xy_position (x = 'SE_group', step.increase=.4)
+box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
+bracket.nudge.y = -1.2, hide.ns = T,
+label = "p.adj.signif") + NoLegend()
 
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
-box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
-         fill = 'white', color='white', line.color = "gray", line.size = 0.3,
-         palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
-    tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme + NoLegend()
-box2 = box2 + 
-geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
-geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
-gtheme_no_text
-
-pdf ('Plots/FIGURE_S5J_expanded_exhaustion.pdf', height = 3.3,width = 2)
-print (box2)
-dev.off()
-
-
-### Check with MHC II module ####
-ccomp_df = as.data.frame (srt_tcr@meta.data)
+ccomp_df = as.data.frame (srt_tcr_cd8@meta.data)
 ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
-ccomp_df = aggregate (ccomp_df$Tm4, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
-
+ccomp_df = aggregate (ccomp_df[,c('Tm4','Tm2','Tm5')], by=as.list(srt_tcr_cd8@meta.data[,c('cloneSize','sampleID','SE_group'),drop=F]), mean)
+ccomp_df = gather (ccomp_df, module, score, 4:6)
 ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
-box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
-         fill = 'white', color='white', line.color = "gray", line.size = 0.3,
-         palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
-    tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme + NoLegend()
-box2 = box2 + 
-geom_point (position='identity', alpha=.7, color="grey44", size=1.2) +
-geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
-gtheme_no_text
 
-pdf ('Plots/FIGURE_S5J_expanded_MHCII.pdf',height = 3.3,width = 2)
-print (box2)
+stat.test = ccomp_df %>% 
+group_by (module) %>% 
+t_test (reformulate ('cloneSize', 'score'), paired=T, comparisons = list(c('NonExpanded','Large'))) %>%
+adjust_pvalue (method = "fdr") %>% 
+add_significance ()
+
+box = ggplot (ccomp_df, aes_string (x= 'cloneSize', y= 'score')) +
+geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
+geom_boxplot (aes_string(fill='cloneSize'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
+geom_point (data = ccomp_df, aes (x = cloneSize, y = score), position='identity', alpha=.7, color="grey44", size=1.2) +
+scale_fill_manual (values = palette_clonotype) + 
+scale_color_manual (values = palette_clonotype) +
+geom_line (data = ccomp_df, aes(x = cloneSize, y = score, group = sampleID), color='grey44',linewidth=.2, alpha=.7) +
+facet_wrap (~module, scales = 'free_y') + 
+gtheme_no_text #+
+
+stat.test = stat.test %>% add_xy_position (x = 'cloneSize', step.increase=.4)
+box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
+bracket.nudge.y = -0.8, hide.ns = T,
+label = "p.adj.signif") + NoLegend()
+
+png ('Plots/FIGURE_S5J.png',800,width = 1200, res=300)
+box
 dev.off()
-
-
-### Check with Cytotoxic module ####
-ccomp_df = as.data.frame (srt_tcr@meta.data)
-ccomp_df = ccomp_df[,!duplicated (colnames(ccomp_df))]
-ccomp_df = aggregate (ccomp_df$Tm2, by=as.list(srt_tcr@meta.data[,c('cloneSize','sampleID'),drop=F]), mean)
-
-ccomp_df$cloneSize = factor (ccomp_df$cloneSize, levels = c('NonExpanded','Small','Large'))
-box2 = ggpaired (ccomp_df, x = "cloneSize", y = "x", id = 'sampleID', width = .5,
-         fill = 'white', color='white', line.color = "gray", line.size = 0.3,
-         palette = palette_clonotype) 
-box2 = box2 + stat_compare_means (paired = TRUE, comparisons = list(c('Large','NonExpanded')),
-    tip.length=0.02, method='t.test', label = "p.signif", bracket.nudge.y = -0.3) + gtheme + NoLegend()
-box2 = box2 + 
-geom_point(position='identity', alpha=.7, color="grey44", size=1.2) +
-geom_boxplot (aes_string(fill='cloneSize'),color = 'grey22', width=.5, alpha = 0.7, lwd=.2, outlier.shape = NA) +
-gtheme_no_text
-
-
-pdf ('Plots/FIGURE_S5J_expanded_cytox.pdf',height = 3.3,width = 2)
-print (box2)
-dev.off()
-
 
 
 
 # FIGURE S5 - proportion of CD8 expanded and exhausted in SE groups ####
 metaGroupName = 'cloneSize'
 cc_box = cellComp (
-  seurat_obj = srt_tcr, 
+  seurat_obj = srt_tcr_cd8, 
   metaGroups = c('sampleID',metaGroupName, 'SE_group'),
   plot_as = 'box',
   ptable_factor = c(1),
@@ -732,7 +714,7 @@ print (clonalOverlap(combinedTCR,
 dev.off()
 
 # Compare clonotypes
-pdf (paste0('Plots/FIGURE_S6C_shared_clones.pdf'),width=4.5,3)
+pdf (paste0('Plots/FIGURE_S5C_shared_clones.pdf'),width=4.5,3)
 cs1 = clonalScatter(combinedTCR, 
               cloneCall ="strict", 
               x.axis = "P7_pbmc", 
@@ -871,49 +853,3 @@ paletteer::scale_color_paletteer_c("ggthemes::Red") +
 pdf ('Plots/FIGURE_5O_exhausted_shared_clonotypes2.pdf', height = 2.6,3.5)
 print (sp)
 dev.off()
-
-
-
-
-### FIGURE 6C ####
-gcdata_TIC = readRDS('TICAtlas.rds') # Please download from: https://zenodo.org/records/5186413#%20.YRqbJC1h2v6
-
-table(gcdata_TIC@meta.data$cell_type)
-table(gcdata_TIC@meta.data$source)
-
-# Subset for NK cells ####
-gcdata_TIC_nk = gcdata_TIC[,gcdata_TIC$cell_type == 'NK']
-table (gcdata_TIC_nk$cell_type,gcdata_TIC_nk$source)
-
-# Import NK from MPM
-srt_nk = srt[, srt$celltype %in% c('FGFBP2_NK','KLRC1_NK')]
-
-srt_nk_merged = merge (gcdata_TIC_nk, srt_nk)
-srt_nk_merged = NormalizeData (object = srt_nk_merged, normalization.method = "LogNormalize", scale.factor = 10000)
-srt_nk_merged$source[is.na(srt_nk_merged$source)] = 'PM'
-srt_nk_merged$subtype[is.na(srt_nk_merged$subtype)] = 'PM'
-
-gd = geneDot (
-srt_nk_merged,
-gene = 'KLRC1',
-x = 'subtype', # 
-min_expression = 0,
-facet_ncol = 5,
-lim_expression = NULL,
-scale.data=T,
-x_name ='samples',
-y_name = 'celltype',
-returnDF = T)
-
-gd$groups = factor (gd$groups, levels = gd$groups[order (-gd$percent)])
-col_pal = setNames (c('red',rep('grey',13)), levels(gd$groups))
-bp = ggplot (gd, aes (x = groups, y = percent)) +
-geom_bar(aes (fill = groups), position="dodge", stat="identity") + 
-scale_fill_manual (values = col_pal) + NoLegend() + 
-gtheme
-
-
-png (paste0('Plots/KLRC1_positive.png'), width=900,height=700, res=300)
-print (bp)
-dev.off()
-
