@@ -61,7 +61,7 @@ dp = DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palett
 dp1 = DimPlot (srt, group.by = 'sampleID2', reduction = reductionName) + 
     scale_color_manual (values=palette_sample)
 pdf ('Plots/celltypes_umap.pdf', 5,width = 6)
-print (pd)
+print (dp)
 print (dp1)
 dev.off()
 
