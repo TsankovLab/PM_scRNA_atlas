@@ -210,7 +210,7 @@ srt_fetal = LoadH5Seurat("fetal_lung_endothelial.h5seurat")
 srt_fetal$celltype = srt_fetal$new_celltype
 
 # Load Travaglini dataset ####
-srt_adult = readRDS("travaglini_lung_atlas.rds")
+srt_adult = readRDS("../../travaglini_lung_atlas.rds")
 srt_adult = UpdateSeuratObject (srt_adult)
 srt_adult = srt_adult[, srt_adult$free_annotation %in% c('Artery','Bronchial Vessel 1','Bronchial Vessel 2','Capillary','Capillary Aerocyte','Capillary Intermediate 1','Capillary Intermediate 2','Vein','Vascular Smooth Muscle')]
 srt_adult$sampleID = srt_adult$sample
