@@ -204,25 +204,25 @@ dev.off()
 # Use PLVAP+ markers to compare adult vs fetal lung endothelial dataset ####
 ############################################################################
 
-# Load He dataset ####
+# Load He dataset #### Endothelium compartment can be downloaded from https://fetal-lung.cellgeni.sanger.ac.uk/scRNA.html. Make sure to place the file in the folder including the repository folder.
 Convert('../../C3filtered.h5ad', dest="fetal_lung_endothelial.h5seurat", overwrite=TRUE)
 srt_fetal = LoadH5Seurat("fetal_lung_endothelial.h5seurat")
 srt_fetal$celltype = srt_fetal$new_celltype
 
-# Load Travaglini dataset ####
+# Load Travaglini dataset #### Adult lung atlas can be downloaded from https://www.synapse.org/#!Synapse:syn21041850/wiki/600865 selecting following files: droplet_normal_lung_blood_seurat_ntiss10x.P3.anno.20191002.RC4.Robj, droplet_normal_lung_blood_seurat_ntiss10x.P1.anno.20191002.RC4.Robj, droplet_normal_lung_seurat_ntiss10x.P2.anno.20191002.RC4.Robj. Please combine them in 1 seurat object named travaglini_lung_atlas.rds and place it in the folder including the repository folder
 srt_adult = readRDS("../../travaglini_lung_atlas.rds")
 srt_adult = UpdateSeuratObject (srt_adult)
-srt_adult = srt_adult[, srt_adult$free_annotation %in% c('Artery','Bronchial Vessel 1','Bronchial Vessel 2','Capillary','Capillary Aerocyte','Capillary Intermediate 1','Capillary Intermediate 2','Vein','Vascular Smooth Muscle')]
-srt_adult$sampleID = srt_adult$sample
-srt_adult$status = 'adult'
+srt_adult_endo = srt_adult[, srt_adult$free_annotation %in% c('Artery','Bronchial Vessel 1','Bronchial Vessel 2','Capillary','Capillary Aerocyte','Capillary Intermediate 1','Capillary Intermediate 2','Vein','Vascular Smooth Muscle')]
+srt_adult_endo$sampleID = srt_adult_endo$sample
+srt_adult_endo$status = 'adult'
 
-srt_adult$celltype = srt_adult$free_annotation
-srt_adult$project = 'adult_lung'
+srt_adult_endo$celltype = srt_adult_endo$free_annotation
+srt_adult_endo$project = 'adult_lung'
 srt_fetal$project = 'fetal_lung'
 
 # Merge datasets
-intersect_features = intersect (rownames (srt_fetal), rownames (srt_adult))
-srt_fetal_adult = merge (srt_fetal[intersect_features,srt_fetal$dissection == 'Distal'], srt_adult[intersect_features,srt_adult$location == 'distal'])
+intersect_features = intersect (rownames (srt_fetal), rownames (srt_adult_endo))
+srt_fetal_adult = merge (srt_fetal[intersect_features,srt_fetal$dissection == 'Distal'], srt_adult_endo[intersect_features,srt_adult_endo$location == 'distal'])
 srt_fetal_adult = srt_fetal_adult[,!grepl ('erythr',srt_fetal_adult$celltype)]
 srt_fetal_adult = srt_fetal_adult[,!grepl ('reticu',srt_fetal_adult$celltype)]
 low_celltype_filter = names(table (srt_fetal_adult$celltype)[table (srt_fetal_adult$celltype) > 200])
@@ -234,7 +234,7 @@ srt_fetal_adult = srt_fetal_adult[,srt_fetal_adult$celltype %in% low_celltype_fi
 Idents(srt_endo) = 'celltype'
 degClusters = FindAllMarkers (srt_endo, max.cells.per.ident = 1000, min.pct = .1, logfc.threshold = .25, verbose = T)
 
-fetal_endo_PM_deg_genes = degClusters[fetal_endo_MPM_deg$cluster == 'PLVAP',]
+fetal_endo_PM_deg_genes = degClusters[degClusters$cluster == 'PLVAP',]
 fetal_endo_PM_deg_genes = fetal_endo_PM_deg_genes[fetal_endo_PM_deg_genes$avg_log2FC > 0,]
 fetal_endo_PM_deg_genes = fetal_endo_PM_deg_genes[fetal_endo_PM_deg_genes$p_val_adj < 0.05, ]
 fetal_endo_PM_deg_genes = head (fetal_endo_PM_deg_genes[order (fetal_endo_PM_deg_genes$p_val_adj), 'gene'],15)
@@ -270,9 +270,9 @@ dev.off()
 srt_endo$status = 'tumor'
 srt_endo$location = 'pleura'
 srt_endo$free_annotation = srt_endo$celltype
-shared_feat = rownames(srt_endo)[rownames(srt_endo) %in% rownames(srt_adult)]
+shared_feat = rownames(srt_endo)[rownames(srt_endo) %in% rownames(srt_adult_endo)]
 
-srt_adult_PM = merge (srt_endo[shared_feat,], srt_adult[shared_feat,])
+srt_adult_PM = merge (srt_endo[shared_feat,], srt_adult_endo[shared_feat,])
 srt_adult_PM = NormalizeData (object = srt_adult_PM, normalization.method = "LogNormalize", scale.factor = 10000)
 
 srt_adult_PM$celltype = gsub (' ','_',srt_adult_PM$celltype)
@@ -281,7 +281,7 @@ nfeat = 2000
 srt_adult_PM_distal = srt_adult_PM[,srt_adult_PM$location %in% c('pleura','distal')]
 
 # Run seurat integration ####
-DefaultAssay(srt_adult_PM_distal) = 'RNA'
+DefaultAssay (srt_adult_PM_distal) = 'RNA'
 nfeat_int = 3000
 k.weight = 30
 metaGroupNames = c('location')
@@ -339,11 +339,9 @@ pdf ('Plots/FIGURE_3C_cor_mat_travaglini_heatmap_top20.pdf',width = 7,4.6)
 hm
 dev.off()
 
-
-
 ### subset fibroblasts ####
 srt_fib = srt[,srt$celltype %in% c('Fibroblasts')]
-cnmf_spectra_unique_comb = as.list (read_excel( "../../cnmf_per_compartment.xlsx", sheet = "Fms_20"))
+cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Fms_20"))
 
 srt_fib = ModScoreCor (
         seurat_obj = srt_fib, 
@@ -357,7 +355,7 @@ srt_fib = ModScoreCor (
 # Run correlation across samples 
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 ccomp_df = srt_fib@meta.data[,names(cnmf_spectra_unique_comb)]
-ccomp_df = aggregate (ccomp_df, by=as.list(srt_fib@meta.data[,'sampleID4',drop=F]), 'mean')
+ccomp_df = aggregate (ccomp_df, by=as.list(srt_fib@meta.data[,'sampleID',drop=F]), 'mean')
 rownames(ccomp_df) = ccomp_df[,1]
 ccomp_df = ccomp_df[,-1]
 ccomp_df = cbind (ccomp_df, scs = scs_sample_avg[rownames(ccomp_df),])
@@ -379,11 +377,9 @@ cor_mat_cells = cor_mat_cells[row_order(hm), row_order(hm)]
 cor_mat_combined = cor_mat[row_order(hm), row_order(hm)]
 cor_mat_combined[upper.tri(cor_mat_combined, diag = TRUE)] = cor_mat_cells [upper.tri(cor_mat_cells, diag = TRUE)]
 
-col_fun = colorRamp2(c(-1, 0, 1), rev(c(palette_sample[3], palette_sample[length(palette_sample)/2], palette_sample[length(palette_sample)-3])))
-palette_module_correlation = paletteer::paletteer_c("pals::kovesi.diverging_bwr_40_95_c42",100)
-
 # Add track showing corelation of each module to scS-score
-ha = HeatmapAnnotation (scS_score = scs_sample_avg[row_order(hm)], col = list (scS_score = col_fun), which='row')
+ha = HeatmapAnnotation (S_score = scs_sample_avg[row_order(hm)], col = list (S_score = palette_sample2_fun), which='row')
+
 hm_combined = draw (Heatmap (cor_mat_combined, 
   cluster_columns = FALSE,
   cluster_rows = FALSE,
@@ -397,16 +393,13 @@ pdf (paste0('Plots/FIGURE_S3E_Fms_pairwise_across_cells_and_samples_heatmap.pdf'
 print (hm_combined)
 dev.off()
 
-
 ### FIGURE S3D - Make dotplot of top markers for each nmf ####
 cnmf_spectra_unique_comb_ordered = cnmf_spectra_unique_comb[row_order(hm)]
 marker_genes = unlist (lapply (cnmf_spectra_unique_comb_ordered, function(x) head (x, 5)))
-marker_genes[marker_genes == 'DUSP6'] = 'IGFBP2'
-marker_genes[marker_genes == 'C9orf16'] = 'IGFBP6'
-marker_genes[marker_genes == 'SPTBN1'] = 'MFAP5'
-#marker_genes[marker_genes == 'COL8A1'] = 'CXCL14'
-marker_genes[marker_genes == 'MALAT1'] = 'COL6A2'
-#marker_genes[marker_genes == 'PNISR'] = 'MMP2'
+marker_genes[marker_genes == 'DUSP6'] = 'IGFBP2' # Manually show different markers
+marker_genes[marker_genes == 'C9orf16'] = 'IGFBP6' # Manually show different markers
+marker_genes[marker_genes == 'SPTBN1'] = 'MFAP5' # Manually show different markers
+marker_genes[marker_genes == 'MALAT1'] = 'COL6A2' # Manually show different markers
 
 srt_fib$Fms_r_max = factor (srt_fib$Fms_r_max, levels = rev(names(cnmf_spectra_unique_comb_ordered)))
 
@@ -414,15 +407,15 @@ dotp = geneDot (
 seurat_obj=srt_fib,
 #gene = top_tfs2, 
 gene = factor (marker_genes, levels = marker_genes),
-x = srt_fib$sampleID4, # if multiple genes are specified this is ignored and genes would make the x axis of dotplot instead
-y = 'Fms_r_max',
+x = 'Fms_r_max',
 min_expression = 0,
 facet_ncol = 5,
 lim_expression = NULL,
 scale.data=T,
 x_name ='samples',
+swap_axes = T,
 y_name = 'celltype',
-plotcol = gene_expression_palette)
+plotcol = palette_gene_expression2) + gtheme_italic
 
 pdf ('Plots/FIGURE_S3D_cNMF_markers_expression.pdf', width=7, height = 3)
 print (dotp)
@@ -430,19 +423,17 @@ dev.off()
 
 
 # Load Travaglini dataset ####
+srt_adult_fib = srt_adult[, srt_adult$free_annotation %in% c('Alveolar Fibroblast','Adventitial Fibroblast','Fibromyocyte','Myofibroblast','Pericyte','Lipofibroblast')]
 srt_fib$status = 'tumor'
 srt_fib$location = 'pleura'
-srt_adult = readRDS("travaglini_lung_atlas.rds")
-srt_adult = UpdateSeuratObject (srt_adult)
-srt_adult = srt_adult[, srt_adult$free_annotation %in% c('Alveolar Fibroblast','Adventitial Fibroblast','Fibromyocyte','Myofibroblast','Pericyte','Lipofibroblast')]
-srt_adult$sampleID4 = srt_adult$sample
-srt_adult$status = 'adult'
-srt_adult$celltype = srt_adult$free_annotation
+srt_adult_fib$sampleID = srt_adult_fib$sample
+srt_adult_fib$status = 'adult'
+srt_adult_fib$celltype = srt_adult_fib$free_annotation
 
 srt_fib$celltype = srt_fib$Fms_r_max
-shared_feat = rownames(srt_fib)[rownames(srt_fib) %in% rownames(srt_adult)]
+shared_feat = rownames(srt_fib)[rownames(srt_fib) %in% rownames(srt_adult_fib)]
 
-srt_merged = merge (srt_fib[shared_feat,], srt_adult[shared_feat,])
+srt_merged = merge (srt_fib[shared_feat,], srt_adult_fib[shared_feat,])
 srt_merged = NormalizeData (object = srt_merged, normalization.method = "LogNormalize", scale.factor = 10000)  
 
 srt_merged$celltype = gsub (' ','_',srt_merged$celltype)
@@ -486,18 +477,17 @@ DefaultAssay (gcdata.avg) = 'integrated'
 gcdata.avg <- ScaleData(gcdata.avg)
 #gcdata.avg = gcdata.avg[,rownames(gcdata.avg@meta.data) != 'VascularSmoothMuscle']
 
-mtx<-as.matrix(GetAssayData(gcdata.avg, assay = 'integrated', slot='scale.data'))
-corr<-cor(mtx,method = 'spearman')
-col_fun = colorRamp2(c(-1, 0, 1), c(palette_module_correlation[1], palette_module_correlation[length(palette_module_correlation)/2], palette_module_correlation[length(palette_module_correlation)]))
-pdf ('Plots/FIGURE_S3F_cor_mat_travaglini_fibroblasts_heatmap_top20.pdf')
-print (Heatmap(corr,col = col_fun))
+mtx = as.matrix(GetAssayData(gcdata.avg, assay = 'integrated', slot='scale.data'))
+corr = cor(mtx,method = 'spearman')
+pdf ('Plots/FIGURE_S3F_cor_mat_travaglini_fibroblasts_heatmap_top20.pdf', height=5, width=6)
+print (Heatmap(corr,col = palette_module_correlation_fun))
 dev.off()
 
 
 
 ### FIGURE 3F - SCENIC only on MPM endothelial ####
 # Import results
-auc_mtx <- read.csv('../../PM_scRNA_atlas/data/SCENIC_Endothelial_auc_mtx.csv')
+auc_mtx <- read.csv('../../PM_scRNA_atlas/data/SCENIC_endothelial_auc_mtx.csv')
 rownames (auc_mtx) = auc_mtx[,1]
 auc_mtx = auc_mtx[,-1]
 colnames (auc_mtx) = paste0('SCENIC_',colnames(auc_mtx))
@@ -509,7 +499,7 @@ bc_scenic = gsub ('\\.','-', bc_scenic)
 celltypes_scenic = srt_endo$celltype
 
 # Generate heatmap of TFs ####
-motifs_table = read.csv ('../../PM_scRNA_atlas/data/SCENIC_Endothelial_motifs.csv', skip=2) 
+motifs_table = read.csv ('../../PM_scRNA_atlas/data/SCENIC_endothelial_motifs.csv', skip=2) 
 
 pValThreshold = 1e-2
 auc_mtx_avg = aggregate (auc_mtx, by=list(unname(celltypes_scenic)), mean)
@@ -588,6 +578,7 @@ srt_tumor$celltype_nichenet[srt_tumor$celltype == 'PLVAP'] = 'PLVAP+_EC'
 
 sender_cells = unique(srt_tumor$celltype_nichenet)[!unique(srt_tumor$celltype_nichenet) %in% receiver_cells]
 
+# Retreive nichenetR databases. This may throw an error if servers are busy. Please try again if that happens
 lr_network = readRDS(url("https://zenodo.org/record/7074291/files/lr_network_human_21122021.rds"))
 ligand_target_matrix = readRDS(url("https://zenodo.org/record/7074291/files/ligand_target_matrix_nsga2r_final.rds"))
 weighted_networks = readRDS(url("https://zenodo.org/record/7074291/files/weighted_networks_nsga2r_final.rds"))
@@ -729,8 +720,7 @@ bp = ggplot (my_sum) +
   geom_errorbar ( aes(x=histology,ymin=mean, ymax=mean+se), width=0.2, colour="grey10", alpha=0.7, size=.2) +
   geom_bar ( aes(x=histology, y=mean, fill=histology), stat="identity", alpha = 0.7, lwd=.2, color='black') +
   scale_fill_manual (values = palette_bulk) + 
-  theme_minimal() +
-  ggtitle("IHC PLVAP+ with standard errors")
+  ggtitle("IHC PLVAP+ with standard errors") + gtheme
 
 stat.test = ihc %>%
 t_test (reformulate ('histology', 'staining'),p.adjust.method = 'fdr', comparisons= list(c('Lung Adj Normal','Epithelioid'),c('Lung Adj Normal','Sarcomatoid'),c('Lung Adj Normal','Biphasic'))) %>%
