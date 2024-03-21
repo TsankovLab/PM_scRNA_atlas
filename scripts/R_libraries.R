@@ -33,7 +33,8 @@ packages = c(
   'survminer',
   'ggExtra',
   'DirichletReg',
-  'GenomicFeatures'
+  'GenomicFeatures',
+  'infercnv'
 )
 lapply(packages, require, character.only = TRUE)
 

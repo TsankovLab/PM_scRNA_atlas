@@ -212,7 +212,6 @@ dev.off()
 ### Generate plots of boolean gating ####
 bool = read.csv ('../../PM_scRNA_atlas/data/NK_Degranulation_or_IFN_Boolean_percent.csv')
 
-
 sel_groups = c('NK','NK_NKG2A','NK_MHC1','NK_NKG2A_MHC1')
 bool = bool[bool$group %in% sel_groups,]
 

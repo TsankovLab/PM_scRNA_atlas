@@ -51,7 +51,6 @@ srt = ModScoreCor (
 
 # Load cnmfs ####
 cnmf_spectra_unique_comb = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Cms_20"))
-cnmf_spectra_unique_comb = lapply (cnmf_spectra_unique_comb,function(x) x[x != 'NA'])
 cnmf_spectra_unique_comb_full = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Cms_full"))
 
 # re-compute nmf score after combining ####
@@ -220,9 +219,14 @@ srt,
 metaGroups = c('Cm_r_max','sampleID'), 
 plot_as = 'bar',
 pal = palette_sample,
-ptable_factor = 1,
-prop=T) +
-gtheme
+ptable_factor = c(2),
+returnDF= T,
+prop=T) 
+cp = do.call (rbind, lapply (split (cp, cp$Cm_r_max), function(x) {x$Freq = proportions(x$Freq); x}))
+cp = ggplot (cp, aes_string (x= 'Cm_r_max', y= 'Freq')) +
+    geom_bar(position="stack", stat="identity", aes_string(fill= 'sampleID')) +              
+    scale_fill_manual (values= palette_sample) +
+    gtheme
 cp$data$Cm_r_max = factor (cp$data$Cm_r_max, levels = names (cnmf_spectra_unique_comb[row_order(hm)])) 
 pdf (paste0('Plots/FIGURE_2C_sample_abundance_cNMF_stacked_barplot.pdf'))
 print (cp)
