@@ -336,7 +336,7 @@ hm = Heatmap(corr, top_annotation = ha,
   column_names_rot = 70,
   border=T)
 pdf ('Plots/FIGURE_3C_cor_mat_travaglini_heatmap_top20.pdf',width = 7,4.6)
-hm
+print (hm)
 dev.off()
 
 ### subset fibroblasts ####
