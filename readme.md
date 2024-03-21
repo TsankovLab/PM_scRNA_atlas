@@ -2,13 +2,13 @@
 
 Scripts are organized by figure and bulkRNA / scRNA analysis: 
 ## 
-FIGURE_1_S1_main.R
+FIGURE_1_S1_main.R  
 FIGURE_2_S2_malignant.R  
 FIGURE_3_S3_stromal.R  
 FIGURE_4_S4_myeloid.R  
 FIGURE_5_S5_lymphoid.R  
 FIGURE_5_S5_pbmc.R  
-FIGURE_6_S6_pbmc.R  
+FIGURE_6_S6_nk.R  
 bulkRNA_analyses.R # including 1E, S1H-I, 2D-E/G, S2F-J, 3H, S3I-J, 4G, 5E/K, S5D, 6A, S6A-C  
 ##
 
