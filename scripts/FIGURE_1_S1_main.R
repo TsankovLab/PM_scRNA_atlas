@@ -185,7 +185,7 @@ dev.off()
 
 
 # inferCNV
-infcnv = readRDS ('../../PM_scRNA_atlas/data/infercnv.results.obj.Rds')
+infcnv = readRDS ('../../PM_scRNA_atlas/data/infercnv.results.obj.rds')
 plot_cnv (infcnv)
 
 
