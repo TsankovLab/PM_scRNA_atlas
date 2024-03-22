@@ -21,7 +21,7 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-srt_tumor = readRDS ('../srt_tumor.rds')
+srt_tumor = readRDS ('../GSE190597_srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype_simplified2 %in% c('Myeloid','pDC')]
 
 batch = 'sampleID'

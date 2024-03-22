@@ -17,7 +17,7 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Import seurat object
-srt_tumor = readRDS ('../srt_tumor.rds')
+srt_tumor = readRDS ('../GSE190597_srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype == 'Malignant']
 srt$sampleID = factor (srt$sampleID, levels = levels (srt$sampleID)[1:12])
 

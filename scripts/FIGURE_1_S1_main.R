@@ -17,8 +17,8 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load Seurat object
-srt = readRDS ('../srt_tumor.rds')
-srt_pbmc = readRDS ('../srt_pbmc.rds')
+srt = readRDS ('../GSE190597_srt_tumor.rds')
+srt_pbmc = readRDS ('../GSE190597_srt_pbmc.rds')
 
 ### FIGURE 1D ####
 top_markers = c('KRT19','CALB2','SLPI','HP','ITLN1','CLDN1','PMP2','VGF','OLIG2','SFTPC','SFTPB','COL1A1','COL3A1','PECAM1','PLVAP','VWF','ACTA2','MYL9','MYH11','LYZ','CD14','C1QA','CD3D','CD3E','CD8A','NKG7','GNLY','GZMA','CD79A','IGHM','CD37','IGLC2','IGHA1','IGLC3','IRF8','IRF4','LILRA4')
@@ -185,7 +185,7 @@ dev.off()
 
 
 # inferCNV
-infcnv = readRDS ('../../PM_scRNA_atlas/data/PM_infercnv.results.obj.Rds')
+infcnv = readRDS ('../../PM_scRNA_atlas/data/infercnv.results.obj.Rds')
 plot_cnv (infcnv)
 
 

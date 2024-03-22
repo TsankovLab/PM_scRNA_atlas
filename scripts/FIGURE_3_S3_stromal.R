@@ -20,7 +20,7 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-srt_tumor = readRDS ('../srt_tumor.rds')
+srt_tumor = readRDS ('../GSE190597_srt_tumor.rds')
 srt = srt_tumor[, srt_tumor$celltype_simplified %in% c('Endothelial','Fibroblasts','SmoothMuscle')]
 
 batch = 'sampleID'
@@ -194,7 +194,7 @@ y_name = 'celltype',
 swap_axes=T,
 plotcol = palette_gene_expression2) + gtheme_italic
 
-pdf ('Plots/FIGURE_4H_VEGFA_receptors.pdf', width=2.5, height =2)
+pdf ('Plots/FIGURE_4H_VEGFA_receptors.pdf', width=3.5, height =3)
 print (dotp)
 dev.off()
 
@@ -480,7 +480,7 @@ gcdata.avg <- ScaleData(gcdata.avg)
 mtx = as.matrix(GetAssayData(gcdata.avg, assay = 'integrated', slot='scale.data'))
 corr = cor(mtx,method = 'spearman')
 pdf ('Plots/FIGURE_S3F_cor_mat_travaglini_fibroblasts_heatmap_top20.pdf', height=5, width=6)
-print (Heatmap(corr,col = palette_module_correlation_fun))
+print (Heatmap(corr,col = palette_module_correlation_fun, border=T))
 dev.off()
 
 
@@ -514,7 +514,9 @@ hm = Heatmap (scale(auc_mtx_avg),
  col = palette_scenic, column_names_rot = 45,
 # right_annotation = ha,
  column_names_gp = gpar(fontsize = 7),
- row_names_gp = gpar(fontsize = 8))
+ row_names_gp = gpar(fontsize = 8),heatmap_legend_param = list(
+               legend_direction = "horizontal",
+               heatmap_legend_side = "bottom"))
 pdf ('Plots/FIGURE_S3G_auc_scores_celltypes_heatmap.pdf', width=7, height=2)
 print (hm)
 dev.off()
@@ -720,7 +722,7 @@ bp = ggplot (my_sum) +
   geom_errorbar ( aes(x=histology,ymin=mean, ymax=mean+se), width=0.2, colour="grey10", alpha=0.7, size=.2) +
   geom_bar ( aes(x=histology, y=mean, fill=histology), stat="identity", alpha = 0.7, lwd=.2, color='black') +
   scale_fill_manual (values = palette_bulk) + 
-  ggtitle("IHC PLVAP+ with standard errors") + gtheme
+  ggtitle("IHC PLVAP+ with standard errors") + gtheme_no_text
 
 stat.test = ihc %>%
 t_test (reformulate ('histology', 'staining'),p.adjust.method = 'fdr', comparisons= list(c('Lung Adj Normal','Epithelioid'),c('Lung Adj Normal','Sarcomatoid'),c('Lung Adj Normal','Biphasic'))) %>%

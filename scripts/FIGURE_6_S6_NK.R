@@ -17,7 +17,7 @@ source ('../../PM_scRNA_atlas/scripts/palettes.R')
 source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 
 # Load Seurat object
-srt = readRDS ('../srt_tumor.rds')
+srt = readRDS ('../GSE190597_srt_tumor.rds')
 
 # FIGURE 6B - get NK activators and inhibitors and cross with CPDB database ####
 ### load cellphoneDB results ####
