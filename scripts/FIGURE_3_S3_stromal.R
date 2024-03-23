@@ -179,6 +179,7 @@ dev.off()
 srt_endo$celltype = factor (srt_endo$celltype, levels  = c('Artery','PLVAP','Vein'))
 
 
+
 # FIGURE 3H - VEGFA receptors ####
 dotp = geneDot (
 seurat_obj=srt_endo,
@@ -739,4 +740,27 @@ print (bp)
 dev.off()
 
 
+
+#### FIGURE 3D - Run pathway enrichment on PLVAP+ EC DE markers ####
+DefaultAssay(srt) = 'RNA'
+Idents (srt) = 'celltype'
+degClusters = FindAllMarkers (srt, max.cells.per.ident = 1000, min.pct = .1, logfc.threshold = 0.25, verbose = T)
+message ('Run GSEA enrichment on each cluster DE markers')
+
+# GSEA analysis on DEG per cluster
+EnrichRResAll = list()
+gmt.file = '../../PM_scRNA_atlas/data/c5.bp.v7.1.symbol.gmt'
+pathways = read.gmt (gmt.file)
+    
+degCluster = degClusters[degClusters$cluster == 'PLVAP',]
+sig_genes = degCluster[degCluster$p_val_adj < 0.01 & degCluster$avg_log2FC > 0, 'gene']
+egmt = enricher(sig_genes, TERM2GENE=pathways, universe = rownames(srt))
+egmt_res = egmt@result
+egmt_res$log10pval = -log10(egmt_res$p.adjust)
+egmt_res$ID = factor (egmt_res$ID, levels = rev(egmt_res$ID))
+bp = ggplot (head(egmt_res,5), aes (y = ID, x = log10pval)) +
+  geom_bar (stat = 'identity', fill = 'navyblue') + gtheme_no_rot
+pdf ('Plots/FIGURE_3D_PLVAP_EC_pathway_enrichment.pdf', height=2, width=5)
+bp
+dev.off()
 
