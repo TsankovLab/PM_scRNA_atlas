@@ -200,7 +200,7 @@ print (hm)
 dev.off()
 
 
-# FIGURE 5E - Test individually each exhaustion marker ####
+# FIGURE 5F - Test individually each exhaustion marker ####
 ext_markers = c(
   'TIGIT','PDCD1','CTLA4','LAG3','HAVCR2')
 
@@ -228,12 +228,12 @@ box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
 bracket.nudge.y = -1.2, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
-pdf ('Plots/FIGURE_5E_exhaustion_markers.pdf',2.5,width = 2.8)
+pdf ('Plots/FIGURE_5F_exhaustion_markers.pdf',2.5,width = 2.8)
 print (box)
 dev.off()
 
 # FIGURE S5E - Repeat per subtype ####
-ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('sampleID','celltype'))
+ext_avg = AverageExpression (srt_t[,srt_t$sampleID != 'P10'], features = ext_markers, group.by = c('sampleID','celltype'))
 ext_avg = log2(as.data.frame (t(ext_avg[[1]]))+1)
 ext_avg$group = rownames (ext_avg)
 ext_avg = gather (ext_avg, gene, avg_expression, 1:(ncol(ext_avg)-1))
@@ -270,7 +270,7 @@ pdf ('Plots/FIGURE_S5E_exhaustion_markers_per_celltype.pdf',width = 12, height=4
 print (wrap_plots (boxl, ncol=5))
 dev.off()
 
-# FIGURE 5F - Repeat per subtype across samples to generate heatmap ####
+# FIGURE 5G - Repeat per subtype across samples to generate heatmap ####
 ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('SE_group', 'celltype'))
 ext_avg = log2(as.data.frame (t(ext_avg[[1]]))+1)
 #ext_avg$group = rownames (ext_avg)
@@ -292,12 +292,12 @@ hm = draw (Heatmap (t(ext_avgs),
   #column_km=2,
 #  right_annotation = ha,
   border=T))
-pdf ('Plots/FIGURE_5F_exhaustion_markers_per_celltype_heatmap.pdf',width = 4, height=2.8)
+pdf ('Plots/FIGURE_5G_exhaustion_markers_per_celltype_heatmap.pdf',width = 4, height=2.8)
 print (hm)
 dev.off()
   
 # FIGURE 5E - Show distribution relevant Tms ####
-ccomp_df = srt@meta.data
+ccomp_df = srt_t[, srt_t$sampleID != 'P10']@meta.data
 dp = lapply (c('Tm2','Tm5','Tm7'), function(x) ggplot(ccomp_df, aes_string(x = x, group = 'SE_group')) +
   geom_density(aes(fill = SE_group),linewidth=.1, alpha = 0.6) + scale_fill_manual (values = palette_SE_group) + gtheme + NoLegend())
 pdf ('Plots/FIGURE_5E_cell_distributions_Tm2_Tm5_Tm7_density.pdf',width = 4, height=1.6)
@@ -305,7 +305,7 @@ print (wrap_plots (dp))
 dev.off()
 
 
-# FIGURE 5G - MHCII per subtype ####
+# FIGURE 5D - MHCII per subtype ####
 ext_markers = c('HLA-DPB1','HLA-DPA1', 'HLA-DQA1','HLA-DRB5','GZMK')
 ext_avg = AverageExpression (srt_t, features = ext_markers, group.by = c('sampleID','SE_group'))
 ext_avg = log2(as.data.frame (t(ext_avg[[1]]))+1)
@@ -331,7 +331,7 @@ box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
 bracket.nudge.y = -1, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
-pdf ('Plots/FIGURE_5G_MHCII_markers.pdf',2.5,width = 2.8)
+pdf ('Plots/FIGURE_5D_MHCII_markers.pdf',2.5,width = 2.8)
 print (box)
 dev.off()
 
@@ -595,24 +595,27 @@ box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
 bracket.nudge.y = -0.8, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
-png ('Plots/FIGURE_S5J.png',800,width = 1200, res=300)
+pdf ('Plots/FIGURE_S5J.pdf', height=3,width=4)
 box
 dev.off()
 
 
 
 # FIGURE S5 - proportion of CD8 expanded and exhausted in SE groups ####
-metaGroupName = 'cloneSize'
-cc_box = cellComp (
-  seurat_obj = srt_tcr_cd8, 
-  metaGroups = c('sampleID',metaGroupName, 'SE_group'),
-  plot_as = 'box',
-  ptable_factor = c(1),
-  prop = T,
-  pal = palette_SE_group,
-  subset_prop = 'Large',
-  facet_ncol = 15
-  ) + gtheme_no_text
+
+ccomp_df = srt_tcr_cd8@meta.data[, c('cloneSize','sampleID','SE_group')]
+ccomp_df = as.data.frame (prop.table (table (ccomp_df),2))
+ccomp_df = na.omit(ccomp_df)
+ccomp_df = ccomp_df[ccomp_df$cloneSize == 'Large',]
+ccomp_df = ccomp_df[ccomp_df$Freq != 0,]
+
+cc_box = ggplot (ccomp_df, aes_string (x= 'SE_group', y= 'Freq')) +
+geom_boxplot (aes_string(fill='SE_group'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
+geom_point (position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
+#geom_point (data = ccomp_df, aes (x = SE_group, y = Freq), position='identity', alpha=.7, color="grey44", size=1.2) +
+scale_fill_manual (values = palette_SE_group) + gtheme_no_text
+
+
 
 cc_box$data$SE_group = factor (cc_box$data$SE_group, levels = unique(cc_box$data$SE_group))
 cc_box$data$cloneSize = factor (cc_box$data$cloneSize, levels = rev (c('Large','Small','NonExpanded')))

@@ -31,7 +31,7 @@ srt = ModScoreCor (
         seurat_obj = srt, 
         geneset_list = top_bueno_genes, 
         cor_threshold = NULL, 
-        pos_threshold = NULL, # threshold for fetal_pval2
+        pos_threshold = NULL, # 
         listName = 'Bueno', outdir = paste0(projdir,'Plots/'))
 }
 
@@ -45,7 +45,7 @@ srt = ModScoreCor (
         seurat_obj = srt, 
         geneset_list = top_blum_genes, 
         cor_threshold = NULL, 
-        pos_threshold = NULL, # threshold for fetal_pval2
+        pos_threshold = NULL, # 
         listName = 'Blum', outdir = paste0(projdir,'Plots/'))
 }
 
@@ -59,7 +59,7 @@ srt = ModScoreCor (
         seurat_obj = srt, 
         geneset_list = cnmf_spectra_unique_comb, 
         cor_threshold = NULL, 
-        pos_threshold = NULL, # threshold for fetal_pval2
+        pos_threshold = NULL, # 
         listName = 'Cm', outdir = paste0(projdir,'Plots/'))
 }
 
@@ -90,9 +90,9 @@ box = ggplot (ccomp_df, aes_string (x= 'sampleID', y= sarc_nmf)) +
      ) +
   gtheme +
   scale_fill_manual (values= palette_sample) +
-  theme (axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  NoLegend()
   
-png(paste0('Plots/FIGURE_2B_',sarc_nmf,'_signatures_boxplot.png'),1200,600, res=300) #width = 10, height = 11,
+pdf(paste0('Plots/FIGURE_2B_',sarc_nmf,'_signatures_boxplot.pdf'),width=3,2) #width = 10, height = 11,
 print (box)
 dev.off()
 
@@ -120,7 +120,7 @@ p2l = lapply (levels (srt$sampleID), function(x)
   df = srt@meta.data[srt$sampleID == x,]
   tot_cells = nrow(df)    
   ggplot(df, aes(x=x_axis, y=y_axis, fill = bueno_color), color='black') +
-  geom_point(alpha=1, shape=21, stroke=.25, linewidth=3,size=1) +
+  geom_point(alpha=1, shape=21, stroke=.25, size=1) +
   xlim (c(-2,2)) + ylim (c(-2,2)) +
   geom_vline(xintercept = 0,linetype = 'dashed', size=.1) +
   geom_hline(yintercept = 0,linetype = 'dashed', size=.1) +
@@ -134,7 +134,7 @@ p2l = lapply (levels (srt$sampleID), function(x)
   theme_void() + 
   NoLegend()
   })
-png ('Plots/FIGURE_S2A_neftel_diagram_on_malignant_cells_per_sample.png',3200,1300, res=300)
+pdf ('Plots/FIGURE_S2A_neftel_diagram_on_malignant_cells_per_sample.pdf',10,3)
 print (wrap_plots (p2l, ncol=6))
 dev.off()
 
@@ -151,7 +151,7 @@ p2l = ggplot(ccomp_df, aes(x=x_axis, y=y_axis, fill=bueno_color)) +
   gtheme_no_rot +
   NoLegend()
     
-png ('Plots/FIGURE_2A_neftel_diagram_on_malignant_cells.png',1000,1000, res=300)
+pdf ('Plots/FIGURE_2A_neftel_diagram_on_malignant_cells.pdf',3,3)
 print (p2l)
 dev.off()
 
@@ -167,9 +167,9 @@ sp = ggscatter(ccomp_df, x = sarc_nmf, y = 'S_score_20',
             xlab = sarc_nmf, ylab = "S_score Blum et al") + 
             geom_point (aes (color = rownames(ccomp_df)),alpha=.7) +
             scale_color_manual (values = palette_sample) +
-            gtheme
+            gtheme_no_rot + NoLegend()
       
-pdf (paste0('Plots/FIGURE_S2E_sarcomatoid_vs_S_score.pdf'),height=3,width=5)
+pdf (paste0('Plots/FIGURE_S2E_sarcomatoid_vs_S_score.pdf'),height=3,width=3)
 print (sp)
 dev.off()
 
@@ -472,7 +472,8 @@ sarc_nmf = 'Cm17'
 sarc_score_hm = ccomp_df_cor_df[,sarc_nmf]
 names (sarc_score_hm) = rownames (ccomp_df_cor_df)
 
-ha = HeatmapAnnotation (' ' = sarc_score_hm, col = list (' ' = palette_sample_cnv), which='row',simple_anno_size = unit(.3, "cm"))
+ha = HeatmapAnnotation (' ' = sarc_score_hm, col = list (' ' = palette_sample_cnv), which='row',simple_anno_size = unit(.3, "cm"),  heatmap_legend_param = list(
+legend_direction = "horizontal"))
 hm = Heatmap (
   left_annotation = ha,
   ccomp_df_cor_df, col=palette_cnv_fun, 
@@ -481,9 +482,11 @@ hm = Heatmap (
   clustering_distance_columns = 'pearson',
   clustering_distance_rows = 'pearson',
   row_names_gp = gpar(fontsize = 8),
-  column_names_gp = gpar(fontsize = 7))
+  column_names_gp = gpar(fontsize = 7),
+  heatmap_legend_param = list(
+legend_direction = "horizontal"))
 pdf (paste0('Plots/FIGURE_2F_RNA_CNV_Cm_heatmap.pdf'),width=5,height=1.7)
-print (hm)
+print (draw (hm, heatmap_legend_side = "bottom"))
 dev.off()
 
 

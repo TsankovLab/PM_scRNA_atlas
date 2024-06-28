@@ -20,7 +20,7 @@ source ('../../PM_scRNA_atlas/scripts/ggplot_aestetics.R')
 scs_sample_avg = read.csv ('../../PM_scRNA_atlas/data/scs_score_per_sample.csv', row.names=1)
 
 # Load Seurat object
-srt = readRDS ('../srt_pbmc.rds')
+srt = readRDS ('../GSE190597_srt_pbmc.rds')
 
 # Normalize, scale and compute UMAP after correcting for sampleID batch with harmony
 batch = 'sampleID'
@@ -65,6 +65,11 @@ scale_color_manual(values = palette_sample)
 png (paste0("Plots/FIGURE_1C_celltypes_samples_umap.png"), width = 2800, height = 1000, res=300)
 print (pq1 + pq2)
 dev.off()
+
+png (paste0("Plots/doublets_umap.png"), width = 2800, height = 1000, res=300)
+wrap_plots (fp (srt, gene = c('CDC3D','LYZ','C1QA','C1QB','C1QC')))
+dev.off()
+
 
 ### FIGURE S1A ####
 ccomp_df = as.data.frame (table(srt$sampleID))
@@ -354,11 +359,14 @@ srt_tcr = srt_tcr[, !is.na (srt_tcr$cloneSize)]
 srt_tcr$cloneSize = unname(clonesize_name[as.character(srt_tcr$cloneSize)])
 srt_tcr_tnk = srt_tcr[,srt_tcr$predicted.celltype.l1 %in% c('CD4 T','CD8 T','NK')]
 
+### Subset to CD8 ####
+srt_tcr_cd8 = srt_tcr_tnk[, srt_tcr_tnk$predicted.celltype.l1 %in% c('CD8 T')]
+srt_tcr_cd8 = srt_tcr_cd8[, !srt_tcr_cd8$sampleID %in% c('P3')] # remove low counts samples
 
 # FIGURE S5H - Show expanded clonotypes are found in CD8 cells ####  
 metaGroupName = 'cloneSize'
 cc_box = cellComp (
-  seurat_obj = srt_tcr_tnk, 
+  seurat_obj = srt_tcr_cd8, 
   metaGroups = c('predicted.celltype.l2',metaGroupName),
   plot_as = 'bar',
   prop = FALSE,
@@ -369,13 +377,10 @@ cc_box = cellComp (
   ) + gtheme
 cc_box$data$predicted.celltype.l2 = factor (cc_box$data$predicted.celltype.l2, levels = as.character(cc_box$data$predicted.celltype.l2[order(-cc_box$data$Freq)]))
 
-png(paste0('Plots/FIGURE_S5H_Expanded_vs_nonExpanded_barplot.png'),width=1200,height=800, res=300)
+pdf(paste0('Plots/FIGURE_S5H_Expanded_vs_nonExpanded_barplot.pdf'),4,3)
 print (cc_box)
 dev.off()
 
-### Subset to CD8 ####
-srt_tcr_cd8 = srt_tcr_tnk[, srt_tcr_tnk$predicted.celltype.l1 %in% c('CD8 T')]
-srt_tcr_cd8 = srt_tcr_cd8[, !srt_tcr_cd8$sampleID %in% c('P3')] # remove low counts samples
 
 # Import T cell cNMFs
 cnmf_t = as.list (read_excel( "../../PM_scRNA_atlas/data/cnmf_per_compartment.xlsx", sheet = "Tms_20"))
@@ -403,7 +408,7 @@ adjust_pvalue (method = "fdr") %>%
 add_significance ()
 
 box = ggplot (ccomp_df, aes_string (x= 'cloneSize', y= 'score')) +
-geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
+#geom_point(position=position_jitter(width=0.1), alpha=1, color="grey", size=0.7) +
 geom_boxplot (aes_string(fill='cloneSize'),alpha = 0.7, lwd=.2, outlier.shape = NA) +
 geom_point (data = ccomp_df, aes (x = cloneSize, y = score), position='identity', alpha=.7, color="grey44", size=1.2) +
 scale_fill_manual (values = palette_clonotype) + 
@@ -417,9 +422,32 @@ box = box + stat_pvalue_manual (stat.test, remove.bracket=FALSE,
 bracket.nudge.y = 0, hide.ns = T,
 label = "p.adj.signif") + NoLegend()
 
-png ('Plots/FIGURE_5N_S5H.png',800,width = 1200, res=300)
+pdf ('Plots/FIGURE_5N_S5H.pdf',height=3,width=4)
 box
 dev.off()
 
+
+
+### Check abundance of pbmc cell types basde on sample date
+# reviewer FIGURE  Composition plots by date ####
+metaGroupNames = c('celltype_simplified','date')
+srt_pbmc$date = ifelse (srt_pbmc$sampleID %in% c('P2','P7','P9'),'new','old')
+date_sample = c(old = '#FE8137', new = '#3F7CB4')
+metaGroupNames = c('sampleID','celltype_simplified','date')
+ccc_bar2 = cellComp (
+  seurat_obj = srt_pbmc, 
+  metaGroups = metaGroupNames,
+  plot_as = 'box',
+  pal = date_sample,
+  prop = TRUE,
+  ptable_factor = c(1),
+  #subset_prop = 'cycling',
+  facet_ncol = 6,
+  returnDF = F,
+  facet_scales = 'free'
+  ) + theme_classic() + gtheme
+pdf ('Plots/pbmc_celltype_composition_date.pdf',3,height = 2.7)
+ccc_bar2
+dev.off()
 
 

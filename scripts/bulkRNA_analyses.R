@@ -89,15 +89,60 @@ y_max = do.call (rbind, lapply(theta_sp1, function(x)
   }))
 pvals$y.position = y_max$y.position
 
-pdf (paste0('Plots/FIGURE_1E_S1H_bayesPrism_celltype_bueno_fractions.pdf'),width=10, height=4)
+pdf (paste0('Plots/S1H_bayesPrism_celltype_bueno_fractions.pdf'),width=10, height=4)
 print (bk_fractions + stat_pvalue_manual(
     pvals, step.increase = 0.001,
     label = "p_sig", hide.ns=T
     ))
 dev.off()
 
+main_celltypes = c('Malignant','Fibroblasts','SmoothMuscle','Endothelial','Myeloid','B_cells','T_cells','NK')
+bueno_bp = gather (blk_meta[[blk]][,c(main_celltypes, 'histology')], celltype, fraction, 1:length(main_celltypes))
+bueno_bp = bueno_bp[bueno_bp$celltype %in% main_celltypes,]
+bueno_bp$celltype = factor (bueno_bp$celltype, levels = main_celltypes)
+bk_fractions = ggplot(bueno_bp, aes (x= histology, y= fraction)) + 
+        ggtitle (paste('RNAseq bueno cohort')) + 
+        geom_boxplot (aes (fill = histology), outlier.colour="black", outlier.shape=16,
+                 outlier.size=2,outlier.alpha = 0.2, notch=FALSE,alpha = 0.7, lwd=.2) +
+        facet_wrap (~celltype, drop=FALSE, scales = 'free', ncol=4) +
+        gtheme_no_text +
+        NoLegend () +
+        scale_fill_manual (values = palette_bulk)
+pvals = pvals[pvals$celltype %in% main_celltypes,]
+pvals = pvals[match (main_celltypes, pvals$celltype),]
+pvals$celltype = factor (pvals$celltype, levels = main_celltypes)
+pdf (paste0('Plots/FIGURE_1E_bayesPrism_celltype_bueno_fractions.pdf'),width=7, height=5)
+print (bk_fractions + stat_pvalue_manual(
+    pvals, step.increase = 0.00,
+    label = "p_sig", hide.ns=T
+    ))
+dev.off()
+
+main_celltypes = c('Mesothelium','Glia','Alveolar','pDC','Plasma')
+bueno_bp = gather (blk_meta[[blk]][,c(main_celltypes, 'histology')], celltype, fraction, 1:length(main_celltypes))
+bueno_bp = bueno_bp[bueno_bp$celltype %in% main_celltypes,]
+bueno_bp$celltype = factor (bueno_bp$celltype, levels = main_celltypes)
+bk_fractions = ggplot(bueno_bp, aes (x= histology, y= fraction)) + 
+        ggtitle (paste('RNAseq bueno cohort')) + 
+        geom_boxplot (aes (fill = histology), outlier.colour="black", outlier.shape=16,
+                 outlier.size=2,outlier.alpha = 0.2, notch=FALSE,alpha = 0.7, lwd=.2) +
+        facet_wrap (~celltype, drop=FALSE, scales = 'free', ncol=4) +
+        gtheme_no_text +
+        NoLegend () +
+        scale_fill_manual (values = palette_bulk)
+pvals_sub = pvals[pvals$celltype %in% main_celltypes,]
+pvals_sub = pvals_sub[match (main_celltypes, pvals_sub$celltype),]
+pvals_sub$celltype = factor (pvals_sub$celltype, levels = main_celltypes)
+pdf (paste0('Plots/FIGURE_S1H_bayesPrism_celltype_bueno_fractions.pdf'),width=7, height=5)
+print (bk_fractions + stat_pvalue_manual(
+    pvals_sub, step.increase = 0.00,
+    label = "p_sig", hide.ns=T
+    ))
+dev.off()
+
 # Hmeljak data
 blk='tcga'
+main_celltypes = c('Malignant','Fibroblasts','SmoothMuscle','Endothelial','Myeloid','B_cells','T_cells','NK','Mesothelium','Glia','Alveolar','pDC','Plasma')
 tcga_bp = gather (blk_meta[[blk]][,c(celltype_names, 'histology')], celltype, fraction, 1:length(celltype_names))
 tcga_bp$celltype = factor (tcga_bp$celltype, levels = celltype_names)
 bk_fractions = ggplot(tcga_bp, aes (x= histology, y= fraction)) + 
@@ -134,7 +179,7 @@ pvals$p_sig = ifelse (pvals$p.adj <= 0.05,
   ifelse (pvals$p.adj <= 0.01,
     ifelse (pvals$p.adj <= 0.001,'***','**'),'*'),'ns')
 # Get y_positions for pval annotation
-theta_sp1 = split (bueno_bp, bueno_bp$celltype)
+theta_sp1 = split (tcga_bp, tcga_bp$celltype)
 y_max = do.call (rbind, lapply(theta_sp1, function(x) 
   {
   tpm = boxplot(x$fraction ~ x$histology)$stats
@@ -276,7 +321,7 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     })
     
 #stat_testL2[[mod_name]] = stat_testL
-png (paste0 ('Plots/FIGURE_5E_bueno_tcga_T_modules_boxplots.png'), width = 2200,height=800, res=300)
+pdf (paste0 ('Plots/FIGURE_5E_bueno_tcga_T_modules_boxplots.pdf'), height=2, width=6)
 print (wrap_plots (bp_l[[1]],bp_l[[2]]))
 dev.off ()
     
@@ -319,7 +364,7 @@ bp_l = lapply (seq_along(blk_meta), function(y)
     #stat_testL[[blk]] = data.frame (stat.test, dataset = blk)
     
 #stat_testL2[[mod_name]] = stat_testL
-png (paste0 ('Plots/FIGURE_3H_bueno_tcga_PLVAP_boxplots.png'), width = 1400,height=1000, res=300)
+pdf (paste0 ('Plots/FIGURE_3H_bueno_tcga_PLVAP_boxplots.pdf'),height=3,width=4)
 print (wrap_plots (bp_l[[1]],bp_l[[2]]))
 dev.off ()
     
@@ -334,8 +379,8 @@ for (i in mod)
   {
   corr_res = ggscatter (
             blk_meta[[blk]], 
-            x = 'chr22',
-            y = i,
+            x = i,
+            y = 'chr22',
             #palette = bulk_palette 
             shape=16,
             color = 'histology',
@@ -349,6 +394,7 @@ for (i in mod)
             #geom_point (data = exp_df, aes (x = your.gene1, y = your.gene2, color = histology, fill= histology))
             #geom_smooth(method = "lm", color = "black") +
             #stat_cor (label.x = 3)
+  corr_res = ggMarginal(corr_res, type = "density", groupColour = TRUE, groupFill = TRUE)            
   pdf (paste0 ('Plots/FIGURE_2G_S2J_chr22_',i,'_correlation_scatterplots2.pdf'),4,4)
   print (corr_res)
   dev.off()
@@ -564,7 +610,9 @@ cfit_study$Index = c('Bueno','Hmeljak')
 # Run Kaplan Mayer survival curves ####
 studies = c('bueno','tcga')
 hist_column = c(bueno = 'ConsensusCluster',  tcga = 'TUMOR_TYPE')
+subset_hist = c(bueno = 'Sarcomatoid',tcga = 'Epithelioid Mesothelioma')
 subset_hist = c(bueno = 'Epithelioid',tcga = 'Epithelioid Mesothelioma')
+event_column = c(bueno = 'Survival.from.surgery..years.', tcga = 'OS_MONTHS')
 low='1st Qu.'
 high='3rd Qu.'  
 
@@ -823,7 +871,7 @@ bp_l = ggplot(bueno_fish, aes_string (x= 'FISH.chrom22', y= module)) +
           hide.ns = T,
           label = "p.adj.signif")
 
-pdf (paste0('Plots/FIGURE_2G_bueno_chr22_deletion_',module,'_covar_FISH_chrom22_boxplot.pdf'), width = 2.3,2.7)
+pdf (paste0('Plots/FIGURE_2G_bueno_chr22_deletion_',module,'_covar_FISH_chrom22_boxplot.pdf'), width = 2.3,height=2)
 print (bp_l)
 dev.off()
 

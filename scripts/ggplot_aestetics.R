@@ -32,7 +32,7 @@ gtheme_italic = theme(
 gtheme_no_text = theme(
       axis.text.x = element_blank(),
       axis.line =element_line(colour = 'black', size = .1),
-        axis.ticks = element_blank(),
+        #axis.ticks = element_blank(),
       panel.background = element_blank()#,
     #panel.border = element_blank(),
     #panel.grid.major = element_blank(),
@@ -41,7 +41,7 @@ gtheme_no_text = theme(
 
 gtheme_text = theme(
       axis.line =element_line(colour = 'black', size = .1),
-        axis.ticks = element_blank(),
+        #axis.ticks = element_blank(),
       panel.background = element_blank()#,
     #panel.border = element_blank(),
     #panel.grid.major = element_blank(),

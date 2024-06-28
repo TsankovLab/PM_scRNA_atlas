@@ -314,6 +314,8 @@ pdf ('Plots/FIGURE_4E_CXCLs_markers.pdf',2.5,width = 3)
 print (box)
 dev.off()
 
+
+# FIGURE 4H - SCENIC regulons heatmap ####
 # Run SCENIC plots #### 
 motif_window = 'tss500bp'
 
@@ -336,7 +338,7 @@ hm = Heatmap (scale (auc_mtx_avg[,filter_TF]),
  col = palette_scenic, column_names_rot = 45,
  column_names_gp = gpar(fontsize = 5),
  row_names_gp = gpar(fontsize = 8))
-pdf (paste0('Plots/FIGURE_4F_auc_scores_Mms_heatmap.pdf'), width=7, height=2.2)
+pdf (paste0('Plots/FIGURE_4H_auc_scores_Mms_heatmap.pdf'), width=7, height=2.2)
 print (hm)
 dev.off()
 

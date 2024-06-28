@@ -58,11 +58,18 @@ srt = FindNeighbors (object = srt, reduction = reductionSave, dims = 1:15, k.par
 
 ### FIGURE 3A / S3A - celltype umap ####
 dp = DimPlot (srt, group.by = 'celltype', reduction = reductionName, cols=palette_stroma)
-dp1 = DimPlot (srt, group.by = 'sampleID2', reduction = reductionName) + 
+dp1 = DimPlot (srt, group.by = 'sampleID', reduction = reductionName) + 
     scale_color_manual (values=palette_sample)
 pdf ('Plots/celltypes_umap.pdf', 5,width = 6)
 print (dp)
 print (dp1)
+dev.off()
+
+srt$date = ifelse (srt$sampleID %in% c('P10','P11','P12','P13'), 'new','old')
+dp12 = DimPlot (srt, group.by = 'date', reduction = reductionName)# + 
+    #scale_color_manual (values=palette_sample)
+pdf ('Plots/old_new_samples_umap.pdf', 5,width = 6)
+print (dp12)
 dev.off()
 
 ### Make stacked barplot of sample usage of cNMF to put aside of heatmap ####
@@ -195,7 +202,7 @@ y_name = 'celltype',
 swap_axes=T,
 plotcol = palette_gene_expression2) + gtheme_italic
 
-pdf ('Plots/FIGURE_4H_VEGFA_receptors.pdf', width=3.5, height =3)
+pdf ('Plots/FIGURE_4H_VEGFA_receptors.pdf', width=2.5, height =2)
 print (dotp)
 dev.off()
 

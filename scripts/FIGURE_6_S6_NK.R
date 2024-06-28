@@ -82,7 +82,7 @@ table(gcdata_TIC@meta.data$source)
 
 # Subset for NK cells ####
 gcdata_TIC_nk = gcdata_TIC[,gcdata_TIC$cell_type == 'NK']
-table (gcdata_TIC_nk$cell_type,gcdata_TIC_nk$source)
+table (gcdata_TIC_nk$cell_type, gcdata_TIC_nk$source)
 
 # Import NK from MPM
 srt_nk = srt[, srt$celltype %in% c('FGFBP2_NK','KLRC1_NK')]
@@ -112,7 +112,7 @@ scale_fill_manual (values = col_pal) + NoLegend() +
 gtheme
 
 
-png (paste0('Plots/FIGURE_6C_KLRC1_positive.png'), width=900,height=700, res=300)
+pdf (paste0('Plots/FIGURE_6C_KLRC1_positive.pdf'), height=3, width=4)
 print (bp)
 dev.off()
 
@@ -172,7 +172,7 @@ box2 <- box2 + stat_pvalue_manual (stat.test2, remove.bracket=FALSE,
   label = "p.adj.signif")
 
 
-png ('Plots/FIGURE_6E_degran_percentages_barplots.png',800,width = 1200, res=300)
+pdf ('Plots/FIGURE_6E_degran_percentages_barplots.pdf',4,4)
 box2
 dev.off()
 
@@ -203,7 +203,7 @@ box2 <- box2 + stat_pvalue_manual (stat.test2, remove.bracket=FALSE,
   label = "p.adj.signif")
 
 
-png ('Plots/FIGURE_6E_ifn_percentages_barplots.png',800,width = 1200, res=300)
+pdf ('Plots/FIGURE_6E_ifn_percentages_barplots.pdf',4,4)
 box2
 dev.off()
 
@@ -246,6 +246,14 @@ box2 <- box2 + stat_pvalue_manual (stat.test2, remove.bracket=FALSE,
   label = "p.adj.signif")
 
 
-png ('Plots/FIGURE_S6G_boolean_gating_barplots.png',800,width = 1200, res=300)
+pdf ('Plots/FIGURE_S6G_boolean_gating_barplots.pdf',4,4)
 box2
 dev.off()
+
+
+
+
+
+
+
+
