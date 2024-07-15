@@ -55,6 +55,11 @@ RunUMAP (reduction = reductionSave, dims = 1:15, reduction.name = reductionName,
 srt = FindNeighbors (object = srt, reduction = reductionSave, dims = 1:15, k.param = 30,
                               verbose = TRUE, force.recalc = T, graph.name=c(reductionGraphKnn,reductionGraphSnn))
 
+# Add embeddings from scanvi
+scanvi_pbmc = read.csv ('../../PM_scRNA_atlas/data/scanvi_pbmc_umap_embeddings.csv')
+colnames (scanvi_pbmc) = c('scanvi_1','scanvi_2')
+rownames (scanvi_pbmc) = colnames (srt)
+srt[['scanvi']] <- CreateDimReducObject (embeddings = as.matrix(scanvi_pbmc), key = 'scanvi_', assay = 'RNA')
 
 ### FIGURE 1C ####
 pq1 = DimPlot(srt, reduction = reductionName, group.by = "celltype_simplified", label = F, label.size = 3 ,repel = TRUE) + ggtitle (paste(ncol(srt), 'cells')) +
@@ -79,17 +84,17 @@ vln_p = VlnPlot (srt, features = c("nFeature_RNAL", "nCount_RNAL", "percent.mt")
 vln_p = lapply (vln_p, function(x) x +
 scale_fill_manual(values = palette_sample))
 
-png (paste0("Plots/FIGURE_S1A_QC_nFeat_nCount_m.percent_vlnPlot.png"), 3300, 1000, res=300)
+png (paste0("Plots/FIGURE_S1A_QC_nFeat_nCount_m.percent_vlnPlot.png"), width = 3800, height= 1000, res=300)
 print (vln_p[[1]] | vln_p[[2]] | vln_p[[3]])
 dev.off()
 
 ### FIGURE S1D ####
 RNA.markers = c('CD3E','CD8A','MKI67','NKG7','CD79A','JCHAIN','S100A8','FCGR3A','HLA-DQA1','LILRA4')
 DefaultAssay (srt) = 'RNA'
-fp = FeaturePlot(srt, features = RNA.markers,  reduction = reductionName, cols = palette_feature_RNA, ncol = 4) & 
+fp = FeaturePlot(srt, features = RNA.markers,  reduction = 'scanvi', cols = palette_feature_RNA, ncol = 4) & 
 theme(plot.title = element_text(size = 10, face='italic')) & NoLegend() & NoAxes()
 
-png (paste0("Plots/FIGURE_S1D_feature_plots_RNA.png"), width = 1800, height = 1000, res=300)
+png (paste0("Plots/FIGURE_S1D_feature_plots_RNA.png"), width = 1400, height = 1200, res=300)
 print (fp)
 dev.off()
 
@@ -131,6 +136,13 @@ png(paste0("Plots/FIGURE_S1E_DotPlot_topRNAmarkers_predicted.celltype.l2.png"), 
 print (dp)
 dev.off()
 
+# Add embeddings from scanvi
+scanvi_pbmc = read.csv ('../../PM_scRNA_atlas/data/scanvi_pbmc_umap_embeddings.csv')
+colnames (scanvi_pbmc) = c('scanvi_1','scanvi_2')
+rownames (scanvi_pbmc) = colnames (srt)
+srt[['scanvi']] <- CreateDimReducObject (embeddings = as.matrix(scanvi_pbmc), key = 'scanvi_', assay = 'ADT')
+
+
 ### FIGURE S1F ####
 DefaultAssay(srt)='ADT'
 srt = NormalizeData(object = srt, assay = "ADT", normalization.method = "CLR")
@@ -138,7 +150,7 @@ srt = ScaleData(srt,assay = "ADT")
 
 ADT.markers = c('AC-CD3','AC-CD4','AC-CD8','AC-CD19','AC-CD33','AC-CD14','AC-CD16','AC-CD56')
 DefaultAssay (srt) = 'ADT'
-fp = FeaturePlot(srt, features = ADT.markers,  reduction = reductionName, cols = palette_feature_protein, ncol = 4) & 
+fp = FeaturePlot(srt, features = ADT.markers,  reduction = 'scanvi', cols = palette_feature_protein, ncol = 4) & 
 theme(plot.title = element_text(size = 10)) & NoLegend() & NoAxes()
 
 png (paste0("Plots/FIGURE_S1F_feature_plots_ADT.png"), width = 1800, height = 1000, res=300)

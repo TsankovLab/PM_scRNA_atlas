@@ -22,7 +22,7 @@ palette_celltype_simplified = c(
 
 
 
-palette_gene_expression = as.character(paletteer::paletteer_c("grDevices::Blue-Red 3", 100))
+palette_gene_expressiHdac1on = as.character(paletteer::paletteer_c("grDevices::Blue-Red 3", 100))
 palette_gene_expression2 = as.character(paletteer::paletteer_c("grDevices::Blue-Red 3", 100))[c(1,50,100)]
 palette_gene_expression_fun = function(x) {return(colorRamp2(c(min(x), 0, max(x)), c(palette_gene_expression2)))}
 palette_sample = c(
