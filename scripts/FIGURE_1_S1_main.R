@@ -85,6 +85,22 @@ sp
 dev.off()
 
 
+### FIGURE 1C ####
+# import embeddings from scanvi
+scanvi_tumor = read.csv (file.path ('..','..','PM_scRNA_atlas','data','scanvi_tumor_umap_embeddings.csv'))
+colnames (scanvi_tumor) = c('scanvi_1','scanvi_2')
+rownames (scanvi_tumor) = colnames (srt)
+srt[['scanvi']] <- CreateDimReducObject (embeddings = as.matrix(scanvi_tumor), key = 'scanvi_', assay = 'RNA')
+
+reductionName = 'scanvi'
+pq1 = DimPlot (srt, reduction = reductionName, group.by = "celltype_simplified", label = F, label.size = 3 ,repel = TRUE) + ggtitle (paste(ncol(srt), 'cells')) +
+scale_color_manual(values = palette_celltype_simplified)
+pq2 = DimPlot(srt, reduction = reductionName, group.by = "sampleID", label = F, label.size = 3 ,repel = TRUE) + ggtitle (paste(ncol(srt), 'cells')) +
+scale_color_manual(values = palette_sample)
+
+png (paste0("Plots/FIGURE_1C_celltypes_samples_umap.png"), width = 2800, height = 1000, res=300)
+print (pq1 + pq2)
+dev.off()
 
 
 
@@ -92,8 +108,8 @@ dev.off()
 
 
 ### FIGURE 1D ####
-top_markers = c('KRT19','CALB2','SLPI','HP','ITLN1','CLDN1','PMP2','VGF','OLIG2','SFTPC','SFTPB','SFTA3','COL1A1','COL3A1','DCN','PECAM1','PLVAP','VWF','ACTA2','MYL9','MYH11','LYZ','CD14','C1QA','CD3D','CD3E','CD8A','NKG7','GNLY','GZMA','CD79A','IGHM','CD37','IGLC2','IGHA1','IGLC3','IRF8','IRF4','LILRA4')
-srt$celltype_simplified2 = factor (srt$celltype_simplified2, levels = rev (c('Malignant','Mesothelium','Glia','Alveolar','Fibroblasts','Endothelial','SmoothMuscle','Myeloid','T_cells','NK','B_cells','Plasma','pDC')))
+top_markers = rev(c('KRT19','CALB2','SLPI','HP','ITLN1','CLDN1','PMP2','VGF','OLIG2','SFTPC','SFTPB','SFTA3','COL1A1','COL3A1','DCN','PECAM1','PLVAP','VWF','ACTA2','MYL9','MYH11','LYZ','CD14','C1QA','CD3D','CD3E','CD8A','NKG7','GNLY','GZMA','CD79A','IGHM','CD37','IGLC2','IGHA1','IGLC3','IRF8','IRF4','LILRA4'))
+srt$celltype_simplified2 = factor (srt$celltype_simplified2, levels = c('Malignant','Mesothelium','Glia','Alveolar','Fibroblasts','Endothelial','SmoothMuscle','Myeloid','T_cells','NK','B_cells','Plasma','pDC'))
 
 dp = geneDot (
   seurat_obj = srt,
@@ -106,13 +122,13 @@ dp = geneDot (
   scale.data=TRUE,
   x_name ='samples',
   y_name = 'celltype',
-  swap_axes=T,
+  swap_axes=F,
   plotcol = palette_gene_expression2) +
-  gtheme_italic
+  gtheme
 
-pdf ('Plots/FIGURE_1D_top_markers_celltype_expression.pdf', height=4.8, width=8.5)
+pdf ('Plots/FIGURE_1D_top_markers_celltype_expression.pdf', height=7, width=4)
 dp + theme(
-    axis.text.x = element_text(face = "italic")
+    axis.text.y = element_text(face = "italic")
   )
 dev.off()  
 

@@ -16,7 +16,7 @@ palette_celltype_simplified = c(
   #Malignant = 'palegreen4',
   Malignant = 'plum4',
   Mast = 'royalblue4',
-  Mesothelium = 'olivedrab1',
+  Mesothelium = 'tomato4',
   Glia = 'lawngreen',
   pDC = 'tomato')
 
